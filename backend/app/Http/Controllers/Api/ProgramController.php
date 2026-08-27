@@ -10,11 +10,14 @@ use App\Models\Program;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class ProgramController extends Controller
 {
     public function index(Request $request)
     {
+        Gate::authorize('viewAny', Program::class);
+
         $programs = Program::query()
             ->when($request->input('status'), fn ($query, $value) => $query->where('status', $value))
             ->when($request->input('category'), fn ($query, $value) => $query->where('category', $value))
@@ -28,16 +31,22 @@ class ProgramController extends Controller
 
     public function store(StoreProgramRequest $request)
     {
+        Gate::authorize('create', Program::class);
+
         return (new ProgramResource(Program::create($request->validated())))->response()->setStatusCode(201);
     }
 
     public function show(Program $program): ProgramResource
     {
+        Gate::authorize('view', $program);
+
         return new ProgramResource($program);
     }
 
     public function update(UpdateProgramRequest $request, Program $program): ProgramResource
     {
+        Gate::authorize('update', $program);
+
         $program->update($request->validated());
 
         return new ProgramResource($program->refresh());
@@ -45,6 +54,8 @@ class ProgramController extends Controller
 
     public function destroy(Program $program): JsonResponse
     {
+        Gate::authorize('delete', $program);
+
         try {
             $program->delete();
         } catch (QueryException) {

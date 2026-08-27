@@ -13,20 +13,29 @@ class CoreApiTest extends TestCase
 {
     use RefreshDatabase;
 
+    private User $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->admin = User::factory()->create(['role' => 'super_admin']);
+    }
+
     public function test_program_crud_and_slug_validation(): void
     {
         $payload = $this->programPayload();
 
-        $create = $this->postJson('/api/programs', $payload);
+        $create = $this->api()->postJson('/api/programs', $payload);
         $create->assertCreated()->assertJsonPath('data.slug', $payload['slug']);
         $program = Program::firstOrFail();
 
-        $this->getJson('/api/programs')->assertOk()->assertJsonPath('data.0.id', $program->id);
-        $this->getJson('/api/programs/'.$program->id)->assertOk();
-        $this->patchJson('/api/programs/'.$program->id, ['status' => 'open'])
+        $this->api()->getJson('/api/programs')->assertOk()->assertJsonPath('data.0.id', $program->id);
+        $this->api()->getJson('/api/programs/'.$program->id)->assertOk();
+        $this->api()->patchJson('/api/programs/'.$program->id, ['status' => 'open'])
             ->assertOk()->assertJsonPath('data.status', 'open');
-        $this->postJson('/api/programs', $payload)->assertUnprocessable();
-        $this->deleteJson('/api/programs/'.$program->id)->assertNoContent();
+        $this->api()->postJson('/api/programs', $payload)->assertUnprocessable();
+        $this->api()->deleteJson('/api/programs/'.$program->id)->assertNoContent();
     }
 
     public function test_intake_crud_and_date_validation(): void
@@ -40,13 +49,13 @@ class CoreApiTest extends TestCase
             'status' => 'upcoming',
         ];
 
-        $intake = $this->postJson('/api/intakes', $payload)->assertCreated()->json('data');
+        $intake = $this->api()->postJson('/api/intakes', $payload)->assertCreated()->json('data');
         $id = $intake['id'];
-        $this->getJson('/api/intakes')->assertOk();
-        $this->getJson('/api/intakes/'.$id)->assertOk()->assertJsonPath('data.program.id', $program->id);
-        $this->patchJson('/api/intakes/'.$id, ['status' => 'open'])->assertOk();
-        $this->postJson('/api/intakes', [...$payload, 'end_date' => '2026-08-01'])->assertUnprocessable();
-        $this->deleteJson('/api/intakes/'.$id)->assertNoContent();
+        $this->api()->getJson('/api/intakes')->assertOk();
+        $this->api()->getJson('/api/intakes/'.$id)->assertOk()->assertJsonPath('data.program.id', $program->id);
+        $this->api()->patchJson('/api/intakes/'.$id, ['status' => 'open'])->assertOk();
+        $this->api()->postJson('/api/intakes', [...$payload, 'end_date' => '2026-08-01'])->assertUnprocessable();
+        $this->api()->deleteJson('/api/intakes/'.$id)->assertNoContent();
     }
 
     public function test_class_crud_supports_nullable_teacher_and_validates_capacity(): void
@@ -68,11 +77,11 @@ class CoreApiTest extends TestCase
             'schedule' => ['monday' => [['start' => '09:00', 'end' => '12:00']]],
         ];
 
-        $class = $this->postJson('/api/classes', $payload)->assertCreated()->json('data');
-        $this->getJson('/api/classes/'.$class['id'])->assertOk()->assertJsonPath('data.teacher_id', null);
-        $this->patchJson('/api/classes/'.$class['id'], ['capacity' => 25])->assertOk();
-        $this->postJson('/api/classes', [...$payload, 'capacity' => 0])->assertUnprocessable();
-        $this->deleteJson('/api/classes/'.$class['id'])->assertNoContent();
+        $class = $this->api()->postJson('/api/classes', $payload)->assertCreated()->json('data');
+        $this->api()->getJson('/api/classes/'.$class['id'])->assertOk()->assertJsonPath('data.teacher_id', null);
+        $this->api()->patchJson('/api/classes/'.$class['id'], ['capacity' => 25])->assertOk();
+        $this->api()->postJson('/api/classes', [...$payload, 'capacity' => 0])->assertUnprocessable();
+        $this->api()->deleteJson('/api/classes/'.$class['id'])->assertNoContent();
     }
 
     public function test_user_crud_hashes_password_and_never_exposes_it(): void
@@ -84,16 +93,16 @@ class CoreApiTest extends TestCase
             'role' => 'teacher',
         ];
 
-        $created = $this->postJson('/api/users', $payload)->assertCreated();
+        $created = $this->api()->postJson('/api/users', $payload)->assertCreated();
         $user = User::firstOrFail();
-        $created->assertJsonMissingPath('data.password_hash');
-        $this->assertTrue(Hash::check($payload['password'], $user->password_hash));
-        $this->patchJson('/api/users/'.$user->id, ['name' => 'Jane Updated'])
-            ->assertOk()->assertJsonMissingPath('data.password_hash');
-        $this->postJson('/api/users', [...$payload, 'email' => 'jane@example.com'])->assertUnprocessable();
-        $this->getJson('/api/users')->assertOk();
-        $this->getJson('/api/users/'.$user->id)->assertOk();
-        $this->deleteJson('/api/users/'.$user->id)->assertNoContent();
+        $created->assertJsonMissingPath('data.password');
+        $this->assertTrue(Hash::check($payload['password'], $user->password));
+        $this->api()->patchJson('/api/users/'.$user->id, ['name' => 'Jane Updated'])
+            ->assertOk()->assertJsonMissingPath('data.password');
+        $this->api()->postJson('/api/users', [...$payload, 'email' => 'jane@example.com'])->assertUnprocessable();
+        $this->api()->getJson('/api/users')->assertOk();
+        $this->api()->getJson('/api/users/'.$user->id)->assertOk();
+        $this->api()->deleteJson('/api/users/'.$user->id)->assertNoContent();
     }
 
     private function programPayload(): array
@@ -109,5 +118,10 @@ class CoreApiTest extends TestCase
             'fee_currency' => 'USD',
             'duration_weeks' => 12,
         ];
+    }
+
+    private function api()
+    {
+        return $this->actingAs($this->admin, 'sanctum');
     }
 }

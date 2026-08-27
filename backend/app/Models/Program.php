@@ -48,6 +48,13 @@ class Program extends Model
         return $this->hasMany(Application::class);
     }
 
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'program_teacher')
+            ->using(ProgramTeacher::class)
+            ->withPivot('created_at');
+    }
+
     public function galleryImages(): HasMany
     {
         return $this->hasMany(GalleryImage::class);
@@ -56,12 +63,5 @@ class Program extends Model
     public function gradingConfigs(): HasMany
     {
         return $this->hasMany(GradingConfig::class);
-    }
-
-    public function teachers(): BelongsToMany
-    {
-        return $this->belongsToMany(User::class, 'program_teacher')
-            ->using(ProgramTeacher::class)
-            ->withPivot('created_at');
     }
 }

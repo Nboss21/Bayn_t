@@ -4,22 +4,28 @@ namespace App\Models;
 
 use App\Enums\UserRole;
 use Database\Factories\UserFactory;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Laravel\Sanctum\HasApiTokens;
 
 class User extends Authenticatable
 {
     /** @use HasFactory<UserFactory> */
-    use HasFactory, Notifiable;
+    use HasApiTokens, HasFactory, Notifiable;
 
+    /**
+     * The attributes that are mass assignable.
+     *
+     * @var array<int, string>
+     */
     protected $fillable = [
         'name',
         'email',
-        'password_hash',
+        'password',
         'role',
         'phone',
         'is_active',
@@ -27,7 +33,7 @@ class User extends Authenticatable
     ];
 
     protected $hidden = [
-        'password_hash',
+        'password',
         'remember_token',
     ];
 
@@ -37,13 +43,35 @@ class User extends Authenticatable
             'role' => UserRole::class,
             'is_active' => 'boolean',
             'email_verified_at' => 'datetime',
-            'password_hash' => 'hashed',
+            'password' => 'hashed',
         ];
     }
 
-    public function getAuthPasswordName(): string
+    public function hasRole(array|string $roles): bool
     {
-        return 'password_hash';
+        $roles = is_array($roles) ? $roles : [$roles];
+
+        return in_array($this->role?->value, $roles, true);
+    }
+
+    public function isSuperAdmin(): bool
+    {
+        return $this->hasRole(UserRole::SUPER_ADMIN->value);
+    }
+
+    public function isRegistrar(): bool
+    {
+        return $this->hasRole(UserRole::REGISTRAR->value);
+    }
+
+    public function isTeacher(): bool
+    {
+        return $this->hasRole(UserRole::TEACHER->value);
+    }
+
+    public function isStudent(): bool
+    {
+        return $this->hasRole(UserRole::STUDENT->value);
     }
 
     public function staffProfile(): HasOne

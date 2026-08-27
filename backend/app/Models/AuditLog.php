@@ -11,6 +11,7 @@ class AuditLog extends Model
     use HasFactory;
 
     public const UPDATED_AT = null;
+    public $timestamps = false;
 
     protected $fillable = [
         'actor_id',
@@ -19,15 +20,14 @@ class AuditLog extends Model
         'target_id',
         'before_snapshot',
         'after_snapshot',
+        'created_at',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'before_snapshot' => 'array',
-            'after_snapshot' => 'array',
-        ];
-    }
+    protected $casts = [
+        'before_snapshot' => 'array',
+        'after_snapshot' => 'array',
+        'created_at' => 'datetime',
+    ];
 
     public function actor(): BelongsTo
     {
