@@ -46,6 +46,9 @@ class Program extends Model
     public function applications(): HasMany
     {
         return $this->hasMany(Application::class);
+    public function teachers(): BelongsToMany
+    {
+        return $this->belongsToMany(User::class, 'program_teacher');
     }
 
     public function galleryImages(): HasMany
