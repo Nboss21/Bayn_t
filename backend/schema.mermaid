@@ -1,0 +1,226 @@
+erDiagram
+
+    USERS ||--o| STAFF_PROFILES : "has profile"
+    USERS ||--o{ CLASSES : "teaches (teacher_id)"
+    USERS ||--o{ APPLICATIONS : "reviews (reviewed_by)"
+    USERS ||--o{ ATTENDANCE_RECORDS : "marks (marked_by)"
+    USERS ||--o{ ASSESSMENT_SCORES : "grades (graded_by)"
+    USERS ||--o{ NOTIFICATIONS : "receives"
+    USERS ||--o{ AUDIT_LOGS : "performs (actor)"
+    USERS ||--o{ PROGRAM_TEACHER : ""
+    USERS ||--o| STUDENTS : "student portal login (nullable, v2)"
+
+    PROGRAMS ||--o{ INTAKES : "offers"
+    PROGRAMS ||--o{ CLASSES : "offers"
+    PROGRAMS ||--o{ APPLICATIONS : "applied to"
+    PROGRAMS ||--o{ GALLERY_IMAGES : "features"
+    PROGRAMS ||--o{ GRADING_CONFIGS : "overrides (nullable = global)"
+    PROGRAMS ||--o{ PROGRAM_TEACHER : ""
+
+    INTAKES ||--o{ CLASSES : "runs"
+    INTAKES ||--o{ APPLICATIONS : "applied for"
+
+    CLASSES ||--o{ STUDENTS : "enrolls"
+    CLASSES ||--o{ ATTENDANCE_RECORDS : "records"
+    CLASSES ||--o{ ASSESSMENT_SCORES : "scored in"
+
+    APPLICATIONS ||--o| STUDENTS : "approved into (nullable FK)"
+    APPLICATIONS ||--o{ PAYMENTS : "has"
+    APPLICATIONS ||--o{ DOCUMENTS : "has"
+
+    STUDENTS ||--o{ PAYMENTS : "has"
+    STUDENTS ||--o{ DOCUMENTS : "has"
+    STUDENTS ||--o{ ATTENDANCE_RECORDS : "has"
+    STUDENTS ||--o{ ASSESSMENT_SCORES : "has"
+
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        string password_hash
+        enum role "super_admin | registrar | teacher | student"
+        string phone
+        boolean is_active
+        timestamp email_verified_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    STAFF_PROFILES {
+        bigint id PK
+        bigint user_id FK, UK "one-to-one with USERS"
+        string position
+        text bio
+        date hire_date
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PROGRAMS {
+        bigint id PK
+        string name
+        string slug UK
+        text description
+        string category
+        string level
+        enum status "draft | open | closed | archived"
+        decimal tuition_fee "doubles as pricing data"
+        string fee_currency
+        int duration_weeks
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    PROGRAM_TEACHER {
+        bigint program_id PK, FK
+        bigint user_id PK, FK "teacher"
+        timestamp created_at
+    }
+
+    INTAKES {
+        bigint id PK
+        bigint program_id FK
+        string name "e.g. Fall 2026 Cohort"
+        date start_date
+        date end_date
+        enum status "upcoming | open | closed | completed"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    CLASSES {
+        bigint id PK
+        bigint program_id FK
+        bigint intake_id FK
+        bigint teacher_id FK "nullable until assigned, -> USERS"
+        string name "e.g. Section A"
+        int capacity
+        json schedule
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    APPLICATIONS {
+        bigint id PK
+        string reference_number UK "public status-tracker lookup"
+        bigint program_id FK
+        bigint intake_id FK
+        string applicant_name
+        string applicant_email
+        string applicant_phone
+        enum status "draft|submitted|payment_pending|paid|under_review|approved|rejected|enrolled"
+        text rejection_reason "nullable"
+        bigint reviewed_by FK "nullable, -> USERS"
+        timestamp submitted_at "nullable"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    STUDENTS {
+        bigint id PK
+        bigint application_id FK, UK "nullable - see open question below"
+        bigint user_id FK "nullable, for future student portal"
+        bigint class_id FK
+        enum status "applicant|active|completed|suspended|withdrawn|graduated"
+        timestamp enrolled_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+
+    PAYMENTS {
+        bigint id PK
+        bigint application_id FK "nullable"
+        bigint student_id FK "nullable"
+        decimal amount
+        string currency
+        enum status "pending|successful|failed|cancelled|refunded"
+        string gateway_name
+        string gateway_transaction_id UK "idempotency key for webhook"
+        timestamp paid_at "nullable"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ATTENDANCE_RECORDS {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        date date
+        enum status "present|absent|late|excused"
+        bigint marked_by FK "-> USERS"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    ASSESSMENT_SCORES {
+        bigint id PK
+        bigint student_id FK
+        bigint class_id FK
+        enum category "practical|theory|professional"
+        json sub_items "nullable, itemized sub-scores"
+        decimal raw_score
+        decimal weighted_score "nullable, computed from GRADING_CONFIGS"
+        bigint graded_by FK "-> USERS"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    GRADING_CONFIGS {
+        bigint id PK
+        bigint program_id FK "nullable = global default"
+        enum category "practical|theory|professional"
+        decimal weight_percentage
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    DOCUMENTS {
+        bigint id PK
+        bigint application_id FK "nullable"
+        bigint student_id FK "nullable - exactly one of the two set"
+        enum type "id_photo|registration_doc|receipt|certificate|other"
+        string file_path
+        timestamp uploaded_at
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    NOTIFICATIONS {
+        bigint id PK
+        bigint user_id FK
+        string type
+        text message
+        timestamp read_at "nullable"
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    AUDIT_LOGS {
+        bigint id PK
+        bigint actor_id FK "nullable, -> USERS, null = system"
+        string action
+        string target_type
+        bigint target_id
+        json before_snapshot "nullable"
+        json after_snapshot "nullable"
+        timestamp created_at
+    }
+
+    GALLERY_IMAGES {
+        bigint id PK
+        bigint program_id FK "nullable = general gallery"
+        string file_path
+        string category "nullable"
+        int sort_order
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    NEWSLETTER_SUBSCRIBERS {
+        bigint id PK
+        string email UK
+        timestamp subscribed_at
+        timestamp created_at
+        timestamp updated_at
+    }
