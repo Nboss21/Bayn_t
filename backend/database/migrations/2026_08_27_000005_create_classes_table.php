@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->unsignedInteger('capacity');
             $table->json('schedule');
+            $table->timestamps();
             $table->index(['program_id', 'intake_id']);
         });
     }

@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->enum('role', ['super_admin', 'registrar', 'teacher', 'student'])->index();
-            $table->string('phone');
+            $table->string('phone')->nullable();
             $table->boolean('is_active')->index();
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password_hash');
