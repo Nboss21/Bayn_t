@@ -35,4 +35,18 @@ class ApplicationPolicy
     {
         return $user->isSuperAdmin() || $user->isRegistrar();
     }
+
+    public function uploadDocument(User $user, Application $application): bool
+    {
+        if ($user->isSuperAdmin() || $user->isRegistrar()) {
+            return true;
+        }
+
+        return $user->email === $application->applicant_email;
+    }
+
+    public function viewDocument(User $user, Application $application): bool
+    {
+        return $this->view($user, $application);
+    }
 }
