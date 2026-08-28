@@ -10,12 +10,10 @@ return new class extends Migration
     {
         Schema::create('students', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('application_id')->nullable()->unique()->constrained('applications')->nullOnDelete();
-            $table->foreignId('user_id')->nullable()->constrained('users')->nullOnDelete();
-            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
-            $table->enum('status', [
-                'applicant', 'active', 'completed', 'suspended', 'withdrawn', 'graduated'
-            ])->default('active');
+            $table->foreignId('application_id')->nullable()->unique()->constrained()->nullOnDelete();
+            $table->foreignId('user_id')->nullable()->constrained()->nullOnDelete();
+            $table->foreignId('class_id')->constrained('classes')->restrictOnDelete();
+            $table->enum('status', ['applicant', 'active', 'completed', 'suspended', 'withdrawn', 'graduated'])->index();
             $table->timestamp('enrolled_at')->nullable();
             $table->timestamps();
         });

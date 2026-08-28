@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AssessmentCategory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -20,11 +21,15 @@ class AssessmentScore extends Model
         'graded_by',
     ];
 
-    protected $casts = [
-        'sub_items' => 'array',
-        'raw_score' => 'decimal:2',
-        'weighted_score' => 'decimal:2',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'category' => AssessmentCategory::class,
+            'sub_items' => 'array',
+            'raw_score' => 'decimal:2',
+            'weighted_score' => 'decimal:2',
+        ];
+    }
 
     public function student(): BelongsTo
     {
@@ -36,7 +41,7 @@ class AssessmentScore extends Model
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
-    public function grader(): BelongsTo
+    public function gradedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'graded_by');
     }

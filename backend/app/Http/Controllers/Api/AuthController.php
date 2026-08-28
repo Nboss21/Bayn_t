@@ -35,7 +35,7 @@ class AuthController extends Controller
 
         if (! $user->is_active) {
             return response()->json([
-                'message' => 'Your account has been deactivated. Please contact administrator.'
+                'message' => 'Your account has been deactivated. Please contact administrator.',
             ], Response::HTTP_FORBIDDEN);
         }
 

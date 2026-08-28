@@ -25,6 +25,21 @@ class ClassPolicy
         return false;
     }
 
+    public function create(User $user): bool
+    {
+        return $user->isSuperAdmin() || $user->isRegistrar();
+    }
+
+    public function update(User $user, SchoolClass $class): bool
+    {
+        return $user->isSuperAdmin() || $user->isRegistrar();
+    }
+
+    public function delete(User $user, SchoolClass $class): bool
+    {
+        return $user->isSuperAdmin() || $user->isRegistrar();
+    }
+
     public function manageAttendance(User $user, SchoolClass $class): bool
     {
         if ($user->isSuperAdmin()) {

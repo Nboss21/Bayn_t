@@ -11,17 +11,15 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('reference_number')->unique();
-            $table->foreignId('program_id')->constrained('programs')->cascadeOnDelete();
-            $table->foreignId('intake_id')->constrained('intakes')->cascadeOnDelete();
+            $table->foreignId('program_id')->constrained()->restrictOnDelete();
+            $table->foreignId('intake_id')->constrained()->restrictOnDelete();
             $table->string('applicant_name');
             $table->string('applicant_email');
-            $table->string('applicant_phone')->nullable();
-            $table->enum('status', [
-                'draft', 'submitted', 'payment_pending', 'paid', 'under_review', 'approved', 'rejected', 'enrolled'
-            ])->default('draft');
+            $table->string('applicant_phone');
+            $table->enum('status', ['draft', 'submitted', 'payment_pending', 'paid', 'under_review', 'approved', 'rejected', 'enrolled'])->index();
             $table->text('rejection_reason')->nullable();
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();
-            $table->timestamp('submitted_at')->nullable();
+            $table->timestamp('submitted_at')->nullable()->index();
             $table->timestamps();
         });
     }

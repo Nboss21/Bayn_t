@@ -10,14 +10,16 @@ return new class extends Migration
     {
         Schema::create('assessment_scores', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
-            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
-            $table->enum('category', ['practical', 'theory', 'professional']);
+            $table->foreignId('student_id')->constrained()->restrictOnDelete();
+            $table->foreignId('class_id')->constrained('classes')->restrictOnDelete();
+            $table->enum('category', ['practical', 'theory', 'professional'])->index();
             $table->json('sub_items')->nullable();
-            $table->decimal('raw_score', 5, 2);
-            $table->decimal('weighted_score', 5, 2)->nullable();
-            $table->foreignId('graded_by')->constrained('users')->cascadeOnDelete();
+            $table->decimal('raw_score', 8, 2);
+            $table->decimal('weighted_score', 8, 2)->nullable();
+            $table->foreignId('graded_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
+
+            $table->index(['class_id', 'category']);
         });
     }
 

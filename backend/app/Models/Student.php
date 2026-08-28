@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\StudentStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -19,9 +20,13 @@ class Student extends Model
         'enrolled_at',
     ];
 
-    protected $casts = [
-        'enrolled_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'status' => StudentStatus::class,
+            'enrolled_at' => 'datetime',
+        ];
+    }
 
     public function application(): BelongsTo
     {
@@ -36,6 +41,16 @@ class Student extends Model
     public function schoolClass(): BelongsTo
     {
         return $this->belongsTo(SchoolClass::class, 'class_id');
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(Payment::class);
+    }
+
+    public function documents(): HasMany
+    {
+        return $this->hasMany(Document::class);
     }
 
     public function attendanceRecords(): HasMany

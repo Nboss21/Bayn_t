@@ -3,8 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Model;
 
 class StaffProfile extends Model
 {
@@ -17,9 +17,12 @@ class StaffProfile extends Model
         'hire_date',
     ];
 
-    protected $casts = [
-        'hire_date' => 'date',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'hire_date' => 'date',
+        ];
+    }
 
     public function user(): BelongsTo
     {

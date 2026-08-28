@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\AttendanceStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -18,9 +19,13 @@ class AttendanceRecord extends Model
         'marked_by',
     ];
 
-    protected $casts = [
-        'date' => 'date',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'date' => 'date',
+            'status' => AttendanceStatus::class,
+        ];
+    }
 
     public function student(): BelongsTo
     {
@@ -32,7 +37,7 @@ class AttendanceRecord extends Model
         return $this->belongsTo(SchoolClass::class, 'class_id');
     }
 
-    public function marker(): BelongsTo
+    public function markedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'marked_by');
     }

@@ -3,8 +3,6 @@
 namespace Tests\Feature;
 
 use App\Enums\UserRole;
-use App\Models\SchoolClass;
-use App\Models\Student;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Gate;
@@ -23,7 +21,7 @@ class RbacPolicyTest extends TestCase
 
         $token = $admin->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/admin/dashboard');
 
         $response->assertStatus(200)
@@ -39,7 +37,7 @@ class RbacPolicyTest extends TestCase
 
         $token = $teacher->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/admin/dashboard');
 
         $response->assertStatus(403)
@@ -55,7 +53,7 @@ class RbacPolicyTest extends TestCase
 
         $token = $registrar->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/registrar/dashboard');
 
         $response->assertStatus(200)
@@ -71,7 +69,7 @@ class RbacPolicyTest extends TestCase
 
         $token = $student->createToken('test')->plainTextToken;
 
-        $response = $this->withHeader('Authorization', 'Bearer ' . $token)
+        $response = $this->withHeader('Authorization', 'Bearer '.$token)
             ->getJson('/api/registrar/dashboard');
 
         $response->assertStatus(403);

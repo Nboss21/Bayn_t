@@ -10,12 +10,15 @@ return new class extends Migration
     {
         Schema::create('attendance_records', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('student_id')->constrained('students')->cascadeOnDelete();
-            $table->foreignId('class_id')->constrained('classes')->cascadeOnDelete();
+            $table->foreignId('student_id')->constrained()->restrictOnDelete();
+            $table->foreignId('class_id')->constrained('classes')->restrictOnDelete();
             $table->date('date');
-            $table->enum('status', ['present', 'absent', 'late', 'excused']);
-            $table->foreignId('marked_by')->constrained('users')->cascadeOnDelete();
+            $table->enum('status', ['present', 'absent', 'late', 'excused'])->index();
+            $table->foreignId('marked_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
+
+            $table->unique(['student_id', 'class_id', 'date']);
+            $table->index(['class_id', 'date']);
         });
     }
 

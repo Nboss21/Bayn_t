@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enums\ApplicationStatus;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
@@ -25,9 +26,13 @@ class Application extends Model
         'submitted_at',
     ];
 
-    protected $casts = [
-        'submitted_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'status' => ApplicationStatus::class,
+            'submitted_at' => 'datetime',
+        ];
+    }
 
     public function program(): BelongsTo
     {
@@ -39,7 +44,7 @@ class Application extends Model
         return $this->belongsTo(Intake::class);
     }
 
-    public function reviewer(): BelongsTo
+    public function reviewedBy(): BelongsTo
     {
         return $this->belongsTo(User::class, 'reviewed_by');
     }

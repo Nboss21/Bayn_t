@@ -10,11 +10,13 @@ return new class extends Migration
     {
         Schema::create('gallery_images', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->nullable()->constrained('programs')->nullOnDelete();
+            $table->foreignId('program_id')->nullable()->constrained()->nullOnDelete();
             $table->string('file_path');
             $table->string('category')->nullable();
-            $table->integer('sort_order')->default(0);
+            $table->unsignedInteger('sort_order')->default(0);
             $table->timestamps();
+
+            $table->index(['program_id', 'sort_order']);
         });
     }
 

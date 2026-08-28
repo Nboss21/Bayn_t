@@ -14,7 +14,10 @@ class NewsletterSubscriber extends Model
         'subscribed_at',
     ];
 
-    protected $casts = [
-        'subscribed_at' => 'datetime',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'subscribed_at' => 'datetime',
+        ];
+    }
 }

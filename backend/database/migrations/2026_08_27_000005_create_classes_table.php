@@ -10,13 +10,14 @@ return new class extends Migration
     {
         Schema::create('classes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained('programs')->cascadeOnDelete();
-            $table->foreignId('intake_id')->constrained('intakes')->cascadeOnDelete();
+            $table->foreignId('program_id')->constrained()->restrictOnDelete();
+            $table->foreignId('intake_id')->constrained()->restrictOnDelete();
             $table->foreignId('teacher_id')->nullable()->constrained('users')->nullOnDelete();
             $table->string('name');
-            $table->integer('capacity')->default(20);
-            $table->json('schedule')->nullable();
+            $table->unsignedInteger('capacity');
+            $table->json('schedule');
             $table->timestamps();
+            $table->index(['program_id', 'intake_id']);
         });
     }
 

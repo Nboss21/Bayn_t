@@ -10,8 +10,8 @@ return new class extends Migration
     {
         Schema::create('staff_profiles', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('user_id')->unique()->constrained('users')->cascadeOnDelete();
-            $table->string('position')->nullable();
+            $table->foreignId('user_id')->unique()->constrained()->cascadeOnDelete();
+            $table->string('position');
             $table->text('bio')->nullable();
             $table->date('hire_date')->nullable();
             $table->timestamps();

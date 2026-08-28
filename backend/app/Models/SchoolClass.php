@@ -22,9 +22,13 @@ class SchoolClass extends Model
         'schedule',
     ];
 
-    protected $casts = [
-        'schedule' => 'array',
-    ];
+    protected function casts(): array
+    {
+        return [
+            'schedule' => 'array',
+            'capacity' => 'integer',
+        ];
+    }
 
     public function program(): BelongsTo
     {
@@ -44,5 +48,15 @@ class SchoolClass extends Model
     public function students(): HasMany
     {
         return $this->hasMany(Student::class, 'class_id');
+    }
+
+    public function attendanceRecords(): HasMany
+    {
+        return $this->hasMany(AttendanceRecord::class, 'class_id');
+    }
+
+    public function assessmentScores(): HasMany
+    {
+        return $this->hasMany(AssessmentScore::class, 'class_id');
     }
 }

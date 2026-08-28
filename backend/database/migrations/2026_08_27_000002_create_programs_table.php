@@ -13,12 +13,12 @@ return new class extends Migration
             $table->string('name');
             $table->string('slug')->unique();
             $table->text('description')->nullable();
-            $table->string('category')->nullable();
-            $table->string('level')->nullable();
-            $table->enum('status', ['draft', 'open', 'closed', 'archived'])->default('draft');
-            $table->decimal('tuition_fee', 10, 2)->default(0.00);
-            $table->string('fee_currency', 10)->default('USD');
-            $table->integer('duration_weeks')->default(0);
+            $table->string('category');
+            $table->string('level');
+            $table->enum('status', ['draft', 'open', 'closed', 'archived'])->index();
+            $table->decimal('tuition_fee', 12, 2);
+            $table->string('fee_currency');
+            $table->unsignedInteger('duration_weeks');
             $table->timestamps();
         });
     }

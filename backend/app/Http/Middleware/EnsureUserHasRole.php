@@ -11,7 +11,7 @@ class EnsureUserHasRole
     /**
      * Handle an incoming request.
      *
-     * @param  \Closure(\Illuminate\Http\Request): (\Symfony\Component\HttpFoundation\Response)  $next
+     * @param  Closure(Request): (Response)  $next
      */
     public function handle(Request $request, Closure $next, string ...$roles): Response
     {
@@ -19,19 +19,19 @@ class EnsureUserHasRole
 
         if (! $user) {
             return response()->json([
-                'message' => 'Unauthenticated.'
+                'message' => 'Unauthenticated.',
             ], Response::HTTP_UNAUTHORIZED);
         }
 
         if (! $user->is_active) {
             return response()->json([
-                'message' => 'Your account has been deactivated.'
+                'message' => 'Your account has been deactivated.',
             ], Response::HTTP_FORBIDDEN);
         }
 
         if (! empty($roles) && ! $user->hasRole($roles)) {
             return response()->json([
-                'message' => 'Unauthorized. You do not have permission to perform this action.'
+                'message' => 'Unauthorized. You do not have permission to perform this action.',
             ], Response::HTTP_FORBIDDEN);
         }
 

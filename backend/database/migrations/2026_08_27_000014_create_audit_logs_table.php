@@ -17,6 +17,8 @@ return new class extends Migration
             $table->json('before_snapshot')->nullable();
             $table->json('after_snapshot')->nullable();
             $table->timestamp('created_at')->useCurrent();
+
+            $table->index(['target_type', 'target_id']);
         });
     }
 

@@ -10,11 +10,11 @@ return new class extends Migration
     {
         Schema::create('intakes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('program_id')->constrained('programs')->cascadeOnDelete();
+            $table->foreignId('program_id')->constrained()->restrictOnDelete();
             $table->string('name');
             $table->date('start_date')->nullable();
             $table->date('end_date')->nullable();
-            $table->enum('status', ['upcoming', 'open', 'closed', 'completed'])->default('upcoming');
+            $table->enum('status', ['upcoming', 'open', 'closed', 'completed'])->index();
             $table->timestamps();
         });
     }
