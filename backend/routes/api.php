@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClassController;
+use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\UserController;
@@ -20,6 +21,10 @@ use Illuminate\Support\Facades\Route;
 // Public Auth Endpoints
 Route::prefix('auth')->group(function () {
     Route::post('/login', [AuthController::class, 'login']);
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
+    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
+    Route::get('/google/redirect', [AuthController::class, 'googleRedirect']);
+    Route::get('/google/callback', [AuthController::class, 'googleCallback']);
 });
 
 // Protected Auth Endpoints (Requires Sanctum Bearer Token)
@@ -45,6 +50,17 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher'])
 
 Route::middleware(['auth:sanctum', 'role:super_admin'])
     ->apiResource('users', UserController::class);
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])
+    ->prefix('documents')
+    ->group(function () {
+        Route::post('/', [DocumentController::class, 'store']);
+        Route::get('/{document}/temporary-url', [DocumentController::class, 'temporaryUrl']);
+    });
+
+Route::get('/documents/{document}/download', [DocumentController::class, 'download'])
+    ->middleware('signed')
+    ->name('documents.download');
 
 // --------------------------------------------------------------------------
 // Role-Gated Routes
