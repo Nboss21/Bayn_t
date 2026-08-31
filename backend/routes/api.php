@@ -4,6 +4,7 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\ClassController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\IntakeController;
+use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
@@ -32,6 +33,13 @@ Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
     Route::get('/me', [AuthController::class, 'me']);
     Route::post('/refresh', [AuthController::class, 'refresh']);
+});
+
+Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
+    Route::get('/', [NotificationController::class, 'index']);
+    Route::get('/unread', [NotificationController::class, 'unread']);
+    Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
+    Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
 });
 
 // --------------------------------------------------------------------------
