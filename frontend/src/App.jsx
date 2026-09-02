@@ -7,6 +7,7 @@ import Programs from './pages/Programs';
 import EventsPage from './pages/EventsPage';
 import FAQPage from './pages/FAQPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
+import Contact from './pages/Contact';
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="events" element={<EventsPage />} />
           <Route path="faq" element={<FAQPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="contact" element={<Contact />} />
         </Route>
       </Routes>
     </BrowserRouter>

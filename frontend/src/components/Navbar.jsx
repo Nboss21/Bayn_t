@@ -15,6 +15,7 @@ const Navbar = () => {
           <li><a href="#" className="hover:text-white transition capitalize">teachers</a></li>
           <li><a href="#" className="hover:text-white transition capitalize">gallery</a></li>
           <li><Link to="/events" className="hover:text-white transition capitalize">events</Link></li>
+          <li><Link to="/contact" className="hover:text-white transition capitalize">contact</Link></li>
         </ul>
         <button className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase">
           Apply Now
