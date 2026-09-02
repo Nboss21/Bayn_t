@@ -47,7 +47,7 @@ const Footer = () => {
             <li><a href="#" className="hover:text-white transition">Apply Now</a></li>
             <li><Link to="/faq" className="hover:text-white transition">FAQ</Link></li>
             <li><a href="#" className="hover:text-white transition">Contact</a></li>
-            <li><a href="#" className="hover:text-white transition">Privacy Policy</a></li>
+            <li><Link to="/privacy-policy" className="hover:text-white transition">Privacy Policy</Link></li>
             <li><a href="#" className="hover:text-white transition">Terms of Service</a></li>
           </ul>
         </div>
@@ -93,7 +93,7 @@ const Footer = () => {
         <div className="max-w-7xl mx-auto w-[90%] py-6 flex flex-col md:flex-row justify-between items-center text-[13px] text-white/70">
           <p>&copy; 2026 The Academy. All rights reserved.</p>
           <div className="flex space-x-6 mt-4 md:mt-0">
-            <a href="#" className="underline underline-offset-2 hover:text-white transition">Privacy Policy</a>
+            <Link to="/privacy-policy" className="underline underline-offset-2 hover:text-white transition">Privacy Policy</Link>
             <a href="#" className="underline underline-offset-2 hover:text-white transition">Terms of Service</a>
           </div>
         </div>
