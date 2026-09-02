@@ -36,8 +36,6 @@ const Navbar = () => {
           <li><Link to="/contact" className="hover:text-white transition capitalize">contact</Link></li>
         </ul>
 
-        <button className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-bold uppercase shadow-sm">
-        
         <Link to="/application" className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase hover:bg-[#d6ac4f] transition-colors">
           Apply Now
         </Link>
