@@ -11,7 +11,7 @@ const Navbar = () => {
         </Link>
         <ul className="flex space-x-6 text-xs font-medium text-white/70">
           <li><Link to="/about" className="hover:text-white transition capitalize">about</Link></li>
-          <li><a href="#" className="hover:text-white transition capitalize">programs</a></li>
+          <li><Link to="/programs" className="hover:text-white transition capitalize">programs</Link></li>
           <li><a href="#" className="hover:text-white transition capitalize">teachers</a></li>
           <li><a href="#" className="hover:text-white transition capitalize">gallery</a></li>
           <li><a href="#" className="hover:text-white transition capitalize">events</a></li>
