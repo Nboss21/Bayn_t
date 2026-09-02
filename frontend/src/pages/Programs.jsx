@@ -1,12 +1,16 @@
 import React from 'react';
 import ProgramsSection from '../components/programs/ProgramsSection';
-import PassionCTA from '../components/programs/PassionCTA';
+import MiniProgramCards from '../components/programs/MiniProgramCards';
+import ComparePrograms from '../components/programs/ComparePrograms';
+import EnrollmentCTA from '../components/programs/EnrollmentCTA';
 
 const Programs = () => {
   return (
     <div className="w-full bg-white pt-24 pb-4">
       <ProgramsSection />
-      <PassionCTA />
+      <MiniProgramCards />
+      <ComparePrograms />
+      <EnrollmentCTA />
     </div>
   );
 };

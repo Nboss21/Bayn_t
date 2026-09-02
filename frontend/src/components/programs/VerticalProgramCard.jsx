@@ -7,15 +7,23 @@ const VerticalProgramCard = ({
   title = 'Bridal Mastery',
   description = 'Specialize in the lucrative bridal industry. Learn to create long-lasting, timeless looks that honor Ethiopian traditions while incorporating modern global trends.',
   link = '#',
+  image,
   className = '',
   maxDescWidth = 'max-w-none',
 }) => {
   return (
     <div
-      className={`bg-[#f5f4ef] rounded-[2px] shadow-[0_2px_16px_rgba(0,0,0,0.03)] p-6 sm:p-8 lg:p-10 flex flex-col justify-end transition-all ${className}`}
+      className={`bg-[#f5f4ef] overflow-hidden rounded-[2px] shadow-[0_2px_16px_rgba(0,0,0,0.03)] flex flex-col justify-end transition-all ${className}`}
     >
+      {/* Image at the top */}
+      {image && (
+        <div className="w-full flex-grow relative min-h-[160px] sm:min-h-[200px]">
+          <img src={image} alt={title} className="absolute inset-0 w-full h-full object-cover" />
+        </div>
+      )}
+
       {/* Content Block at bottom */}
-      <div className="flex flex-col">
+      <div className="flex flex-col p-6 sm:p-8 lg:p-10 z-10 bg-[#f5f4ef]">
         {/* Metadata */}
         <div className="text-[#a67c4e] text-[10.5px] sm:text-[11px] font-medium tracking-[0.18em] uppercase mb-3">
           {duration} <span className="mx-1">•</span> {level}

@@ -40,6 +40,15 @@ const Teachers = () => {
           </div>
         </div>
       </div>
+
+      <div className="w-full max-w-[1300px] bg-[#b18968] flex flex-col items-center justify-center py-20 px-4 md:px-12 mt-12 rounded-[40px] mb-8">
+        <h2 className="font-serif text-3xl md:text-[40px] text-white mb-8 text-center leading-tight">
+          Ready To Learn From<br />Professionals?
+        </h2>
+        <button className="bg-[#dfdb5a] text-[#1c1c1c] font-sans font-bold text-xs uppercase tracking-wider py-4 px-10 rounded-full hover:bg-[#c9c54e] transition-colors">
+          APPLY NOW
+        </button>
+      </div>
     </div>
   );
 };
