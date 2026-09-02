@@ -20,28 +20,30 @@ const Navbar = () => {
 
   return (
     <div ref={navRef} className="absolute top-6 left-0 right-0 flex justify-center z-50">
-      <nav className="flex justify-between items-center py-3 px-6 bg-[#2a2723]/80 backdrop-blur-sm border border-white/10 rounded-full w-[90%] max-w-4xl text-white">
+      <nav className="flex justify-between items-center py-3 px-6 bg-gradient-to-br from-[#8a5f3f]/80 to-[#7a5236]/80 backdrop-blur-md border border-white/20 rounded-full w-[90%] max-w-4xl text-white shadow-md">
         <Link to="/" className="flex flex-col items-start justify-center leading-none">
           <span className="text-xl font-serif tracking-wide">Lumière</span>
-          <span className="text-[8px] uppercase tracking-[0.15em] text-white/70 mt-0.5">MAKEUP ACADEMY</span>
+          <span className="text-[8px] uppercase tracking-[0.15em] text-white/90 mt-0.5">MAKEUP ACADEMY</span>
         </Link>
-        
+
         {/* Desktop Menu */}
-        <ul className="hidden md:flex space-x-6 text-xs font-medium text-white/70">
+        <ul className="hidden md:flex space-x-6 text-xs font-medium text-white/90">
           <li><Link to="/about" className="hover:text-white transition capitalize">about</Link></li>
           <li><Link to="/programs" className="hover:text-white transition capitalize">programs</Link></li>
           <li><Link to="/teachers" className="hover:text-white transition capitalize">teachers</Link></li>
-          <li><a href="#" className="hover:text-white transition capitalize">gallery</a></li>
+          <li><Link to="/gallery" className="hover:text-white transition capitalize">gallery</Link></li>
           <li><Link to="/events" className="hover:text-white transition capitalize">events</Link></li>
           <li><Link to="/contact" className="hover:text-white transition capitalize">contact</Link></li>
         </ul>
+
+        <button className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-bold uppercase shadow-sm">
         
         <Link to="/application" className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase hover:bg-[#d6ac4f] transition-colors">
           Apply Now
         </Link>
 
         {/* Mobile Hamburger Button */}
-        <button 
+        <button
           className="md:hidden text-white/70 hover:text-white focus:outline-none"
           onClick={() => setIsOpen(!isOpen)}
           aria-label="Toggle Menu"
@@ -61,8 +63,8 @@ const Navbar = () => {
         <div className="absolute top-20 left-0 right-0 mx-auto w-[90%] bg-[#2a2723] border border-white/10 rounded-2xl p-4 flex flex-col space-y-4 shadow-xl md:hidden z-40">
           <Link to="/about" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>about</Link>
           <Link to="/programs" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>programs</Link>
-          <a href="#" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>teachers</a>
-          <a href="#" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>gallery</a>
+          <Link to="/teachers" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>teachers</Link>
+          <Link to="/gallery" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>gallery</Link>
           <Link to="/events" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>events</Link>
           <Link to="/contact" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>contact</Link>
           <Link to="/application" className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase w-full text-center hover:bg-[#d6ac4f] transition-colors inline-block" onClick={() => setIsOpen(false)}>

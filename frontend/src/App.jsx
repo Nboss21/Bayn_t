@@ -10,6 +10,7 @@ import Teachers from './pages/Teachers';
 import FAQPage from './pages/FAQPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
 import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';
 import Application from './pages/Application';
 
 import ProgramSelection from './pages/ProgramSelection';
@@ -31,6 +32,7 @@ function App() {
           <Route path="programs" element={<Programs />} />
           <Route path="events" element={<EventsPage />} />
           <Route path="teachers" element={<Teachers />} />
+          <Route path="gallery" element={<Gallery />} />
           <Route path="faq" element={<FAQPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
           <Route path="contact" element={<Contact />} />
