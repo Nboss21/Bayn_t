@@ -6,6 +6,7 @@ use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProgramController;
+use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -89,11 +90,21 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])
     ->prefix('registrar')
     ->group(function () {
-        Route::get('/dashboard', function () {
-            return response()->json([
-                'message' => 'Welcome Registrar',
-            ]);
-        });
+        Route::get('/dashboard', [RegistrarController::class, 'dashboard']);
+        Route::get('/applications', [RegistrarController::class, 'applications']);
+        Route::get('/applications/{application}', [RegistrarController::class, 'showApplication']);
+        Route::patch('/applications/{application}', [RegistrarController::class, 'review']);
+        Route::get('/applications/{application}/documents', [RegistrarController::class, 'documents']);
+        Route::post('/applications/{application}/enroll', [RegistrarController::class, 'enroll']);
+        Route::get('/documents/{document}/temporary-url', [RegistrarController::class, 'documentUrl']);
+        Route::get('/payments', [RegistrarController::class, 'payments']);
+        Route::get('/payments/{payment}', [RegistrarController::class, 'showPayment']);
+        Route::post('/payments/{payment}/verify', [RegistrarController::class, 'verifyPayment']);
+        Route::get('/students', [RegistrarController::class, 'students']);
+        Route::get('/students/{student}', [RegistrarController::class, 'showStudent']);
+        Route::patch('/students/{student}/status', [RegistrarController::class, 'updateStudentStatus']);
+        Route::get('/classes', [RegistrarController::class, 'classes']);
+        Route::get('/search', [RegistrarController::class, 'search']);
     });
 
 // Super Admin + Teacher
