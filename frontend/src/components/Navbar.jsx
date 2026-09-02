@@ -36,9 +36,9 @@ const Navbar = () => {
           <li><Link to="/contact" className="hover:text-white transition capitalize">contact</Link></li>
         </ul>
         
-        <button className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase">
+        <Link to="/application" className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase hover:bg-[#d6ac4f] transition-colors">
           Apply Now
-        </button>
+        </Link>
 
         {/* Mobile Hamburger Button */}
         <button 
@@ -65,9 +65,9 @@ const Navbar = () => {
           <a href="#" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>gallery</a>
           <Link to="/events" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>events</Link>
           <Link to="/contact" className="text-white/70 hover:text-white transition capitalize text-center" onClick={() => setIsOpen(false)}>contact</Link>
-          <button className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase w-full">
+          <Link to="/application" className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase w-full text-center hover:bg-[#d6ac4f] transition-colors inline-block" onClick={() => setIsOpen(false)}>
             Apply Now
-          </button>
+          </Link>
         </div>
       )}
     </div>
