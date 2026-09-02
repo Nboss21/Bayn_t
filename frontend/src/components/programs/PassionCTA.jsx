@@ -13,7 +13,7 @@ const PassionCTA = () => {
         <div className="w-full">
           <a
             href="#explore"
-            className="w-full block bg-[#dfb94d] hover:bg-[#d4ad36] text-[#1a1a1a] font-bold text-[12px] sm:text-[13px] tracking-[0.16em] uppercase py-3.5 sm:py-4 px-6 text-center transition-colors shadow-xs"
+            className="w-full block bg-[#dfb94d] hover:bg-[#d4ad36] text-[#1a1a1a] font-bold text-[12px] sm:text-[13px] tracking-[0.16em] uppercase py-3.5 sm:py-5 px-6 text-center transition-colors shadow-xs"
           >
             Explore Programs
           </a>
