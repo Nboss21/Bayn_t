@@ -5,9 +5,9 @@ import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
 import EventsPage from './pages/EventsPage';
+import Teachers from './pages/Teachers';
 import FAQPage from './pages/FAQPage';
 import PrivacyPolicy from './pages/PrivacyPolicy';
-
 function App() {
   return (
     <BrowserRouter>
@@ -17,6 +17,7 @@ function App() {
           <Route path="about" element={<About />} />
           <Route path="programs" element={<Programs />} />
           <Route path="events" element={<EventsPage />} />
+          <Route path="teachers" element={<Teachers />} />
           <Route path="faq" element={<FAQPage />} />
           <Route path="privacy-policy" element={<PrivacyPolicy />} />
         </Route>
