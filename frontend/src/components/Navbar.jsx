@@ -3,7 +3,9 @@ import { Link, useLocation } from 'react-router-dom';
 
 const Navbar = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [scrolled, setScrolled] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const [atTop, setAtTop] = useState(true);
+  const lastScrollY = useRef(0);
   const navRef = useRef(null);
   const location = useLocation();
 
@@ -18,7 +20,25 @@ const Navbar = () => {
   }, []);
 
   useEffect(() => {
-    const handleScroll = () => setScrolled(window.scrollY > 60);
+    const handleScroll = () => {
+      const currentY = window.scrollY;
+      const isAtTop = currentY < 10;
+
+      setAtTop(isAtTop);
+
+      if (isAtTop) {
+        setVisible(true);
+      } else if (currentY > lastScrollY.current) {
+        // scrolling down — hide
+        setVisible(false);
+      } else {
+        // scrolling up — show
+        setVisible(true);
+      }
+
+      lastScrollY.current = currentY;
+    };
+
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -39,17 +59,19 @@ const Navbar = () => {
   return (
     <div
       ref={navRef}
-      className={`z-50 flex justify-center transition-all duration-500 ease-in-out
-        ${scrolled
-          ? 'fixed top-0 left-0 right-0 pt-3 pb-2'
-          : 'absolute top-6 left-0 right-0'
-        }`}
+      className={`z-50 flex justify-center transition-all duration-300 ease-in-out
+        ${atTop
+          ? 'absolute top-6 left-0 right-0'
+          : 'fixed top-0 left-0 right-0 pt-3 pb-2'
+        }
+        ${!atTop && !visible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}
+      `}
     >
       <nav
-        className={`flex justify-between items-center px-6 rounded-full w-[90%] max-w-4xl text-white border border-white/20 backdrop-blur-md transition-all duration-500 ease-in-out
-          ${scrolled
-            ? 'py-2.5 bg-gradient-to-br from-[#7a5236]/95 to-[#6b4830]/95 shadow-2xl shadow-black/30'
-            : 'py-3 bg-gradient-to-br from-[#8a5f3f]/80 to-[#7a5236]/80 shadow-md'
+        className={`flex justify-between items-center px-6 rounded-full w-[90%] max-w-4xl text-white border border-white/20 backdrop-blur-md transition-all duration-300 ease-in-out
+          ${atTop
+            ? 'py-3 bg-gradient-to-br from-[#8a5f3f]/80 to-[#7a5236]/80 shadow-md'
+            : 'py-2.5 bg-gradient-to-br from-[#7a5236]/95 to-[#6b4830]/95 shadow-2xl shadow-black/30'
           }`}
       >
         <Link to="/" className="flex flex-col items-start justify-center leading-none">
