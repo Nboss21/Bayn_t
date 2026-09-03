@@ -1,4 +1,5 @@
 import React from 'react';
+import { pathData } from '../../data/home/pathData';
 
 const ComparePrograms = () => {
   return (
@@ -21,11 +22,11 @@ const ComparePrograms = () => {
               </tr>
             </thead>
             <tbody>
-              {[1, 2, 3, 4].map((num) => (
-                <tr key={num} className="border-b border-[#e5e5e5] last:border-none">
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#1c1c1c]">[Insert Program Name {num}]</td>
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">[Insert Duration]</td>
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">[Insert Level]</td>
+              {pathData.programs.map((program) => (
+                <tr key={program.id} className="border-b border-[#e5e5e5] last:border-none">
+                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#1c1c1c]">{program.title}</td>
+                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">{program.duration}</td>
+                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">{program.level}</td>
                   <td className="py-4 px-6 text-right">
                     <a href="#" className="text-[#a87b52] text-[11px] font-semibold tracking-wider hover:text-[#8a5f3f] transition-colors underline underline-offset-4">
                       View Details

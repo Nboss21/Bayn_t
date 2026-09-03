@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const EnrollmentCTA = () => {
   return (
@@ -8,9 +9,9 @@ const EnrollmentCTA = () => {
           Enrollment Now Open
         </h2>
         
-        <button className="bg-[#eec15b] hover:bg-[#d8ae52] text-[#1c1c1c] px-8 py-3.5 rounded-full text-[11px] sm:text-[12px] font-bold uppercase tracking-wider transition-colors shadow-sm">
+        <Link to="/application" className="bg-[#eec15b] hover:bg-[#d8ae52] text-[#1c1c1c] px-8 py-3.5 rounded-full text-[11px] sm:text-[12px] font-bold uppercase tracking-wider transition-colors shadow-sm inline-block">
           Apply Now
-        </button>
+        </Link>
       </div>
     </section>
   );

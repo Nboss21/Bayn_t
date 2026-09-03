@@ -50,7 +50,7 @@ const PathSection = () => {
 
           {/* Right Column (List of Programs) */}
           <div className="md:w-1/2 flex flex-col space-y-8">
-            {programs.map((program) => (
+            {programs.slice(0, 3).map((program) => (
               <div key={program.id} className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
                 <img src={program.image} alt={program.imageAlt} className="w-40 h-40 sm:w-48 sm:h-48 object-cover rounded-2xl shadow-md shrink-0" />
                 <div className="flex flex-col justify-center h-full py-2">
