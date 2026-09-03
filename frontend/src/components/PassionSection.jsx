@@ -1,8 +1,10 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import passionImage from '../assets/womans/woman 1.png';
+import { passionData } from '../data/home/passionData';
 
 const PassionSection = () => {
+  const { image, heading, description, cta } = passionData;
+
   return (
     <section className="py-28 px-10 bg-white">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center w-[95%]">
@@ -10,8 +12,8 @@ const PassionSection = () => {
         {/* Left Column - Image */}
         <div className="md:w-1/2 w-full h-[400px] rounded-lg mb-10 md:mb-0 overflow-hidden">
           <img 
-            src={passionImage} 
-            alt="Professional makeup" 
+            src={image.src} 
+            alt={image.alt} 
             className="w-full h-full object-cover"
           />
         </div>
@@ -24,13 +26,13 @@ const PassionSection = () => {
             </svg>
           </div>
           <h2 className="text-[52px] md:text-[62px] font-serif mb-6 text-[#1c1c1c] leading-[1.1] tracking-tight">
-            Where passion<br/>becomes profession
+            {heading}
           </h2>
           <p className="text-[#1c1c1c]/80 mb-8 max-w-[400px] text-[15px] leading-relaxed">
-            Professional makeup training built to develop skills, confidence, and career readiness.
+            {description}
           </p>
-          <Link to="/about" className="text-[#ad7e59] text-[13px] font-bold flex items-center space-x-2 hover:opacity-80 transition group">
-            <span>Learn More About Us</span>
+          <Link to={cta.to} className="text-[#ad7e59] text-[13px] font-bold flex items-center space-x-2 hover:opacity-80 transition group">
+            <span>{cta.label}</span>
             <svg className="w-3 h-3 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
@@ -42,4 +44,3 @@ const PassionSection = () => {
 };
 
 export default PassionSection;
-
