@@ -1,29 +1,168 @@
 import React from 'react';
+import { ourStoryData } from '../../data/about/ourStoryData';
+
+// SVG icons for the value cards
+const icons = {
+  star: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4">
+      <polygon points="12,2 15.09,8.26 22,9.27 17,14.14 18.18,21.02 12,17.77 5.82,21.02 7,14.14 2,9.27 8.91,8.26" />
+    </svg>
+  ),
+  community: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4">
+      <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+      <circle cx="9" cy="7" r="4" />
+      <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+      <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+    </svg>
+  ),
+  industry: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4">
+      <circle cx="12" cy="8" r="4" />
+      <path d="M6 20v-2a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2" />
+      <path d="M18 8h1a2 2 0 0 1 0 4h-1" />
+    </svg>
+  ),
+  heart: (
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="w-4 h-4">
+      <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z" />
+    </svg>
+  ),
+};
 
 const OurStory = () => {
+  const { heading, paragraphs, image, values, mission } = ourStoryData;
+
   return (
-    <section className="bg-white py-24 px-6">
-      <div className="max-w-5xl mx-auto w-[90%] flex flex-col md:flex-row items-start gap-16">
-        {/* Left — text */}
-        <div className="flex-1">
-          <h2 className="text-3xl md:text-4xl font-serif text-[#1f1d1b] mb-8 leading-tight">
-            Our Story
-          </h2>
-          <p className="text-[#5a5550] text-sm leading-[1.85] mb-5">
-            Founded in the heart of Addis Ababa, Ethiopian Beauty Academy began with a singular mission: to bridge the gap
-            between traditional Ethiopian beauty rituals and modern global professional makeup standards.
-          </p>
-          <p className="text-[#5a5550] text-sm leading-[1.85]">
-            We recognised the immense raw talent within our community and established an institution that provides
-            industry techniques, business knowledge, and a deep understanding of artistry, business, and cultural pride.
-            Today, our graduates lead the industry across local, national, and international spheres.
-          </p>
+    <>
+      {/* ── Story hero band ── */}
+      <section
+        className="relative overflow-hidden"
+        style={{ backgroundColor: '#c4956a', minHeight: '520px' }}
+      >
+        {/* Woman photo — right-aligned, bleeds off top, fades out at the bottom */}
+        <div
+          className="absolute hidden md:block pointer-events-none"
+          style={{ 
+            right: 0, 
+            top: '-6%', 
+            width: '46%', 
+            height: '115%',
+            WebkitMaskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)',
+            maskImage: 'linear-gradient(to bottom, black 65%, transparent 100%)'
+          }}
+        >
+          <img
+            src={image.src}
+            alt={image.alt}
+            className="w-full h-full object-cover"
+            style={{ objectPosition: 'top center' }}
+          />
         </div>
 
-        {/* Right — image placeholder */}
-        <div className="flex-shrink-0 w-full md:w-[42%] aspect-[4/5] bg-[#e8e4df] rounded-sm" />
-      </div>
-    </section>
+        {/* Content area */}
+        <div className="relative z-10 max-w-6xl mx-auto px-8 py-16 md:py-24 flex flex-col justify-center"
+          style={{ minHeight: '520px' }}>
+
+          {/* Decorative line — sits above the card */}
+          <div
+            className="hidden md:block mb-3"
+            style={{ width: '48%' }}
+          >
+            <div style={{ width: '48px', height: '1.5px', backgroundColor: 'rgba(255,255,255,0.55)' }} />
+          </div>
+
+          {/* Card */}
+          <div
+            className="w-full md:w-[46%] rounded-2xl px-8 py-9"
+            style={{
+              backgroundColor: 'rgba(255,255,255,0.18)',
+              backdropFilter: 'blur(4px)',
+            }}
+          >
+            <h2
+              className="font-serif text-white mb-6"
+              style={{ fontSize: '2.75rem', lineHeight: 1.1, fontStyle: 'italic', fontWeight: 700 }}
+            >
+              {heading}
+            </h2>
+
+            <div className="space-y-4">
+              {paragraphs.map((text, i) => (
+                <p key={i} style={{ color: 'rgba(255,255,255,0.88)', fontSize: '0.82rem', lineHeight: 1.75 }}>
+                  {text}
+                </p>
+              ))}
+            </div>
+          </div>
+
+          {/* Extra space below card — matches the reference breathing room */}
+          <div className="h-12" />
+        </div>
+      </section>
+
+      {/* ── Value cards ── */}
+      <section className="px-6 py-14" style={{ backgroundColor: '#c4956a' }}>
+        <div
+          className="max-w-6xl mx-auto grid gap-5"
+          style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
+        >
+          {values.map((item) => (
+            <div
+              key={item.id}
+              className="rounded-2xl p-5 flex flex-col gap-3"
+              style={{ backgroundColor: '#f5ede0', boxShadow: '0 2px 24px rgba(0,0,0,0.09)' }}
+            >
+              {/* Icon badge */}
+              <div
+                className="flex items-center justify-center rounded-lg"
+                style={{
+                  width: '36px',
+                  height: '36px',
+                  backgroundColor: '#f5ede0',
+                  color: '#c4956a',
+                }}
+              >
+                {icons[item.icon]}
+              </div>
+              <h3 style={{ color: '#1f1d1b', fontSize: '0.82rem', fontWeight: 600 }}>{item.title}</h3>
+              <p style={{ color: '#7a6f67', fontSize: '0.72rem', lineHeight: 1.7 }}>{item.description}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+
+      {/* ── Mission band ── */}
+      <section
+        className="text-center px-6 py-24"
+        style={{ backgroundColor: '#8b6340' }}
+      >
+        <p
+          className="flex items-center justify-center gap-2 mb-10"
+          style={{
+            color: '#d4a96a',
+            fontSize: '0.65rem',
+            fontWeight: 700,
+            letterSpacing: '0.2em',
+            textTransform: 'uppercase',
+          }}
+        >
+          <span style={{ fontSize: '0.75rem' }}>✦</span>
+          {mission.label}
+        </p>
+        <blockquote
+          className="font-serif mx-auto"
+          style={{
+            color: '#ffffff',
+            fontSize: '1.6rem',
+            lineHeight: 1.45,
+            maxWidth: '520px',
+          }}
+        >
+          {mission.quote}
+        </blockquote>
+      </section>
+    </>
   );
 };
 
