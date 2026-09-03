@@ -1,6 +1,6 @@
 import img1 from "../../assets/image/image 1.jpg";
 import img2 from "../../assets/image/image 2.jpg";
-import img3 from "../../assets/image/image3.jpg";
+import img3 from "../../assets/image/image 3.jpg";
 
 export const events = [
   {

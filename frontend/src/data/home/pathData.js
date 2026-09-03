@@ -1,6 +1,6 @@
 import image1 from "../../assets/image/image 1.jpg";
 import image2 from "../../assets/image/image 2.jpg";
-import image3 from "../../assets/image/image3.jpg";
+import image3 from "../../assets/image/image 3.jpg";
 import image4 from "../../assets/image/image 4.jpg";
 
 export const pathData = {
