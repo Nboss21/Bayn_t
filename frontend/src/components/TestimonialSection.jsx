@@ -1,17 +1,5 @@
 import React, { useState } from 'react';
-
-const testimonials = [
-  {
-    quote: "I walked in afraid to hold a brush. I walked out with a certificate and a bridal client waiting for me.",
-    author: "Selam Tesfaye",
-    role: "Professional Makeup Artistry graduate"
-  },
-  {
-    quote: "The best learning experience I've ever had. The instructors are extremely supportive.",
-    author: "Sara Bekele",
-    role: "Beauty and Skincare fundamentals graduate"
-  }
-];
+import { testimonials } from '../data/home/testimonialsData';
 
 const TestimonialSection = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
