@@ -3,8 +3,8 @@ import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 
 const paymentMethods = [
-  { id: 'primary', label: '[ Payment method configured by the academy ]' },
-  { id: 'alternative', label: '[ Alternative payment method ]' }
+  { id: 'primary', label: 'Telebirr' },
+  { id: 'alternative', label: 'Bank Transfer (CBE)' }
 ];
 
 const PaymentStep = () => {
@@ -75,7 +75,7 @@ const PaymentStep = () => {
               onClick={() => navigate('/application/confirmation')}
               className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition"
             >
-              Pay [Actual Amount]
+              Pay 15,000 ETB
             </button>
             <button
               onClick={() => navigate('/application/review')}
@@ -96,11 +96,11 @@ const PaymentStep = () => {
             <div className="space-y-4 mb-6">
               <div className="flex justify-between items-start">
                 <p className="text-[12px] text-gray-500 leading-relaxed">Selected Program:</p>
-                <p className="text-[12px] text-[#111111] text-right ml-4">[Selected Program Name]</p>
+                <p className="text-[12px] text-[#111111] text-right ml-4">Professional Makeup Artistry</p>
               </div>
               <div className="flex justify-between items-start">
                 <p className="text-[12px] text-gray-500">Application ID:</p>
-                <p className="text-[12px] text-[#111111] text-right ml-4">[Application ID]</p>
+                <p className="text-[12px] text-[#111111] text-right ml-4">EBA-2024-00847</p>
               </div>
             </div>
 
@@ -113,7 +113,7 @@ const PaymentStep = () => {
                 </p>
               </div>
               <p className="text-[36px] font-serif text-[#111111] leading-none text-right" style={{ fontFamily: 'Georgia, serif' }}>
-                [Actual<br />Amount]
+                15,000<br />ETB
               </p>
             </div>
           </div>

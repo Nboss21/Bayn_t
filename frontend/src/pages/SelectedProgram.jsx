@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
+import woman1 from '../assets/womans2/woman 1.jpg';
 
 const SelectedProgram = () => {
   const navigate = useNavigate();
@@ -22,7 +23,7 @@ const SelectedProgram = () => {
         {/* Left Side: Image */}
         <div className="w-full md:w-1/2 h-[300px] md:h-[450px]">
           <img 
-            src="https://images.unsplash.com/photo-1512413914421-26c361994fb0?auto=format&fit=crop&q=80&w=600" 
+            src={woman1} 
             alt="Professional Bridal Artistry" 
             className="w-full h-full object-cover"
           />

@@ -17,7 +17,7 @@ const SidebarSummary = () => {
 
       <div className="h-[1px] w-full bg-gray-200 mb-6"></div>
 
-      <div className="space-y-6 mb-8">
+      <div className="space-y-6">
         <div className="flex items-start">
           <svg className="w-4 h-4 text-gray-400 mr-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -38,13 +38,6 @@ const SidebarSummary = () => {
             <p className="text-[13px] text-[#111111]">Paris Campus</p>
           </div>
         </div>
-      </div>
-
-      {/* Placeholder for the image in sidebar */}
-      <div className="w-full h-[120px] rounded bg-gray-200 overflow-hidden relative" style={{
-        backgroundImage: 'url("data:image/svg+xml,%3Csvg width=\'20\' height=\'20\' xmlns=\'http://www.w3.org/2000/svg\'%3E%3Cpath d=\'M0 0h10v10H0zm10 10h10v10H10z\' fill=\'%23e5e7eb\' fill-rule=\'evenodd\'/%3E%3C/svg%3E")',
-        backgroundSize: '20px 20px'
-      }}>
       </div>
     </div>
   );

@@ -46,7 +46,7 @@ const ApplicationConfirmation = () => {
           Your application is in.
         </h1>
         <p className="text-[14px] text-gray-500 mb-12 leading-relaxed">
-          Thank you for applying to [Insert company name]. We've<br />received your application.
+          Thank you for applying to Ethio Beauty Academy. We've<br />received your application.
         </p>
 
         {/* Status Cards */}

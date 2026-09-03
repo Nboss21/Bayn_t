@@ -1,37 +1,12 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import ProgramCard from '../components/application/ProgramCard';
-
-const programs = [
-  {
-    id: 1,
-    title: 'Professional Makeup Artistry',
-    description: 'Master the fundamentals of professional makeup application for salon and commercial work.',
-    duration: '6 MONTHS',
-    level: 'BEGINNER TO INTERMEDIATE',
-    image: 'https://images.unsplash.com/photo-1596704017254-9b121068fb31?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: 2,
-    title: 'Bridal Makeup Artistry',
-    description: 'Specialize in the art of traditional and modern Ethiopian bridal beauty.',
-    duration: '3 MONTHS',
-    level: 'ADVANCED',
-    image: 'https://images.unsplash.com/photo-1512413914421-26c361994fb0?auto=format&fit=crop&q=80&w=300'
-  },
-  {
-    id: 3,
-    title: 'Beauty & Editorial Makeup',
-    description: 'Push creative boundaries for high-fashion, editorial, and runway artistry.',
-    duration: '4 MONTHS',
-    level: 'ADVANCED',
-    image: 'https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?auto=format&fit=crop&q=80&w=300'
-  }
-];
+import { pathData } from '../data/home/pathData';
 
 const ProgramSelection = () => {
-  const [selectedId, setSelectedId] = useState(1);
+  const [selectedId, setSelectedId] = useState(null);
   const navigate = useNavigate();
+  const { programs } = pathData;
 
   return (
     <div className="w-full max-w-[800px] mx-auto px-4 py-8 flex flex-col items-center">

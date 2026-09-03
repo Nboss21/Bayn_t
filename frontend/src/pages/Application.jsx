@@ -1,5 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
+import image1 from '../assets/image/image 1.jpg';
 
 const Application = () => {
   const navigate = useNavigate();
@@ -10,7 +11,7 @@ const Application = () => {
         {/* Left Side: Image */}
         <div className="w-full md:w-1/2 relative">
           <img 
-            src="https://images.unsplash.com/photo-1614761066046-608bba33ccf1?auto=format&fit=crop&q=80&w=1000" 
+            src={image1} 
             alt="Application portrait" 
             className="w-full h-full object-cover"
           />

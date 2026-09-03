@@ -37,19 +37,19 @@ const ReviewStep = () => {
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 FULL NAME
               </p>
-              <p className="text-[14px] text-[#111111]">[Insert Name]</p>
+              <p className="text-[14px] text-[#111111]">Hana Tesfaye</p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 DATE OF BIRTH
               </p>
-              <p className="text-[14px] text-[#111111]">[Insert Birth]</p>
+              <p className="text-[14px] text-[#111111]">March 12, 1998</p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 LOCATION
               </p>
-              <p className="text-[14px] text-[#111111]">[Insert Location]</p>
+              <p className="text-[14px] text-[#111111]">Addis Ababa, Bole</p>
             </div>
           </div>
         </div>
@@ -63,20 +63,20 @@ const ReviewStep = () => {
             <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
               SELECTED PROGRAM
             </p>
-            <p className="text-[14px] text-[#111111]">[Insert Title]</p>
+            <p className="text-[14px] text-[#111111]">Professional Makeup Artistry</p>
           </div>
           <div className="grid grid-cols-2 gap-8">
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 INTAKE PERIOD
               </p>
-              <p className="text-[14px] text-[#111111]">[Insert Period]</p>
+              <p className="text-[14px] text-[#111111]">September 2024</p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 SCHEDULE
               </p>
-              <p className="text-[14px] text-[#111111]">[Insert schedule]</p>
+              <p className="text-[14px] text-[#111111]">Mon - Fri, 9:00 AM - 1:00 PM</p>
             </div>
           </div>
         </div>

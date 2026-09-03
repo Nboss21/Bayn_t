@@ -31,14 +31,14 @@ const experienceOptions = [
 
 const ExperienceStep = () => {
   const navigate = useNavigate();
-  const [selectedEdu, setSelectedEdu] = useState('Diploma');
-  const [selectedExp, setSelectedExp] = useState('some_experience');
+  const [selectedEdu, setSelectedEdu] = useState(null);
+  const [selectedExp, setSelectedExp] = useState(null);
 
   return (
     <div className="w-full max-w-[800px] mx-auto px-4 pb-16 flex flex-col items-center">
       <ApplicationStepper currentStep={3} />
 
-      <div className="w-full bg-[#f8f8f8] rounded-md p-8 md:p-16 mt-8">
+      <div className="w-full bg-[#f8f8f8] rounded-md p-8 md:p-16">
         
         {/* Header */}
         <div className="mb-12">
