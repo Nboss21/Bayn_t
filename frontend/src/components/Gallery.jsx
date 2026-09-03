@@ -1,26 +1,45 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import img1 from '../assets/womans/woman 1.png';
+import img2 from '../assets/womans/woman 2.png';
+import img3 from '../assets/womans/woman 3.png';
+import img4 from '../assets/womans/woman 4.png';
+import img5 from '../assets/womans/woman 5.jpg';
+import img6 from '../assets/womans/woman 6.png';
 
 const Gallery = () => {
   return (
-    <section className="py-28 px-10 bg-white text-center">
-      <p className="text-xs text-[#5c7a52] uppercase tracking-widest font-semibold mb-4">Our Work</p>
-      <h2 className="text-4xl md:text-5xl font-serif text-[#1c1c1c] mb-6">Gallery</h2>
-      <p className="text-gray-500 text-sm max-w-md mx-auto mb-16 leading-relaxed">Take a look at some of our students' amazing work and behind-the-scenes moments.</p>
+    <section className="py-20 px-6 md:px-10 bg-white text-center">
+      <h2 className="text-4xl md:text-5xl font-serif text-[#1c1c1c] mb-4">Gallery</h2>
+      <p className="text-gray-700 text-base max-w-md mx-auto mb-12">
+        Real work from our students, instructors, and academy events.
+      </p>
       
-      <div className="max-w-6xl mx-auto w-[90%] grid grid-cols-2 md:grid-cols-4 gap-6">
-        <div className="bg-gray-200 h-80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer">
-          <img src="https://images.unsplash.com/photo-1522337360788-8b13dee7a37e?q=80&w=600&auto=format&fit=crop" alt="Gallery 1" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+      <div className="max-w-5xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+        {/* Column 1 */}
+        <div className="flex flex-col gap-6">
+          <img src={img1} alt="Gallery 1" className="w-full rounded-2xl object-cover shadow-sm" />
         </div>
-        <div className="bg-gray-200 h-80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer">
-          <img src="https://images.unsplash.com/photo-1512496015851-a912bbbc58e0?q=80&w=600&auto=format&fit=crop" alt="Gallery 2" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+        
+        {/* Column 2 */}
+        <div className="flex flex-col gap-6">
+          <img src={img2} alt="Gallery 2" className="w-full rounded-2xl object-cover shadow-sm" />
+          <img src={img3} alt="Gallery 3" className="w-full rounded-2xl object-cover shadow-sm" />
+          <img src={img4} alt="Gallery 4" className="w-full rounded-2xl object-cover shadow-sm" />
         </div>
-        <div className="bg-gray-200 h-80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer">
-          <img src="https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?q=80&w=600&auto=format&fit=crop" alt="Gallery 3" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
-        </div>
-        <div className="bg-gray-200 h-80 rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition cursor-pointer">
-          <img src="https://images.unsplash.com/photo-1596704017254-9b121068fb31?q=80&w=600&auto=format&fit=crop" alt="Gallery 4" className="w-full h-full object-cover hover:scale-105 transition duration-700" />
+
+        {/* Column 3 */}
+        <div className="flex flex-col gap-6">
+          <img src={img5} alt="Gallery 5" className="w-full rounded-2xl object-cover shadow-sm" />
+          <img src={img6} alt="Gallery 6" className="w-full rounded-2xl object-cover shadow-sm" />
         </div>
       </div>
+
+      <Link to="/gallery">
+        <button className="mt-12 px-8 py-2.5 bg-[#E5CB74] text-[#1c1c1c] font-medium rounded-lg border border-[#BFA75B] hover:bg-[#d6bc65] transition shadow-sm">
+          View More
+        </button>
+      </Link>
     </section>
   );
 };

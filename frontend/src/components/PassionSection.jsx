@@ -1,13 +1,19 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import passionImage from '../assets/womans/woman 1.png';
 
 const PassionSection = () => {
   return (
     <section className="py-28 px-10 bg-white">
       <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center w-[95%]">
         
-        {/* Left Column - Image Placeholder */}
-        <div className="md:w-1/2 w-full h-[400px] bg-gray-100 rounded-lg mb-10 md:mb-0">
-          {/* Add image here later */}
+        {/* Left Column - Image */}
+        <div className="md:w-1/2 w-full h-[400px] rounded-lg mb-10 md:mb-0 overflow-hidden">
+          <img 
+            src={passionImage} 
+            alt="Professional makeup" 
+            className="w-full h-full object-cover"
+          />
         </div>
 
         {/* Right Column - Content */}
@@ -23,12 +29,12 @@ const PassionSection = () => {
           <p className="text-[#1c1c1c]/80 mb-8 max-w-[400px] text-[15px] leading-relaxed">
             Professional makeup training built to develop skills, confidence, and career readiness.
           </p>
-          <a href="#" className="text-[#ad7e59] text-[13px] font-bold flex items-center space-x-2 hover:opacity-80 transition group">
+          <Link to="/about" className="text-[#ad7e59] text-[13px] font-bold flex items-center space-x-2 hover:opacity-80 transition group">
             <span>Learn More About Us</span>
             <svg className="w-3 h-3 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
             </svg>
-          </a>
+          </Link>
         </div>
       </div>
     </section>

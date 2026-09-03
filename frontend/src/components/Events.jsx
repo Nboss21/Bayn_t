@@ -1,4 +1,8 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import img1 from '../assets/image/image 1.jpg';
+import img2 from '../assets/image/image 2.jpg';
+import img3 from '../assets/image/image3.jpg';
 
 const events = [
   {
@@ -8,6 +12,7 @@ const events = [
     location: "Location",
     title: "Bridal Makeup Masterclass",
     description: "Learn the full bridal makeup process from prep to the final look with our top instructors.",
+    image: img1,
   },
   {
     id: 2,
@@ -16,6 +21,7 @@ const events = [
     location: "Location",
     title: "Editorial & Fashion Looks",
     description: "Explore bold editorial techniques used on runway and magazine shoots with professionals.",
+    image: img2,
   },
   {
     id: 3,
@@ -24,6 +30,7 @@ const events = [
     location: "Location",
     title: "Skincare & Complexion Deep Dive",
     description: "Understand skin types, undertones, and the science behind a flawless base for any look.",
+    image: img3,
   }
 ];
 
@@ -58,8 +65,9 @@ const Events = () => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {events.map(event => (
             <div key={event.id} className="flex flex-col">
-              {/* Image Placeholder */}
-              <div className="w-full aspect-[4/3] bg-[#e5eade] rounded-xl mb-5 relative">
+              {/* Image */}
+              <div className="w-full aspect-[4/3] rounded-xl mb-5 relative overflow-hidden">
+                <img src={event.image} alt={event.title} className="w-full h-full object-cover" />
                 <span className="absolute top-4 left-4 bg-white/80 text-[#1c1c1c] text-[11px] font-bold px-3 py-1.5 rounded-md border border-[#d8d8d8]">
                   {event.category}
                 </span>
@@ -84,21 +92,21 @@ const Events = () => {
               <p className="text-[#1c1c1c]/60 text-[14px] leading-relaxed mb-6 flex-1">{event.description}</p>
 
               {/* Link */}
-              <a href="#" className="text-[#1c1c1c] text-[14px] font-medium flex items-center group">
+              <Link to="/events" className="text-[#1c1c1c] text-[14px] font-medium flex items-center group">
                 View event
                 <svg className="w-4 h-4 ml-1.5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
                 </svg>
-              </a>
+              </Link>
             </div>
           ))}
         </div>
 
         {/* View All Button */}
         <div className="flex justify-center mt-20">
-          <button className="bg-white border border-gray-200 px-10 py-3 rounded-xl text-[14px] font-medium text-[#1c1c1c] hover:shadow-md transition">
+          <Link to="/events" className="bg-white border border-gray-200 px-10 py-3 rounded-xl text-[14px] font-medium text-[#1c1c1c] hover:shadow-md transition">
             View all
-          </button>
+          </Link>
         </div>
 
       </div>

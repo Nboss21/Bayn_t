@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const Hero = () => {
   return (
@@ -16,11 +17,7 @@ const Hero = () => {
       {/* Main content */}
       <div className="relative z-10 w-full px-8 md:px-20 pt-32 pb-24 flex flex-col justify-center min-h-screen">
 
-        {/* Enrollment badge */}
-        <div className="mb-6 inline-flex items-center gap-2 border border-white/20 rounded-full px-4 py-1.5 text-[11px] uppercase tracking-[0.15em] font-medium text-white/80 w-fit backdrop-blur-sm bg-white/5">
-          <span className="w-2 h-2 rounded-full bg-teal-400 animate-pulse" />
-          Enrollment Open Fall 2026
-        </div>
+
 
         {/* Heading */}
         <h1 className="text-6xl md:text-[82px] font-serif leading-[1.05] mb-6 tracking-tight max-w-lg">
@@ -34,9 +31,9 @@ const Hero = () => {
 
         {/* CTA */}
         <div>
-          <button className="bg-[#8f6340] text-white px-8 py-3.5 rounded-full text-sm font-bold tracking-wide hover:bg-[#a3724a] transition">
+          <Link to="/programs" className="bg-[#8f6340] text-white px-8 py-3.5 rounded-full text-sm font-bold tracking-wide hover:bg-[#a3724a] transition inline-block">
             Explore Courses
-          </button>
+          </Link>
         </div>
       </div>
 

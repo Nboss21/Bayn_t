@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { Link } from 'react-router-dom';
 
 const allCourses = [
   { id: 1, title: 'Professional Makeup Artistry', tag: 'Beginner', price: '$499', image: 'https://images.unsplash.com/photo-1512496015851-a912bbbc58e0?q=80&w=600&auto=format&fit=crop' },
@@ -33,7 +34,7 @@ const Courses = () => {
             <h2 className="text-4xl md:text-5xl font-serif text-[#1c1c1c] mb-4">Courses</h2>
             <p className="text-gray-500 text-sm">Find the perfect program for your goals.</p>
           </div>
-          <button className="mt-6 md:mt-0 border border-gray-400 px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-widest text-[#1c1c1c] hover:bg-gray-50 transition">See All</button>
+          <Link to="/programs" className="mt-6 md:mt-0 border border-gray-400 px-6 py-2 rounded-full text-xs font-semibold uppercase tracking-widest text-[#1c1c1c] hover:bg-gray-50 transition">See All</Link>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
