@@ -2,9 +2,18 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import SidebarSummary from '../components/application/SidebarSummary';
+import { useApplication } from '../context/ApplicationContext';
 
 const LocationStep = () => {
   const navigate = useNavigate();
+  const { formData, errors, updateField, validateStep, completeStep } = useApplication();
+
+  const handleContinue = () => {
+    if (validateStep('location')) {
+      completeStep('location');
+      navigate('/application/experience');
+    }
+  };
 
   return (
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16">
@@ -26,7 +35,7 @@ const LocationStep = () => {
             Tell us your city and area so we know where you're based.
           </p>
 
-          <form className="space-y-8 flex-1">
+          <form className="space-y-8 flex-1" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
             {/* City / Town */}
             <div>
               <label className="block text-[11px] font-bold text-[#111111] tracking-wider mb-2">
@@ -34,6 +43,8 @@ const LocationStep = () => {
               </label>
               <input 
                 type="text" 
+                value={formData.city}
+                onChange={(e) => updateField('city', e.target.value)}
                 placeholder="Example: Addis Ababa"
                 className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
@@ -49,6 +60,8 @@ const LocationStep = () => {
               </label>
               <input 
                 type="text" 
+                value={formData.area}
+                onChange={(e) => updateField('area', e.target.value)}
                 placeholder="Example: Bole"
                 className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
@@ -64,6 +77,8 @@ const LocationStep = () => {
               </label>
               <input 
                 type="text" 
+                value={formData.landmark}
+                onChange={(e) => updateField('landmark', e.target.value)}
                 placeholder="Example: Near Edna Mall"
                 className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
@@ -79,25 +94,34 @@ const LocationStep = () => {
               Your progress is saved as you continue
             </p>
             
-            <div className="flex justify-between items-center w-full">
-              <button 
-                onClick={() => navigate('/application/selected')}
-                className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-gray-50 transition flex items-center"
-              >
-                <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
-                </svg>
-                Back
-              </button>
-              <button 
-                onClick={() => navigate('/application/experience')}
-                className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm"
-              >
-                Continue
-                <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
-                </svg>
-              </button>
+            <div className="flex flex-col gap-2 items-end w-full">
+              {(errors.city || errors.area) && (
+                <p className="text-[12px] text-red-500">
+                  {!errors.city && errors.area && errors.area}
+                  {errors.city && !errors.area && errors.city}
+                  {errors.city && errors.area && 'City and area are required'}
+                </p>
+              )}
+              <div className="flex justify-between items-center w-full">
+                <button 
+                  onClick={() => navigate('/application/selected')}
+                  className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-gray-50 transition flex items-center"
+                >
+                  <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
+                  </svg>
+                  Back
+                </button>
+                <button 
+                  onClick={handleContinue}
+                  className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm"
+                >
+                  Continue
+                  <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
+                  </svg>
+                </button>
+              </div>
             </div>
           </div>
 

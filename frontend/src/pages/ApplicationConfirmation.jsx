@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useApplication } from '../context/ApplicationContext';
 
 const nextSteps = [
   {
@@ -23,9 +24,12 @@ const nextSteps = [
 
 const ApplicationConfirmation = () => {
   const [copied, setCopied] = useState(false);
+  const [appId] = useState(() => 'APP-' + Math.random().toString(36).substring(2, 7).toUpperCase() + '-LM');
+  const { formData, getSelectedProgram } = useApplication();
+  const program = getSelectedProgram();
 
   const handleCopy = () => {
-    navigator.clipboard.writeText('APP-7829-LM');
+    navigator.clipboard.writeText(appId);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   };
@@ -66,7 +70,7 @@ const ApplicationConfirmation = () => {
               APPLICATION ID
             </p>
             <div className="flex items-center justify-between">
-              <span className="text-[16px] font-medium text-[#111111] tracking-wide">APP-7829-LM</span>
+              <span className="text-[16px] font-medium text-[#111111] tracking-wide">{appId}</span>
               <button
                 onClick={handleCopy}
                 title="Copy to clipboard"
@@ -98,11 +102,15 @@ const ApplicationConfirmation = () => {
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-[13px] text-gray-500">Amount</span>
-                <span className="text-[13px] font-medium text-[#111111]">$150.00</span>
+                <span className="text-[13px] font-medium text-[#111111]">15,000 ETB</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-[13px] text-gray-500">Date</span>
-                <span className="text-[13px] font-medium text-[#111111]">Oct 24, 2024</span>
+                <span className="text-[13px] text-gray-500">Program</span>
+                <span className="text-[13px] font-medium text-[#111111]">{program?.title || '—'}</span>
+              </div>
+              <div className="flex justify-between items-center">
+                <span className="text-[13px] text-gray-500">Payment Method</span>
+                <span className="text-[13px] font-medium text-[#111111]">{formData.paymentMethod === 'primary' ? 'Telebirr' : 'Bank Transfer (CBE)'}</span>
               </div>
             </div>
           </div>
