@@ -1,7 +1,9 @@
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
 import MainLayout from './layouts/MainLayout';
 import ApplicationLayout from './layouts/ApplicationLayout';
+import { ApplicationProvider, useApplication } from './context/ApplicationContext';
 import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
@@ -22,9 +24,27 @@ import ReviewStep from './pages/ReviewStep';
 import PaymentStep from './pages/PaymentStep';
 import ApplicationConfirmation from './pages/ApplicationConfirmation';
 
+function ProtectedRoute({ step, children }) {
+  const { canAccess } = useApplication();
+  const targetStep = canAccess(step);
+  if (targetStep !== true) {
+    return <Navigate to={`/application/${targetStep}`} replace />;
+  }
+  return children;
+}
+
+function ApplicationStepsLayout() {
+  return (
+    <ApplicationProvider>
+      <Outlet />
+    </ApplicationProvider>
+  );
+}
+
 function App() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
@@ -38,17 +58,21 @@ function App() {
           <Route path="contact" element={<Contact />} />
         </Route>
         
-        {/* Application specific routes */}
         <Route path="/application" element={<ApplicationLayout />}>
           <Route index element={<Application />} />
-          <Route path="program" element={<ProgramSelection />} />
-          <Route path="selected" element={<SelectedProgram />} />
-          <Route path="location" element={<LocationStep />} />
-          <Route path="experience" element={<ExperienceStep />} />
-          <Route path="documents" element={<DocumentsStep />} />
-          <Route path="review" element={<ReviewStep />} />
-          <Route path="payment" element={<PaymentStep />} />
-          <Route path="confirmation" element={<ApplicationConfirmation />} />
+        </Route>
+
+        <Route path="/application" element={<ApplicationLayout />}>
+          <Route element={<ApplicationStepsLayout />}>
+            <Route path="program" element={<ProgramSelection />} />
+            <Route path="selected" element={<ProtectedRoute step="selected"><SelectedProgram /></ProtectedRoute>} />
+            <Route path="location" element={<ProtectedRoute step="location"><LocationStep /></ProtectedRoute>} />
+            <Route path="experience" element={<ProtectedRoute step="experience"><ExperienceStep /></ProtectedRoute>} />
+            <Route path="documents" element={<ProtectedRoute step="documents"><DocumentsStep /></ProtectedRoute>} />
+            <Route path="review" element={<ProtectedRoute step="review"><ReviewStep /></ProtectedRoute>} />
+            <Route path="payment" element={<ProtectedRoute step="payment"><PaymentStep /></ProtectedRoute>} />
+            <Route path="confirmation" element={<ProtectedRoute step="confirmation"><ApplicationConfirmation /></ProtectedRoute>} />
+          </Route>
         </Route>
       </Routes>
     </BrowserRouter>
