@@ -1,10 +1,19 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
+import { useApplication } from '../context/ApplicationContext';
 
 const ReviewStep = () => {
   const navigate = useNavigate();
+  const { formData, getSelectedProgram, completeStep } = useApplication();
   const [agreed, setAgreed] = useState(false);
+  const program = getSelectedProgram();
+
+  const experienceLabels = {
+    no_experience: 'No Experience',
+    some_experience: 'Some Experience',
+    formal_experience: 'Formal / Professional Experience',
+  };
 
   return (
     <div className="w-full max-w-[800px] mx-auto px-4 pb-16 flex flex-col items-center">
@@ -27,59 +36,84 @@ const ReviewStep = () => {
 
         <div className="h-[1px] bg-gray-200 w-full mb-10"></div>
 
-        {/* Personal Information */}
+        {/* Location Information */}
         <div className="mb-10">
           <h3 className="text-[22px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
-            Personal Information
+            Location
           </h3>
           <div className="grid grid-cols-2 gap-y-6 gap-x-8 mb-4">
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                FULL NAME
+                CITY
               </p>
-              <p className="text-[14px] text-[#111111]">Hana Tesfaye</p>
+              <p className="text-[14px] text-[#111111]">{formData.city || '—'}</p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                DATE OF BIRTH
+                AREA
               </p>
-              <p className="text-[14px] text-[#111111]">March 12, 1998</p>
+              <p className="text-[14px] text-[#111111]">{formData.area || '—'}</p>
+            </div>
+            {formData.landmark && (
+              <div>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  LANDMARK
+                </p>
+                <p className="text-[14px] text-[#111111]">{formData.landmark}</p>
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Background */}
+        <div className="mb-10">
+          <h3 className="text-[22px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+            Background
+          </h3>
+          <div className="grid grid-cols-2 gap-y-6 gap-x-8 mb-4">
+            <div>
+              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                EDUCATION
+              </p>
+              <p className="text-[14px] text-[#111111]">{formData.education || '—'}</p>
             </div>
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                LOCATION
+                EXPERIENCE
               </p>
-              <p className="text-[14px] text-[#111111]">Addis Ababa, Bole</p>
+              <p className="text-[14px] text-[#111111]">{experienceLabels[formData.experience] || '—'}</p>
             </div>
           </div>
         </div>
 
         {/* Program & Intake */}
-        <div className="bg-[#f2f5f2] rounded-md p-8 mb-10">
-          <h3 className="text-[20px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
-            Program & Intake
-          </h3>
-          <div className="mb-5">
-            <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-              SELECTED PROGRAM
-            </p>
-            <p className="text-[14px] text-[#111111]">Professional Makeup Artistry</p>
-          </div>
-          <div className="grid grid-cols-2 gap-8">
-            <div>
+        {program && (
+          <div className="bg-[#f2f5f2] rounded-md p-8 mb-10">
+            <h3 className="text-[20px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+              Program & Intake
+            </h3>
+            <div className="mb-5">
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                INTAKE PERIOD
+                SELECTED PROGRAM
               </p>
-              <p className="text-[14px] text-[#111111]">September 2024</p>
+              <p className="text-[14px] text-[#111111]">{program.title}</p>
             </div>
-            <div>
-              <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                SCHEDULE
-              </p>
-              <p className="text-[14px] text-[#111111]">Mon - Fri, 9:00 AM - 1:00 PM</p>
+            <div className="grid grid-cols-2 gap-8">
+              <div>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  DURATION
+                </p>
+                <p className="text-[14px] text-[#111111]">{program.duration}</p>
+              </div>
+              <div>
+                <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  LEVEL
+                </p>
+                <p className="text-[14px] text-[#111111]">{program.level}</p>
+              </div>
             </div>
           </div>
-        </div>
+        )}
 
         {/* Documents */}
         <div className="mb-12">
@@ -88,22 +122,50 @@ const ReviewStep = () => {
           </h3>
 
           <div className="flex items-center space-x-2 mb-4">
-            <svg className="w-4 h-4 text-[#6b826d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <circle cx="12" cy="12" r="10" strokeWidth={1.5} />
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
-            </svg>
-            <p className="text-[13px] text-gray-600">Required documents complete</p>
+            {formData.idDocument && formData.profilePhoto ? (
+              <>
+                <svg className="w-4 h-4 text-[#6b826d]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth={1.5} />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4" />
+                </svg>
+                <p className="text-[13px] text-gray-600">Required documents complete</p>
+              </>
+            ) : (
+              <>
+                <svg className="w-4 h-4 text-red-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <circle cx="12" cy="12" r="10" strokeWidth={1.5} />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4m0 4h.01" />
+                </svg>
+                <p className="text-[13px] text-red-500">Required documents missing</p>
+              </>
+            )}
           </div>
 
           <div className="space-y-2">
-            {['vance_e_portfolio_2024.pdf', 'vance_e_id_verification.pdf'].map((filename) => (
-              <div key={filename} className="flex items-center space-x-2">
+            {formData.idDocument && (
+              <div className="flex items-center space-x-2">
                 <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-[13px] text-gray-600">{filename}</p>
+                <p className="text-[13px] text-gray-600">{formData.idDocument.name}</p>
               </div>
-            ))}
+            )}
+            {formData.profilePhoto && (
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-[13px] text-gray-600">{formData.profilePhoto.name}</p>
+              </div>
+            )}
+            {formData.supportingDoc && (
+              <div className="flex items-center space-x-2">
+                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <p className="text-[13px] text-gray-600">{formData.supportingDoc.name}</p>
+              </div>
+            )}
           </div>
         </div>
 
@@ -141,7 +203,7 @@ const ReviewStep = () => {
           </button>
           <button
             disabled={!agreed}
-            onClick={() => navigate('/application/payment')}
+            onClick={() => { completeStep('review'); navigate('/application/payment'); }}
             className={`text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm ${
               agreed
                 ? 'bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] cursor-pointer'

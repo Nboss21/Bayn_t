@@ -1,6 +1,7 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
+import { useApplication } from '../context/ApplicationContext';
 
 const paymentMethods = [
   { id: 'primary', label: 'Telebirr' },
@@ -9,7 +10,8 @@ const paymentMethods = [
 
 const PaymentStep = () => {
   const navigate = useNavigate();
-  const [selectedMethod, setSelectedMethod] = useState('primary');
+  const { formData, updateField, getSelectedProgram, completeStep } = useApplication();
+  const program = getSelectedProgram();
 
   return (
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16">
@@ -33,11 +35,11 @@ const PaymentStep = () => {
           {/* Payment method options */}
           <div className="space-y-3 mb-8">
             {paymentMethods.map((method) => {
-              const isSelected = selectedMethod === method.id;
+              const isSelected = formData.paymentMethod === method.id;
               return (
                 <div
                   key={method.id}
-                  onClick={() => setSelectedMethod(method.id)}
+                  onClick={() => updateField('paymentMethod', method.id)}
                   className={`flex items-center p-4 border rounded-sm cursor-pointer transition-colors ${
                     isSelected
                       ? 'border-gray-400 bg-white'
@@ -72,7 +74,7 @@ const PaymentStep = () => {
           {/* Action buttons */}
           <div className="flex items-center gap-4">
             <button
-              onClick={() => navigate('/application/confirmation')}
+              onClick={() => { completeStep('payment'); navigate('/application/confirmation'); }}
               className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition"
             >
               Pay 15,000 ETB
@@ -96,11 +98,11 @@ const PaymentStep = () => {
             <div className="space-y-4 mb-6">
               <div className="flex justify-between items-start">
                 <p className="text-[12px] text-gray-500 leading-relaxed">Selected Program:</p>
-                <p className="text-[12px] text-[#111111] text-right ml-4">Professional Makeup Artistry</p>
+                <p className="text-[12px] text-[#111111] text-right ml-4">{program?.title || '—'}</p>
               </div>
               <div className="flex justify-between items-start">
-                <p className="text-[12px] text-gray-500">Application ID:</p>
-                <p className="text-[12px] text-[#111111] text-right ml-4">EBA-2024-00847</p>
+                <p className="text-[12px] text-gray-500">Location:</p>
+                <p className="text-[12px] text-[#111111] text-right ml-4">{formData.city}{formData.area ? `, ${formData.area}` : ''}</p>
               </div>
             </div>
 
