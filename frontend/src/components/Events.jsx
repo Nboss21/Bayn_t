@@ -19,7 +19,7 @@ const Events = () => {
   return (
     <section className="bg-[#f0f4ea] py-24 px-10">
       <div className="max-w-6xl mx-auto w-[90%]">
-        
+
         {/* Header */}
         <div className="text-center mb-16 flex flex-col items-center">
           <p className="text-xs font-bold uppercase tracking-widest text-[#1c1c1c] mb-4">Tagline</p>

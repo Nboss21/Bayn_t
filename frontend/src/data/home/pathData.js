@@ -1,4 +1,7 @@
 import image1 from "../../assets/image/image 1.jpg";
+import image2 from "../../assets/image/image 2.jpg";
+import image3 from "../../assets/image/image 3.jpg";
+import image4 from "../../assets/image/image 4.jpg";
 import woman1 from "../../assets/womans2/woman 1.jpg";
 import woman2 from "../../assets/womans2/woman 2.jpg";
 import woman3 from "../../assets/womans2/woman 3.jpg";
