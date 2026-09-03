@@ -1,12 +1,16 @@
 import React from 'react';
+import { pathData } from '../../data/home/pathData';
 
-const MiniProgramCard = ({ duration, label, courseName }) => {
+const MiniProgramCard = ({ image, duration, label, courseName }) => {
   return (
     <div className="flex flex-col">
-      {/* Placeholder Image */}
-      <div className="w-full aspect-[4/3] bg-[url('data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCI+CjxyZWN0IHdpZHRoPSIyMCIgaGVpZ2h0PSIyMCIgZmlsbD0iI2Y1ZjVmNSIvPgo8cmVjdCB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNlNWU1ZTUiLz4KPHJlY3QgeD0iMTAiIHk9IjEwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9IiNlNWU1ZTUiLz4KPC9zdmc+')] bg-repeat rounded-[2px] mb-4 relative">
+      {/* Image */}
+      <div className="w-full aspect-[4/3] bg-[#f5f5f5] rounded-[2px] mb-4 relative overflow-hidden">
+        {image ? (
+          <img src={image} alt={courseName} className="w-full h-full object-cover" />
+        ) : null}
          <div className="absolute top-2 left-2 flex gap-1">
-             <span className="bg-[#f5eeb6] text-[9px] font-bold uppercase px-2 py-0.5 rounded-[2px]">Beginner</span>
+             <span className="bg-[#f5eeb6] text-[9px] font-bold uppercase px-2 py-0.5 rounded-[2px]">{label}</span>
          </div>
       </div>
       
@@ -37,10 +41,15 @@ const MiniProgramCards = () => {
   return (
     <section className="px-4 sm:px-6 md:px-8 py-10 max-w-[1240px] mx-auto w-full border-t border-gray-100 mt-10">
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6 sm:gap-8 w-full max-w-5xl mx-auto">
-        <MiniProgramCard duration="[INSERT DURATION]" label="[INSERT LABEL]" courseName="[INSERT COURSE NAME]" />
-        <MiniProgramCard duration="[INSERT DURATION]" label="[INSERT LABEL]" courseName="[INSERT COURSE NAME]" />
-        <MiniProgramCard duration="[INSERT DURATION]" label="[INSERT LABEL]" courseName="[INSERT COURSE NAME]" />
-        <MiniProgramCard duration="[INSERT DURATION]" label="[INSERT LABEL]" courseName="[INSERT COURSE NAME]" />
+        {pathData.programs.slice(4).map((program) => (
+          <MiniProgramCard
+            key={program.id}
+            image={program.image}
+            duration={program.duration}
+            label={program.level}
+            courseName={program.title}
+          />
+        ))}
       </div>
     </section>
   );

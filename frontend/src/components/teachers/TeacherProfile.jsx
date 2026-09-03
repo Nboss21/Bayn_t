@@ -1,11 +1,19 @@
 import React from 'react';
 
-const TeacherProfile = ({ name, role, description, quote, experience, icon, imageLeft, placeholderColor }) => {
+const TeacherProfile = ({ name, role, description, quote, experience, icon, image, imageLeft, placeholderColor }) => {
   return (
     <div className={`flex flex-col ${imageLeft ? 'md:flex-row' : 'md:flex-row-reverse'} items-center gap-12 lg:gap-24 w-full`}>
-      {/* Image Placeholder */}
+      {/* Image */}
       <div className="w-full md:w-1/2 flex justify-center">
-        <div className={`w-full max-w-[420px] aspect-[4/5] ${placeholderColor || 'bg-white'} shadow-sm border border-gray-100/50`}></div>
+        {image ? (
+          <img
+            src={image}
+            alt={name}
+            className="w-full max-w-[420px] aspect-[4/5] object-cover shadow-sm border border-gray-100/50"
+          />
+        ) : (
+          <div className={`w-full max-w-[420px] aspect-[4/5] ${placeholderColor || 'bg-white'} shadow-sm border border-gray-100/50`}></div>
+        )}
       </div>
       
       {/* Content */}
