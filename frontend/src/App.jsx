@@ -1,122 +1,82 @@
-import { useState } from 'react'
-import heroImg from './assets/hero.png'
-import reactLogo from './assets/react.svg'
-import viteLogo from './assets/vite.svg'
-import './App.css'
+import React from 'react';
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from 'react-router-dom';
+import ScrollToTop from './components/ScrollToTop';
+import MainLayout from './layouts/MainLayout';
+import ApplicationLayout from './layouts/ApplicationLayout';
+import { ApplicationProvider, useApplication } from './context/ApplicationContext';
+import Home from './pages/Home';
+import About from './pages/About';
+import Programs from './pages/Programs';
+import EventsPage from './pages/EventsPage';
+import Teachers from './pages/Teachers';
+import FAQPage from './pages/FAQPage';
+import PrivacyPolicy from './pages/PrivacyPolicy';
+import Contact from './pages/Contact';
+import Gallery from './pages/Gallery';
+import Application from './pages/Application';
 
-function App() {
-  const [count, setCount] = useState(0)
+import ProgramSelection from './pages/ProgramSelection';
+import SelectedProgram from './pages/SelectedProgram';
+import LocationStep from './pages/LocationStep';
+import ExperienceStep from './pages/ExperienceStep';
+import DocumentsStep from './pages/DocumentsStep';
+import ReviewStep from './pages/ReviewStep';
+import PaymentStep from './pages/PaymentStep';
+import ApplicationConfirmation from './pages/ApplicationConfirmation';
 
-  return (
-    <>
-      <section id="center">
-        <div className="hero">
-          <img src={heroImg} className="base" width="170" height="179" alt="" />
-          <img src={reactLogo} className="framework" alt="React logo" />
-          <img src={viteLogo} className="vite" alt="Vite logo" />
-        </div>
-        <div>
-          <h1>Get started</h1>
-          <p>
-            Edit <code>src/App.jsx</code> and save to test <code>HMR</code>
-          </p>
-        </div>
-        <button
-          type="button"
-          className="counter"
-          onClick={() => setCount((count) => count + 1)}
-        >
-          Count is {count}
-        </button>
-      </section>
-
-      <div className="ticks"></div>
-
-      <section id="next-steps">
-        <div id="docs">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#documentation-icon"></use>
-          </svg>
-          <h2>Documentation</h2>
-          <p>Your questions, answered</p>
-          <ul>
-            <li>
-              <a href="https://vite.dev/" target="_blank">
-                <img className="logo" src={viteLogo} alt="" />
-                Explore Vite
-              </a>
-            </li>
-            <li>
-              <a href="https://react.dev/" target="_blank">
-                <img className="button-icon" src={reactLogo} alt="" />
-                Learn more
-              </a>
-            </li>
-          </ul>
-        </div>
-        <div id="social">
-          <svg className="icon" role="presentation" aria-hidden="true">
-            <use href="/icons.svg#social-icon"></use>
-          </svg>
-          <h2>Connect with us</h2>
-          <p>Join the Vite community</p>
-          <ul>
-            <li>
-              <a href="https://github.com/vitejs/vite" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#github-icon"></use>
-                </svg>
-                GitHub
-              </a>
-            </li>
-            <li>
-              <a href="https://chat.vite.dev/" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#discord-icon"></use>
-                </svg>
-                Discord
-              </a>
-            </li>
-            <li>
-              <a href="https://x.com/vite_js" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#x-icon"></use>
-                </svg>
-                X.com
-              </a>
-            </li>
-            <li>
-              <a href="https://bsky.app/profile/vite.dev" target="_blank">
-                <svg
-                  className="button-icon"
-                  role="presentation"
-                  aria-hidden="true"
-                >
-                  <use href="/icons.svg#bluesky-icon"></use>
-                </svg>
-                Bluesky
-              </a>
-            </li>
-          </ul>
-        </div>
-      </section>
-
-      <div className="ticks"></div>
-      <section id="spacer"></section>
-    </>
-  )
+function ProtectedRoute({ step, children }) {
+  const { canAccess } = useApplication();
+  const targetStep = canAccess(step);
+  if (targetStep !== true) {
+    return <Navigate to={`/application/${targetStep}`} replace />;
+  }
+  return children;
 }
 
-export default App
+function ApplicationStepsLayout() {
+  return (
+    <ApplicationProvider>
+      <Outlet />
+    </ApplicationProvider>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <ScrollToTop />
+      <Routes>
+        <Route path="/" element={<MainLayout />}>
+          <Route index element={<Home />} />
+          <Route path="about" element={<About />} />
+          <Route path="programs" element={<Programs />} />
+          <Route path="events" element={<EventsPage />} />
+          <Route path="teachers" element={<Teachers />} />
+          <Route path="gallery" element={<Gallery />} />
+          <Route path="faq" element={<FAQPage />} />
+          <Route path="privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="contact" element={<Contact />} />
+        </Route>
+        
+        <Route path="/application" element={<ApplicationLayout />}>
+          <Route index element={<Application />} />
+        </Route>
+
+        <Route path="/application" element={<ApplicationLayout />}>
+          <Route element={<ApplicationStepsLayout />}>
+            <Route path="program" element={<ProgramSelection />} />
+            <Route path="selected" element={<ProtectedRoute step="selected"><SelectedProgram /></ProtectedRoute>} />
+            <Route path="location" element={<ProtectedRoute step="location"><LocationStep /></ProtectedRoute>} />
+            <Route path="experience" element={<ProtectedRoute step="experience"><ExperienceStep /></ProtectedRoute>} />
+            <Route path="documents" element={<ProtectedRoute step="documents"><DocumentsStep /></ProtectedRoute>} />
+            <Route path="review" element={<ProtectedRoute step="review"><ReviewStep /></ProtectedRoute>} />
+            <Route path="payment" element={<ProtectedRoute step="payment"><PaymentStep /></ProtectedRoute>} />
+            <Route path="confirmation" element={<ProtectedRoute step="confirmation"><ApplicationConfirmation /></ProtectedRoute>} />
+          </Route>
+        </Route>
+      </Routes>
+    </BrowserRouter>
+  );
+}
+
+export default App;

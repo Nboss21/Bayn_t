@@ -1,0 +1,77 @@
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { pathData } from '../data/home/pathData';
+
+const PathSection = () => {
+  const { heading, sectionLabel, mainProgram, programs } = pathData;
+
+  return (
+    <section className="bg-[#b08968] py-24 px-10">
+      <div className="max-w-7xl mx-auto w-[95%]">
+        
+        {/* Header Area */}
+        <div className="mb-12">
+          <h2 className="text-5xl md:text-[72px] font-serif text-white mb-12 leading-[1.1] tracking-tight">
+            {heading.split('\n').map((line, i) => (
+              <React.Fragment key={i}>{line}{i === 0 && <br />}</React.Fragment>
+            ))}
+          </h2>
+          
+          <div className="flex justify-between items-center mb-10 md:w-1/2">
+            <h3 className="text-2xl text-white font-serif">{sectionLabel}</h3>
+            <div className="flex-grow ml-8 border-t border-white/40 max-w-[200px] md:max-w-none"></div>
+          </div>
+        </div>
+
+        {/* Content Area */}
+        <div className="flex flex-col md:flex-row gap-12">
+          
+          {/* Left Column (Main Program) */}
+          <div className="md:w-1/2 flex flex-col">
+            <img src={mainProgram.image} alt={mainProgram.imageAlt} className="w-full aspect-[4/3] object-cover rounded-2xl mb-6 shadow-lg" />
+            
+            <div className="flex items-center space-x-4 mb-4">
+              <span className="bg-white/20 px-3 py-1 rounded text-xs font-bold text-white tracking-wide">{mainProgram.tag}</span>
+              <span className="text-xs font-bold text-white">{mainProgram.duration}</span>
+            </div>
+            
+            <h4 className="text-3xl md:text-4xl font-serif text-white mb-3 leading-tight">
+              {mainProgram.title}
+            </h4>
+            
+            <p className="text-white/80 text-sm mb-6 font-sans">
+              {mainProgram.description}
+            </p>
+            
+            <Link to="/programs" className="text-sm font-bold text-[#1c1c1c] flex items-center group">
+              View details <svg className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+            </Link>
+          </div>
+
+          {/* Right Column (List of Programs) */}
+          <div className="md:w-1/2 flex flex-col space-y-8">
+            {programs.slice(0, 3).map((program) => (
+              <div key={program.id} className="flex flex-col sm:flex-row gap-6 items-center sm:items-start">
+                <img src={program.image} alt={program.imageAlt} className="w-40 h-40 sm:w-48 sm:h-48 object-cover rounded-2xl shadow-md shrink-0" />
+                <div className="flex flex-col justify-center h-full py-2">
+                  <div className="flex items-center space-x-3 mb-3">
+                    <span className="bg-white/20 px-3 py-1 rounded text-[10px] sm:text-xs font-bold text-white tracking-wide">{program.tag}</span>
+                    <span className="text-[10px] sm:text-xs font-bold text-white">{program.duration}</span>
+                  </div>
+                  <h4 className="text-2xl sm:text-3xl font-serif text-white mb-4 leading-tight">
+                    {program.title}
+                  </h4>
+                  <Link to="/programs" className="text-sm font-bold text-[#1c1c1c] flex items-center group mt-auto">
+                    View details <svg className="w-3.5 h-3.5 ml-1.5 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7"></path></svg>
+                  </Link>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+};
+
+export default PathSection;
