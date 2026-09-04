@@ -9,7 +9,7 @@ class ProgramPolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isSuperAdmin() || $user->isRegistrar();
+        return $user->isSuperAdmin() || $user->isRegistrar() || $user->isStudent();
     }
 
     public function view(User $user, Program $program): bool

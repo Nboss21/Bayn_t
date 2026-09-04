@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Enums\DocumentType;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreDocumentRequest;
+use App\Http\Requests\StoreApplicationDocumentRequest;
 use App\Http\Resources\DocumentResource;
 use App\Models\Application;
 use App\Models\Document;
@@ -18,6 +19,27 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
 {
+    public function storeForApplication(StoreApplicationDocumentRequest $request, Application $application): JsonResponse
+    {
+        Gate::authorize('uploadDocument', $application);
+        abort_if($application->status?->value !== 'draft', 409, 'Documents can only be uploaded to draft applications.');
+
+        $file = $request->file('file');
+        $filePath = $file->storeAs(
+            "applications/{$application->id}",
+            Str::uuid()->toString().'.'.$file->extension(),
+            'private_documents'
+        );
+        $document = Document::create([
+            'application_id' => $application->id,
+            'type' => DocumentType::from($request->validated('type')),
+            'file_path' => $filePath,
+            'uploaded_at' => now(),
+        ]);
+
+        return (new DocumentResource($document))->response()->setStatusCode(201);
+    }
+
     public function store(StoreDocumentRequest $request): JsonResponse
     {
         $validated = $request->validated();

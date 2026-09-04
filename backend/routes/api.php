@@ -1,12 +1,14 @@
 <?php
 
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\ClassController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\RegistrarController;
+use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,16 +45,32 @@ Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
     Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
 });
 
+Route::middleware(['auth:sanctum', 'role:student'])->prefix('applications')->group(function () {
+    Route::post('/', [ApplicationController::class, 'store']);
+    Route::get('/', [ApplicationController::class, 'index']);
+    Route::get('/{application}', [ApplicationController::class, 'show']);
+    Route::patch('/{application}/steps/{step}', [ApplicationController::class, 'updateStep'])
+        ->where('step', '[A-Za-z0-9_-]+');
+    Route::post('/{application}/documents', [DocumentController::class, 'storeForApplication']);
+    Route::get('/{application}/documents', [ApplicationController::class, 'documents']);
+    Route::post('/{application}/submit', [ApplicationController::class, 'submit']);
+});
+
+Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(function () {
+    Route::get('/me', [StudentController::class, 'me']);
+});
+
 // --------------------------------------------------------------------------
 // Core CRUD APIs
 // --------------------------------------------------------------------------
 
-Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->group(function () {
     Route::apiResources([
         'programs' => ProgramController::class,
         'intakes' => IntakeController::class,
     ]);
 });
+
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher'])
     ->apiResource('classes', ClassController::class);
