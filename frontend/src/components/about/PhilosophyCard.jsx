@@ -6,7 +6,7 @@ const PhilosophyCard = ({ title, description, image, hasBottomAccent = false }) 
       className={`relative rounded-sm overflow-hidden flex flex-col justify-end ${
         hasBottomAccent ? 'border-b-4 border-[#c9a254]' : ''
       }`}
-      style={{ minHeight: '340px' }}
+      style={{ minHeight: 'clamp(280px, 45vw, 340px)' }}
     >
       {/* Full-bleed background image */}
       {image && (
@@ -21,7 +21,7 @@ const PhilosophyCard = ({ title, description, image, hasBottomAccent = false }) 
       )}
 
       {/* Text content at the bottom */}
-      <div className="relative z-10 p-8">
+      <div className="relative z-10 p-6 sm:p-8">
         <h3 className="text-[#c9a254] text-base font-semibold mb-3 leading-snug">{title}</h3>
         <p className="text-white/90 text-xs leading-relaxed">{description}</p>
       </div>
