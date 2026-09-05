@@ -36,7 +36,7 @@ const ApplicationConfirmation = () => {
 
   return (
     <div className="w-full max-w-[1000px] mx-auto px-4 py-8 flex justify-center">
-      <div className="bg-white border border-gray-100 rounded-md w-full max-w-[680px] px-10 py-14 flex flex-col items-center text-center shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
+      <div className="bg-white border border-gray-100 rounded-xl w-full max-w-[680px] px-5 sm:px-10 py-10 sm:py-14 flex flex-col items-center text-center shadow-[0_2px_20px_rgba(0,0,0,0.04)]">
 
         {/* Success Icon */}
         <div className="w-14 h-14 rounded-xl bg-[#eef1ed] flex items-center justify-center mb-8">
@@ -46,18 +46,18 @@ const ApplicationConfirmation = () => {
         </div>
 
         {/* Heading */}
-        <h1 className="text-[40px] md:text-[46px] font-serif leading-tight text-[#111111] mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+        <h1 className="text-3xl sm:text-[40px] md:text-[46px] font-serif leading-tight text-[#111111] mb-4">
           Your application is in.
         </h1>
         <p className="text-[14px] text-gray-500 mb-12 leading-relaxed">
-          Thank you for applying to Ethio Beauty Academy. We've<br />received your application.
+          Thank you for applying to Ethio Beauty Academy. We've received your application.
         </p>
 
         {/* Status Cards */}
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 gap-4 mb-14 text-left">
 
           {/* Application Status */}
-          <div className="border border-gray-200 rounded-md p-6">
+          <div className="border border-gray-200 rounded-lg p-6">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">
               APPLICATION STATUS
             </p>
@@ -90,7 +90,7 @@ const ApplicationConfirmation = () => {
           </div>
 
           {/* Payment Details */}
-          <div className="border border-gray-200 rounded-md p-6">
+          <div className="border border-gray-200 rounded-lg p-6">
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-3">
               PAYMENT DETAILS
             </p>
@@ -123,7 +123,7 @@ const ApplicationConfirmation = () => {
           </p>
 
           {/* Steps connector line + dots */}
-          <div className="relative flex items-center justify-center mb-4">
+          <div className="relative hidden sm:flex items-center justify-center mb-4">
             <div className="absolute left-[16.5%] right-[16.5%] top-[5px] h-[1px] bg-gray-200"></div>
             <div className="relative z-10 flex justify-between w-[65%]">
               {nextSteps.map((step) => (
@@ -139,7 +139,7 @@ const ApplicationConfirmation = () => {
           </div>
 
           {/* Steps labels */}
-          <div className="grid grid-cols-3 gap-4 text-center">
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-6 sm:gap-4 text-center">
             {nextSteps.map((step) => (
               <div key={step.num} className="flex flex-col items-center px-2">
                 <p className="text-[10px] text-gray-400 mb-1">{step.num}</p>
