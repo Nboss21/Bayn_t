@@ -33,7 +33,7 @@ const Courses = () => {
           {currentCourses.map(course => (
             <div key={course.id} className="group cursor-pointer">
               <div className="h-72 bg-gray-100 overflow-hidden mb-6 relative rounded-xl">
-                <img src={course.image} alt={course.title} className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
+                <img src={course.image} alt={course.title} loading="lazy" className="w-full h-full object-cover transition duration-700 group-hover:scale-105" />
                 <div className="absolute top-4 left-4 bg-white/90 px-4 py-1 text-xs font-bold uppercase tracking-wider rounded-full shadow-sm text-[#1c1c1c]">
                   {course.tag}
                 </div>
