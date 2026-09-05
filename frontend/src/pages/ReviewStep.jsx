@@ -26,7 +26,7 @@ const ReviewStep = () => {
           <p className="text-[#a87b52] text-[10px] font-bold tracking-[0.15em] uppercase mb-4">
             REVIEW
           </p>
-          <h2 className="text-[32px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-[32px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3">
             Make sure everything looks<br />right.
           </h2>
           <p className="text-[13px] text-gray-500">
@@ -38,10 +38,10 @@ const ReviewStep = () => {
 
         {/* Location Information */}
         <div className="mb-10">
-          <h3 className="text-[22px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+          <h3 className="text-[22px] font-serif text-[#111111] mb-6">
             Location
           </h3>
-          <div className="grid grid-cols-2 gap-y-6 gap-x-8 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 mb-4">
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 CITY
@@ -67,10 +67,10 @@ const ReviewStep = () => {
 
         {/* Background */}
         <div className="mb-10">
-          <h3 className="text-[22px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+          <h3 className="text-[22px] font-serif text-[#111111] mb-6">
             Background
           </h3>
-          <div className="grid grid-cols-2 gap-y-6 gap-x-8 mb-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-6 gap-x-8 mb-4">
             <div>
               <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                 EDUCATION
@@ -88,8 +88,8 @@ const ReviewStep = () => {
 
         {/* Program & Intake */}
         {program && (
-          <div className="bg-[#f2f5f2] rounded-md p-8 mb-10">
-            <h3 className="text-[20px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+          <div className="bg-[#f2f5f2] rounded-xl p-5 sm:p-8 mb-10">
+            <h3 className="text-[20px] font-serif text-[#111111] mb-6">
               Program & Intake
             </h3>
             <div className="mb-5">
@@ -98,7 +98,7 @@ const ReviewStep = () => {
               </p>
               <p className="text-[14px] text-[#111111]">{program.title}</p>
             </div>
-            <div className="grid grid-cols-2 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-8">
               <div>
                 <p className="text-[10px] font-bold text-gray-500 uppercase tracking-wider mb-1">
                   DURATION
@@ -117,7 +117,7 @@ const ReviewStep = () => {
 
         {/* Documents */}
         <div className="mb-12">
-          <h3 className="text-[22px] font-serif text-[#111111] mb-6" style={{ fontFamily: 'Georgia, serif' }}>
+          <h3 className="text-[22px] font-serif text-[#111111] mb-6">
             Documents
           </h3>
 
@@ -143,27 +143,27 @@ const ReviewStep = () => {
 
           <div className="space-y-2">
             {formData.idDocument && (
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center space-x-2 min-w-0">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-[13px] text-gray-600">{formData.idDocument.name}</p>
+                <p className="text-[13px] text-gray-600 truncate">{formData.idDocument.name}</p>
               </div>
             )}
             {formData.profilePhoto && (
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center space-x-2 min-w-0">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-[13px] text-gray-600">{formData.profilePhoto.name}</p>
+                <p className="text-[13px] text-gray-600 truncate">{formData.profilePhoto.name}</p>
               </div>
             )}
             {formData.supportingDoc && (
-              <div className="flex items-center space-x-2">
-                <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="flex items-center space-x-2 min-w-0">
+                <svg className="w-4 h-4 text-gray-400 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                 </svg>
-                <p className="text-[13px] text-gray-600">{formData.supportingDoc.name}</p>
+                <p className="text-[13px] text-gray-600 truncate">{formData.supportingDoc.name}</p>
               </div>
             )}
           </div>
@@ -175,7 +175,7 @@ const ReviewStep = () => {
         <div className="flex items-start space-x-3 mb-12">
           <div
             onClick={() => setAgreed(!agreed)}
-            className={`w-4 h-4 mt-0.5 flex-shrink-0 border rounded-sm cursor-pointer transition-colors ${
+            className={`w-4 h-4 mt-0.5 flex-shrink-0 border rounded-md cursor-pointer transition-colors ${
               agreed ? 'bg-[#404c40] border-[#404c40]' : 'bg-white border-gray-400'
             }`}
           >
@@ -191,10 +191,10 @@ const ReviewStep = () => {
         </div>
 
         {/* Bottom navigation */}
-        <div className="flex justify-between items-center">
+        <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center">
           <button
             onClick={() => navigate('/application/documents')}
-            className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-gray-50 transition flex items-center"
+            className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full hover:bg-gray-50 transition flex items-center justify-center w-full sm:w-auto"
           >
             <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -204,7 +204,7 @@ const ReviewStep = () => {
           <button
             disabled={!agreed}
             onClick={() => { completeStep('review'); navigate('/application/payment'); }}
-            className={`text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm ${
+            className={`text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto ${
               agreed
                 ? 'bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] cursor-pointer'
                 : 'bg-[#e6ca64]/50 text-[#111111]/50 cursor-not-allowed'
