@@ -4,7 +4,7 @@ const ProgramCard = ({ title, description, duration, level, image, isSelected, o
   return (
     <div 
       onClick={onClick}
-      className={`flex flex-col sm:flex-row p-4 border cursor-pointer transition-colors duration-200 relative ${
+      className={`flex flex-col sm:flex-row p-4 border cursor-pointer transition-colors duration-200 relative rounded-xl overflow-hidden ${
         isSelected 
           ? 'bg-[#f6f9f6] border-[#a0b2a1]' 
           : 'bg-white border-gray-200 hover:border-gray-300'
@@ -27,22 +27,23 @@ const ProgramCard = ({ title, description, duration, level, image, isSelected, o
         <img 
           src={image} 
           alt={title} 
+          loading="lazy"
           className="w-full h-full object-cover"
         />
       </div>
 
       <div className="mt-4 sm:mt-0 sm:ml-8 flex flex-col justify-center pr-12">
-        <h3 className="text-[22px] font-serif text-[#111111] mb-2 leading-tight" style={{ fontFamily: 'Georgia, serif' }}>
+        <h3 className="text-[22px] font-serif text-[#111111] mb-2 leading-tight">
           {title}
         </h3>
         <p className="text-[13px] text-gray-500 mb-5 leading-relaxed font-light">
           {description}
         </p>
         <div className="flex flex-wrap gap-2">
-          <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 bg-white">
+          <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 bg-white rounded-full">
             {duration}
           </span>
-          <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 bg-white">
+          <span className="px-2.5 py-1 text-[10px] uppercase tracking-wider text-gray-500 border border-gray-300 bg-white rounded-full">
             {level}
           </span>
         </div>
