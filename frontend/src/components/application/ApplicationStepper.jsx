@@ -11,10 +11,10 @@ const steps = [
 
 const ApplicationStepper = ({ currentStep = 1 }) => {
   return (
-    <div className="w-full max-w-[800px] mx-auto mb-16 pt-8">
+    <div className="w-full max-w-[800px] mx-auto mb-10 sm:mb-16 pt-4 sm:pt-8">
       <div className="relative flex items-center justify-between w-full">
         {/* Background Line */}
-        <div className="absolute left-[5%] right-[5%] top-[14px] h-[1px] bg-gray-200 -z-10"></div>
+        <div className="absolute left-[5%] right-[5%] top-[12px] sm:top-[14px] h-[1px] bg-gray-200 -z-10"></div>
         
         {steps.map((step) => {
           const stepNumber = parseInt(step.num, 10);
@@ -31,12 +31,12 @@ const ApplicationStepper = ({ currentStep = 1 }) => {
           return (
             <div key={step.num} className="flex flex-col items-center">
               <div 
-                className={`w-[28px] h-[28px] rounded-full flex items-center justify-center text-[11px] font-medium transition-colors ${circleClasses}`}
+                className={`w-[24px] h-[24px] sm:w-[28px] sm:h-[28px] rounded-full flex items-center justify-center text-[10px] sm:text-[11px] font-medium transition-colors ${circleClasses}`}
               >
                 {step.num}
               </div>
               <span 
-                className={`text-[9px] uppercase tracking-widest mt-3 font-semibold ${
+                className={`hidden sm:block text-[9px] uppercase tracking-widest mt-3 font-semibold ${
                   isActive || isPast ? 'text-[#111111]' : 'text-gray-400'
                 }`}
               >

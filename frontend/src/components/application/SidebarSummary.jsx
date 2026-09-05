@@ -8,12 +8,12 @@ const SidebarSummary = () => {
   if (!program) return null;
 
   return (
-    <div className="bg-[#fafafa] rounded-md p-8 w-full max-w-[320px] h-fit">
+    <div className="bg-[#fafafa] rounded-xl p-8 w-full max-w-[320px] h-fit">
       <p className="text-[10px] text-gray-500 uppercase tracking-widest font-semibold mb-4">
         Selected Program
       </p>
       
-      <h3 className="text-[26px] font-serif text-[#111111] leading-tight mb-2" style={{ fontFamily: 'Georgia, serif' }}>
+      <h3 className="text-2xl sm:text-[26px] font-serif text-[#111111] leading-tight mb-2">
         {program.title.split(' ').length > 3
           ? program.title.split(' ').slice(0, Math.ceil(program.title.split(' ').length / 2)).join(' ') + '\n' + program.title.split(' ').slice(Math.ceil(program.title.split(' ').length / 2)).join(' ')
           : program.title}

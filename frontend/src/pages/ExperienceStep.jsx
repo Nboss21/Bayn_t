@@ -45,18 +45,18 @@ const ExperienceStep = () => {
     <div className="w-full max-w-[800px] mx-auto px-4 pb-16 flex flex-col items-center">
       <ApplicationStepper currentStep={3} />
 
-      <div className="w-full bg-[#f8f8f8] rounded-md p-8 md:p-16">
+      <div className="w-full bg-[#f8f8f8] rounded-xl p-5 sm:p-8 md:p-16">
         
         {/* Header */}
         <div className="mb-12">
           <p className="text-[#a87b52] text-[10px] font-bold tracking-[0.15em] uppercase mb-4">
             BACKGROUND
           </p>
-          <h2 className="text-[32px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-[28px] sm:text-[32px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3">
             Tell us a little about<br />your background.
           </h2>
           <p className="text-[14px] text-gray-500">
-            This helps us understand your starting point and learning<br />needs.
+            This helps us understand your starting point and learning needs.
           </p>
         </div>
 
@@ -76,7 +76,7 @@ const ExperienceStep = () => {
                 <div 
                   key={edu}
                   onClick={() => updateField('education', edu)}
-                  className={`relative px-4 py-4 border rounded-sm cursor-pointer transition-colors text-center text-[13px] font-medium ${
+                  className={`relative px-4 py-4 border rounded-lg cursor-pointer transition-colors text-center text-[13px] font-medium ${
                     isSelected 
                       ? 'bg-[#eef1ed] border-[#8a9f8b] text-[#111111]' 
                       : 'bg-white border-gray-200 text-gray-700 hover:border-gray-300'
@@ -115,7 +115,7 @@ const ExperienceStep = () => {
                 <div 
                   key={exp.id}
                   onClick={() => updateField('experience', exp.id)}
-                  className={`relative flex items-center p-5 border rounded-sm cursor-pointer transition-colors ${
+                  className={`relative flex items-center p-5 border rounded-lg cursor-pointer transition-colors ${
                     isSelected 
                       ? 'bg-[#eef1ed] border-[#8a9f8b]' 
                       : 'bg-white border-gray-200 hover:border-gray-300'
@@ -164,10 +164,10 @@ const ExperienceStep = () => {
                 {errors.education && errors.experience && 'Education and experience are required'}
               </p>
             )}
-            <div className="flex justify-between items-center w-full">
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center w-full">
               <button 
                 onClick={() => navigate('/application/location')}
-                className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-white transition flex items-center"
+                className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full hover:bg-white transition flex items-center justify-center w-full sm:w-auto"
               >
                 <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -176,7 +176,7 @@ const ExperienceStep = () => {
               </button>
               <button 
                 onClick={handleContinue}
-                className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm"
+                className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto"
               >
                 Continue
                 <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -44,7 +44,7 @@ const FileUploadZone = ({ icon = 'document', accept = '.jpg,.png,.pdf', file, on
       onDragOver={(e) => { e.preventDefault(); setDragging(true); }}
       onDragLeave={() => setDragging(false)}
       onDrop={handleDrop}
-      className={`w-full border border-dashed rounded-sm py-8 flex flex-col items-center justify-center cursor-pointer transition-colors ${
+      className={`w-full border border-dashed rounded-lg py-6 sm:py-8 px-4 flex flex-col items-center justify-center cursor-pointer transition-colors ${
         displayError
           ? 'border-red-300 bg-red-50'
           : dragging
@@ -74,11 +74,11 @@ const FileUploadZone = ({ icon = 'document', accept = '.jpg,.png,.pdf', file, on
       </div>
 
       {file ? (
-        <div className="flex items-center gap-3">
-          <p className="text-[13px] text-[#6b826d] font-medium truncate max-w-[200px]">{file.name}</p>
+        <div className="flex items-center gap-3 min-w-0 w-full justify-center">
+          <p className="text-[13px] text-[#6b826d] font-medium truncate max-w-[160px] sm:max-w-[200px]">{file.name}</p>
           <button
             onClick={handleRemove}
-            className="text-gray-400 hover:text-red-500 transition"
+            className="text-gray-400 hover:text-red-500 transition flex-shrink-0"
             title="Remove file"
           >
             <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

@@ -72,7 +72,7 @@ const Events = () => {
 
         {/* View All Button */}
         <div className="flex justify-center mt-20">
-          <Link to="/events" className="bg-white border border-gray-200 px-10 py-3 rounded-xl text-[14px] font-medium text-[#1c1c1c] hover:shadow-md transition">
+          <Link to="/events" className="bg-white border border-gray-200 px-10 py-3 rounded-full text-[14px] font-medium text-[#1c1c1c] hover:shadow-md transition">
             View all
           </Link>
         </div>
