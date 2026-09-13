@@ -477,3 +477,11 @@ The application model contains reference_number, nullable program_id/intake_id/a
 - ⚠️ Application step names are not interpreted; the step value is accepted but field validation is shared.
 - ⚠️ No document replacement endpoint exists; duplicate document types are allowed by the schema.
 - ⚠️ No payment-before-submission requirement is implemented.
+
+## Reports, documents, and site content
+
+Reporting endpoints require Sanctum and use the authenticated user's scope. `GET /api/reports/dashboard` returns aggregate application, student, attendance, assessment, and administrative payment metrics. Applications are available to super admins and registrars at `/api/reports/applications`; student/enrollment reports are available at `/api/reports/students` and `/api/reports/enrollment`; attendance is `/api/reports/attendance`; assessments/performance are `/api/reports/assessments` and `/api/reports/performance`; and payments are `/api/reports/payments` for super admins and registrars. Reports accept relevant `status`, `program_id`, `class_id`, `intake_id`, `student_id`, `category`, `from`, and `to` filters. Payment totals are separated by currency and status. CSV exports are available at `/api/reports/students/export`, `/api/reports/attendance/export`, and `/api/reports/payments/export`.
+
+Certificates use `POST /api/students/{student}/certificate` and are limited to super admins and registrars. A student must be `completed` or `graduated`. The generated HTML certificate is stored on the private document disk as a `certificate` document, regenerated certificates replace the prior certificate, and generation is audit logged. `GET /api/students/{student}/certificate` returns a 15-minute signed URL for the student owner or authorized staff.
+
+Public content endpoints are `GET /api/site/settings`, `GET /api/public/gallery`, and `POST /api/newsletter/subscribe`. Gallery administration (`GET/POST /api/gallery`, `PUT/PATCH` and `DELETE /api/gallery/{galleryImage}`) and `PUT /api/site/settings` require a super admin or registrar. Gallery files use the configured `public_assets` disk; subscriber email addresses are never returned publicly. Site settings use a structured table.

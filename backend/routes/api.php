@@ -16,6 +16,8 @@ use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\GradingConfigController;
 use App\Http\Controllers\Api\AuditLogController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ContentController;
 
 /*
 |--------------------------------------------------------------------------
@@ -132,6 +134,33 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student']
 Route::get('/documents/{document}/download', [DocumentController::class, 'download'])
     ->middleware('signed')
     ->name('documents.download');
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])->prefix('reports')->group(function () {
+    Route::get('/dashboard', [ReportController::class, 'dashboard']);
+    Route::get('/applications', [ReportController::class, 'applications']);
+    Route::get('/students', [ReportController::class, 'students']);
+    Route::get('/enrollment', [ReportController::class, 'enrollment']);
+    Route::get('/attendance', [ReportController::class, 'attendance']);
+    Route::get('/assessments', [ReportController::class, 'assessments']);
+    Route::get('/performance', [ReportController::class, 'performance']);
+    Route::get('/payments', [ReportController::class, 'payments']);
+    Route::get('/{type}/export', [ReportController::class, 'export'])->where('type', 'students|attendance|payments');
+});
+
+Route::get('/site/settings', [ContentController::class, 'settings']);
+Route::get('/public/gallery', [ContentController::class, 'gallery']);
+Route::post('/newsletter/subscribe', [ContentController::class, 'subscribe']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
+    Route::put('/site/settings', [ContentController::class, 'updateSettings']);
+    Route::get('/gallery', [ContentController::class, 'galleryAdmin']);
+    Route::get('/gallery/{galleryImage}', [ContentController::class, 'showGallery']);
+    Route::post('/gallery', [ContentController::class, 'storeGallery']);
+    Route::match(['put','patch'], '/gallery/{galleryImage}', [ContentController::class, 'updateGallery']);
+    Route::delete('/gallery/{galleryImage}', [ContentController::class, 'deleteGallery']);
+});
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->post('/students/{student}/certificate', [DocumentController::class, 'certificate']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->get('/students/{student}/certificate', [DocumentController::class, 'certificateView']);
 
 // --------------------------------------------------------------------------
 // Role-Gated Routes
