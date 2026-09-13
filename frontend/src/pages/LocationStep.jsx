@@ -19,7 +19,7 @@ const LocationStep = () => {
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16">
       <ApplicationStepper currentStep={2} />
 
-      <div className="flex flex-col md:flex-row gap-12 lg:gap-20 mt-10">
+      <div className="flex flex-col md:flex-row gap-10 md:gap-12 lg:gap-20 mt-10">
         {/* Left Sidebar */}
         <SidebarSummary />
 
@@ -28,7 +28,7 @@ const LocationStep = () => {
           <p className="text-[10px] font-bold text-gray-500 tracking-[0.15em] uppercase mb-4">
             LOCATION
           </p>
-          <h2 className="text-[34px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-[28px] sm:text-[34px] md:text-[38px] font-serif leading-[1.1] text-[#111111] mb-3">
             Where do you currently<br />live?
           </h2>
           <p className="text-[13px] text-gray-500 mb-10">
@@ -46,7 +46,7 @@ const LocationStep = () => {
                 value={formData.city}
                 onChange={(e) => updateField('city', e.target.value)}
                 placeholder="Example: Addis Ababa"
-                className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
               <p className="text-[11px] text-gray-500 mt-2">
                 Enter the city or town where you currently live.
@@ -63,7 +63,7 @@ const LocationStep = () => {
                 value={formData.area}
                 onChange={(e) => updateField('area', e.target.value)}
                 placeholder="Example: Bole"
-                className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
               <p className="text-[11px] text-gray-500 mt-2">
                 Enter your neighborhood or local area.
@@ -80,7 +80,7 @@ const LocationStep = () => {
                 value={formData.landmark}
                 onChange={(e) => updateField('landmark', e.target.value)}
                 placeholder="Example: Near Edna Mall"
-                className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
+                className="w-full border border-gray-300 rounded-lg px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 focus:ring-0 transition-colors"
               />
               <p className="text-[11px] text-gray-500 mt-2">
                 Add a nearby landmark or any detail that helps describe your location.
@@ -102,10 +102,10 @@ const LocationStep = () => {
                   {errors.city && errors.area && 'City and area are required'}
                 </p>
               )}
-              <div className="flex justify-between items-center w-full">
+              <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center w-full">
                 <button 
                   onClick={() => navigate('/application/selected')}
-                  className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-gray-50 transition flex items-center"
+                  className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full hover:bg-gray-50 transition flex items-center justify-center w-full sm:w-auto"
                 >
                   <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -114,7 +114,7 @@ const LocationStep = () => {
                 </button>
                 <button 
                   onClick={handleContinue}
-                  className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm"
+                  className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto"
                 >
                   Continue
                   <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">

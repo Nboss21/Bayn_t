@@ -17,18 +17,18 @@ const PaymentStep = () => {
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16">
       <ApplicationStepper currentStep={6} />
 
-      <div className="flex flex-col md:flex-row gap-12 lg:gap-16 mt-6">
+      <div className="flex flex-col md:flex-row gap-10 md:gap-12 lg:gap-16 mt-6">
 
         {/* Left: Payment form */}
         <div className="flex-1">
-          <h2 className="text-[36px] md:text-[42px] font-serif leading-[1.1] text-[#111111] mb-3" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-[36px] md:text-[42px] font-serif leading-[1.1] text-[#111111] mb-3">
             Complete your payment.
           </h2>
           <p className="text-[13px] text-gray-500 mb-10 leading-relaxed">
             Your application is ready. Review the payment details below and continue securely.
           </p>
 
-          <h3 className="text-[20px] font-serif text-[#111111] mb-5" style={{ fontFamily: 'Georgia, serif' }}>
+          <h3 className="text-[20px] font-serif text-[#111111] mb-5">
             How would you like to pay?
           </h3>
 
@@ -40,7 +40,7 @@ const PaymentStep = () => {
                 <div
                   key={method.id}
                   onClick={() => updateField('paymentMethod', method.id)}
-                  className={`flex items-center p-4 border rounded-sm cursor-pointer transition-colors ${
+                  className={`flex items-center p-4 border rounded-lg cursor-pointer transition-colors ${
                     isSelected
                       ? 'border-gray-400 bg-white'
                       : 'border-gray-200 bg-white hover:border-gray-300'
@@ -60,7 +60,7 @@ const PaymentStep = () => {
           </div>
 
           {/* Security note */}
-          <div className="flex items-center space-x-2 bg-[#f5f5f3] px-4 py-3 rounded-sm mb-12">
+          <div className="flex items-center space-x-2 bg-[#f5f5f3] px-4 py-3 rounded-lg mb-12">
             <svg className="w-3.5 h-3.5 text-gray-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
@@ -72,16 +72,16 @@ const PaymentStep = () => {
           <div className="h-[1px] bg-gray-200 mb-8"></div>
 
           {/* Action buttons */}
-          <div className="flex items-center gap-4">
+          <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
               onClick={() => { completeStep('payment'); navigate('/application/confirmation'); }}
-              className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition"
+              className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-6 sm:px-8 rounded-full transition w-full sm:w-auto"
             >
               Pay 15,000 ETB
             </button>
             <button
               onClick={() => navigate('/application/review')}
-              className="border border-gray-300 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-4 px-8 rounded-sm hover:bg-gray-50 transition"
+              className="border border-gray-300 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-4 px-6 sm:px-8 rounded-full hover:bg-gray-50 transition w-full sm:w-auto"
             >
               Back
             </button>
@@ -90,8 +90,8 @@ const PaymentStep = () => {
 
         {/* Right: Application Summary */}
         <div className="md:w-[300px] flex-shrink-0">
-          <div className="bg-[#f2f4f0] rounded-md p-8">
-            <h3 className="text-[22px] font-serif text-[#111111] mb-8" style={{ fontFamily: 'Georgia, serif' }}>
+          <div className="bg-[#f2f4f0] rounded-xl p-8">
+            <h3 className="text-[22px] font-serif text-[#111111] mb-8">
               Application Summary
             </h3>
 
@@ -114,7 +114,7 @@ const PaymentStep = () => {
                   TOTAL TO PAY
                 </p>
               </div>
-              <p className="text-[36px] font-serif text-[#111111] leading-none text-right" style={{ fontFamily: 'Georgia, serif' }}>
+              <p className="text-2xl sm:text-[36px] font-serif text-[#111111] leading-none text-right">
                 15,000<br />ETB
               </p>
             </div>

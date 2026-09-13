@@ -14,15 +14,15 @@ const ProgramsSection = () => {
     : programs.filter((p) => p.category === activeCategory);
 
   const getColSpan = (index) => {
-    if (index === 0) return 'lg:col-span-8';
-    if (index === 1) return 'lg:col-span-4';
-    return 'lg:col-span-6';
+    if (index === 0) return 'md:col-span-12 lg:col-span-8';
+    if (index === 1) return 'md:col-span-6 lg:col-span-4';
+    return 'md:col-span-6 lg:col-span-6';
   };
 
   const getMinHeight = (index) => {
     if (index === 0) return '';
-    if (index === 1) return 'min-h-[480px] sm:min-h-[550px] lg:min-h-[620px]';
-    return 'min-h-[380px] sm:min-h-[410px] lg:min-h-[430px]';
+    if (index === 1) return 'min-h-[360px] sm:min-h-[420px] md:min-h-[480px] lg:min-h-[620px]';
+    return 'min-h-[340px] sm:min-h-[380px] lg:min-h-[430px]';
   };
 
   return (
@@ -37,7 +37,7 @@ const ProgramsSection = () => {
           />
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 sm:gap-6 w-full max-w-5xl">
+        <div className="grid grid-cols-1 md:grid-cols-12 gap-5 sm:gap-6 w-full max-w-5xl">
           {filteredPrograms.map((program, index) => (
             <div key={program.id} className={`${getColSpan(index)} flex`}>
               {index === 0 ? (

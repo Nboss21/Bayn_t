@@ -20,7 +20,7 @@ const HorizontalProgramCard = ({
       )}
       
       {/* Content aligned to right side with ample left empty space */}
-      <div className="w-full sm:w-[280px] lg:w-[300px] flex flex-col relative z-10">
+      <div className="w-full sm:w-[280px] md:w-[42%] lg:w-[300px] flex flex-col relative z-10">
         {/* Metadata */}
         <div className="text-[#a67c4e] text-[10.5px] sm:text-[11px] font-medium tracking-[0.18em] uppercase mb-3">
           {duration} <span className="mx-1">•</span> {level}

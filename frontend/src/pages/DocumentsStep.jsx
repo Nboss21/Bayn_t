@@ -19,14 +19,14 @@ const DocumentsStep = () => {
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16 flex flex-col items-center">
       <ApplicationStepper currentStep={4} />
 
-      <div className="w-full flex flex-col md:flex-row gap-12 lg:gap-20 mt-10">
+      <div className="w-full flex flex-col md:flex-row gap-10 md:gap-12 lg:gap-20 mt-10">
 
         {/* Left: Section header */}
         <div className="md:w-[260px] flex-shrink-0">
           <p className="text-[#a87b52] text-[10px] font-bold tracking-[0.15em] uppercase mb-4">
             DOCUMENTS
           </p>
-          <h2 className="text-[32px] md:text-[36px] font-serif leading-[1.1] text-[#111111] mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+          <h2 className="text-[28px] sm:text-[32px] md:text-[36px] font-serif leading-[1.1] text-[#111111] mb-4">
             Let's add your<br />documents.
           </h2>
           <p className="text-[13px] text-gray-500 leading-relaxed">
@@ -43,7 +43,7 @@ const DocumentsStep = () => {
               <h4 className="text-[11px] font-bold text-[#111111] tracking-wider uppercase">
                 IDENTIFICATION
               </h4>
-              <span className="text-[10px] font-semibold text-[#a87b52] tracking-wider uppercase border border-[#d2bba0] px-2 py-0.5 rounded-sm">
+              <span className="text-[10px] font-semibold text-[#a87b52] tracking-wider uppercase border border-[#d2bba0] px-2 py-0.5 rounded-full">
                 REQUIRED
               </span>
             </div>
@@ -63,7 +63,7 @@ const DocumentsStep = () => {
               <h4 className="text-[11px] font-bold text-[#111111] tracking-wider uppercase">
                 PROFILE PHOTO
               </h4>
-              <span className="text-[10px] font-semibold text-[#a87b52] tracking-wider uppercase border border-[#d2bba0] px-2 py-0.5 rounded-sm">
+              <span className="text-[10px] font-semibold text-[#a87b52] tracking-wider uppercase border border-[#d2bba0] px-2 py-0.5 rounded-full">
                 REQUIRED
               </span>
             </div>
@@ -83,7 +83,7 @@ const DocumentsStep = () => {
               <h4 className="text-[11px] font-bold text-[#111111] tracking-wider uppercase">
                 SUPPORTING DOCUMENT
               </h4>
-              <span className="text-[10px] font-semibold text-gray-400 tracking-wider uppercase border border-gray-300 px-2 py-0.5 rounded-sm">
+              <span className="text-[10px] font-semibold text-gray-400 tracking-wider uppercase border border-gray-300 px-2 py-0.5 rounded-full">
                 OPTIONAL
               </span>
             </div>
@@ -106,10 +106,10 @@ const DocumentsStep = () => {
                 {errors.idDocument && errors.profilePhoto && 'ID and profile photo are required'}
               </p>
             )}
-            <div className="flex justify-between items-center w-full">
+            <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center w-full">
               <button
                 onClick={() => navigate('/application/experience')}
-                className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full hover:bg-gray-50 transition flex items-center"
+                className="border border-gray-400 bg-transparent text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full hover:bg-gray-50 transition flex items-center justify-center w-full sm:w-auto"
               >
                 <svg className="w-3.5 h-3.5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M10 19l-7-7m0 0l7-7m-7 7h18" />
@@ -118,7 +118,7 @@ const DocumentsStep = () => {
               </button>
               <button
                 onClick={handleContinue}
-                className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-8 rounded-full transition flex items-center shadow-sm"
+                className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto"
               >
                 Continue
                 <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
