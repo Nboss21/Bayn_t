@@ -1,10 +1,10 @@
-import img1 from "../../assets/womans/woman 1.png";
-import img2 from "../../assets/womans/woman 2.png";
-import img3 from "../../assets/womans/woman 3.png";
-import img4 from "../../assets/womans/woman 4.png";
-import img5 from "../../assets/womans/woman 5.jpg";
-import img6 from "../../assets/womans/woman 6.png";
-import img7 from "../../assets/womans/woman 7.jpg";
+import img1 from "../../assets/womans/woman 1.webp";
+import img2 from "../../assets/womans/woman 2.webp";
+import img3 from "../../assets/womans/woman 3.webp";
+import img4 from "../../assets/womans/woman 4.webp";
+import img5 from "../../assets/womans/woman 5.webp";
+import img6 from "../../assets/womans/woman 6.webp";
+import img7 from "../../assets/womans/woman 7.webp";
 
 export const galleryImages = [
   { id: 1, src: img1, alt: "Woman 1", colSpan: 2, height: "tall" },

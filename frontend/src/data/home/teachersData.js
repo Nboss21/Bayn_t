@@ -1,9 +1,9 @@
-import teacher1 from "../../assets/womans/woman 1.png";
-import teacher2 from "../../assets/womans/woman 2.png";
-import teacher3 from "../../assets/womans/woman 3.png";
-import teacher4 from "../../assets/womans/woman 4.png";
-import teacher5 from "../../assets/womans/woman 5.jpg";
-import teacher6 from "../../assets/womans/woman 6.png";
+import teacher1 from "../../assets/womans/woman 1.webp";
+import teacher2 from "../../assets/womans/woman 2.webp";
+import teacher3 from "../../assets/womans/woman 3.webp";
+import teacher4 from "../../assets/womans/woman 4.webp";
+import teacher5 from "../../assets/womans/woman 5.webp";
+import teacher6 from "../../assets/womans/woman 6.webp";
 
 export const teachers = [
   {
