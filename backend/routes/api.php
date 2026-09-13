@@ -15,6 +15,7 @@ use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\GradingConfigController;
 use App\Http\Controllers\Api\AuditLogController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -22,6 +23,10 @@ use Illuminate\Support\Facades\Route;
 | API Routes
 |--------------------------------------------------------------------------
 */
+
+// Payment Gateway Webhook (Public Gateway Callback)
+Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
+
 
 // --------------------------------------------------------------------------
 // Authentication
@@ -48,6 +53,10 @@ Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
     Route::get('/unread', [NotificationController::class, 'unread']);
     Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
     Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
+});
+
+Route::middleware(['auth:sanctum', 'role:student,super_admin,registrar'])->group(function () {
+    Route::post('/payments/initiate', [PaymentController::class, 'initiate']);
 });
 
 Route::middleware(['auth:sanctum', 'role:student'])->prefix('applications')->group(function () {
