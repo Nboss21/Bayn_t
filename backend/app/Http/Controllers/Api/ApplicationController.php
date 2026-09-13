@@ -15,6 +15,7 @@ use App\Models\Intake;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Gate;
 use App\Services\AuditLogService;
 
@@ -114,7 +115,10 @@ class ApplicationController extends Controller
 
     private function referenceNumber(): string
     {
-        return 'APP-'.now()->format('Y').'-'.str_pad((string) ((int) Application::query()->max('id') + 1), 6, '0', STR_PAD_LEFT);
+        do {
+            $reference = 'APP-'.now()->format('Y').'-'.Str::upper(Str::random(10));
+        } while (Application::query()->where('reference_number', $reference)->exists());
+        return $reference;
     }
 
     private function snapshot(Application $application): array

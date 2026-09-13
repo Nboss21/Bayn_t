@@ -14,7 +14,7 @@ use Symfony\Component\HttpFoundation\StreamedResponse;
 class ReportController extends Controller
 {
     public function __construct(private readonly ReportService $reports) {}
-    public function dashboard(Request $r) { $this->staff($r); $data = $this->reports->dashboard($r->only(['from','to']), $r->user()); if (! $r->user()->isSuperAdmin() && ! $r->user()->isRegistrar()) unset($data['payments']); return response()->json(['data' => $data]); }
+    public function dashboard(Request $r) { abort_unless($r->user()->isSuperAdmin() || $r->user()->isRegistrar(), 403); return response()->json(['data' => $this->reports->dashboard($r->only(['from','to']), $r->user())]); }
     public function applications(Request $r) { abort_unless($r->user()->isSuperAdmin() || $r->user()->isRegistrar(),403); $data = $this->reports->applications($r->all()); $q = Application::query()->with(['program','intake']); $this->applicationFilters($q, $r); return response()->json(['data' => $data, 'records' => ApplicationResource::collection($q->latest()->paginate(min($r->integer('per_page', 20), 100)))]); }
     public function students(Request $r)
     {

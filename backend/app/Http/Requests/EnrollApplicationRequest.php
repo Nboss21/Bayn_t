@@ -7,7 +7,7 @@ use Illuminate\Validation\Rule;
 
 class EnrollApplicationRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('assignClass', $this->route('application')) === true; }
 
     public function rules(): array
     {
