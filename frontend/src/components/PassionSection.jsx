@@ -1,42 +1,87 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { passionData } from '../data/home/passionData';
+import ImageReveal from './ImageReveal';
+import Reveal from './Reveal';
 
 const PassionSection = () => {
   const { image, heading, description, cta } = passionData;
 
   return (
-    <section className="py-28 px-10 bg-white">
-      <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center w-[95%]">
-        
+    <section className="relative bg-cream py-28 md:py-32">
+      <div
+        className="pointer-events-none absolute inset-0 bg-[radial-gradient(60%_50%_at_30%_30%,rgba(201,162,39,0.08),transparent_60%)]"
+        aria-hidden
+      />
+
+      <div className="relative mx-auto w-[95%] max-w-6xl flex flex-col items-center gap-14 md:flex-row md:gap-20">
         {/* Left Column - Image */}
-        <div className="md:w-1/2 w-full h-[400px] rounded-lg mb-10 md:mb-0 overflow-hidden">
-          <img 
-            src={image.src} 
-            alt={image.alt} 
-            className="w-full h-full object-cover"
+        <div className="w-full md:w-1/2">
+          <ImageReveal
+            src={image.src}
+            alt={image.alt}
+            className="aspect-[4/5] w-full md:aspect-[3/4]"
           />
         </div>
 
         {/* Right Column - Content */}
-        <div className="md:w-1/2 w-full md:pl-20 flex flex-col items-start text-left">
-          <div className="mb-8 p-3 rounded bg-[#c5d5b7]">
-            <svg className="w-8 h-8 text-white" fill="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-              <path d="M12.75 3.486a2.25 2.25 0 00-1.5 0L3.393 6.94a2.25 2.25 0 00-1.144 1.95v6.22a2.25 2.25 0 001.144 1.95L11.25 20.51a2.25 2.25 0 001.5 0l7.857-3.447a2.25 2.25 0 001.144-1.95v-6.22a2.25 2.25 0 00-1.144-1.95L12.75 3.486zM11.64 5.378a.75.75 0 01.72 0l7.25 3.18-7.25 3.18-7.25-3.18 7.25-3.18zM4.143 8.89l7.107 3.118v7.411l-7.107-3.118V8.89zm8.607 10.53v-7.411l7.107-3.118v7.411l-7.107 3.118z" />
-            </svg>
-          </div>
-          <h2 className="text-[52px] md:text-[62px] font-serif mb-6 text-[#1c1c1c] leading-[1.1] tracking-tight">
-            {heading}
-          </h2>
-          <p className="text-[#1c1c1c]/80 mb-8 max-w-[400px] text-[15px] leading-relaxed">
-            {description}
-          </p>
-          <Link to={cta.to} className="text-[#ad7e59] text-[13px] font-bold flex items-center space-x-2 hover:opacity-80 transition group">
-            <span>{cta.label}</span>
-            <svg className="w-3 h-3 group-hover:translate-x-1 transition" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2.5" d="M9 5l7 7-7 7" />
-            </svg>
-          </Link>
+        <div className="flex w-full flex-col items-start text-left md:w-1/2">
+          <Reveal delay={0}>
+            <div
+              className="mb-8 inline-flex rounded-xl bg-champagne/10 p-3 text-champagne"
+              aria-hidden
+            >
+              <svg
+                className="h-8 w-8"
+                fill="currentColor"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <path d="M12.75 3.486a2.25 2.25 0 00-1.5 0L3.393 6.94a2.25 2.25 0 00-1.144 1.95v6.22a2.25 2.25 0 001.144 1.95L11.25 20.51a2.25 2.25 0 001.5 0l7.857-3.447a2.25 2.25 0 001.144-1.95v-6.22a2.25 2.25 0 00-1.144-1.95L12.75 3.486zM11.64 5.378a.75.75 0 01.72 0l7.25 3.18-7.25 3.18-7.25-3.18 7.25-3.18zM4.143 8.89l7.107 3.118v7.411l-7.107-3.118V8.89zm8.607 10.53v-7.411l7.107-3.118v7.411l-7.107-3.118z" />
+              </svg>
+            </div>
+          </Reveal>
+
+          <Reveal delay={0}>
+            <p className="mb-5 flex items-center gap-3 text-[11px] font-semibold uppercase tracking-[0.4em] text-champagne">
+              <span className="h-[1px] w-10 bg-champagne/80" />
+              About Lumière
+            </p>
+          </Reveal>
+
+          <Reveal delay={80}>
+            <h2 className="mb-8 font-display text-5xl font-light leading-[1.05] tracking-[-0.01em] text-ink md:text-[62px]">
+              {heading}
+            </h2>
+          </Reveal>
+
+          <Reveal delay={160}>
+            <p className="mb-10 max-w-[420px] text-base leading-relaxed text-ink/70">
+              {description}
+            </p>
+          </Reveal>
+
+          <Reveal delay={240}>
+            <Link
+              to={cta.to}
+              className="group relative inline-flex items-center gap-3 font-semibold text-bronze after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-right after:scale-x-100 after:bg-champagne after:transition-transform after:duration-300 hover:text-ink hover:after:origin-left hover:after:scale-x-0"
+            >
+              <span>{cta.label}</span>
+              <svg
+                className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-1"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M9 5l7 7-7 7"
+                />
+              </svg>
+            </Link>
+          </Reveal>
         </div>
       </div>
     </section>
