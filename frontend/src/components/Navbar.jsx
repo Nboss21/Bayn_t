@@ -51,27 +51,26 @@ const Navbar = () => {
   const isActive = (path) => location.pathname === path;
 
   const desktopLinkClass = (path) =>
-    `hover:text-white transition-colors capitalize ${isActive(path) ? 'text-white underline underline-offset-[6px] decoration-[#eec15b] decoration-2' : ''}`;
+    `relative transition-colors duration-300 capitalize pb-0.5 after:absolute after:left-0 after:-bottom-0.5 after:h-[2px] after:w-full after:origin-left after:scale-x-0 after:bg-[#eec15b] after:transition-transform after:duration-300 hover:after:scale-x-100 ${
+      isActive(path) ? 'text-white after:scale-x-100' : 'text-white/80 hover:text-white'
+    }`;
 
   const mobileLinkClass = (path) =>
-    `hover:text-white transition-colors capitalize text-center ${isActive(path) ? 'text-white underline underline-offset-[6px] decoration-[#eec15b] decoration-2' : 'text-white/70'}`;
+    `transition-colors duration-300 capitalize text-center ${isActive(path) ? 'text-white underline underline-offset-[6px] decoration-[#eec15b] decoration-2' : 'text-white/70 hover:text-white'}`;
 
   return (
     <div
       ref={navRef}
-      className={`z-50 flex justify-center transition-all duration-300 ease-in-out
-        ${atTop
-          ? 'absolute top-6 left-0 right-0'
-          : 'fixed top-0 left-0 right-0 pt-3 pb-2'
-        }
-        ${!atTop && !visible ? '-translate-y-full opacity-0' : 'translate-y-0 opacity-100'}
+      className={`z-50 fixed top-0 left-0 right-0 flex justify-center transition-all duration-500 ease-in-out
+        ${atTop ? 'pt-5' : 'pt-3'}
+        ${!atTop && !visible ? '-translate-y-[150%] opacity-0' : 'translate-y-0 opacity-100'}
       `}
     >
       <nav
-        className={`flex justify-between items-center px-6 rounded-full w-[90%] max-w-4xl text-white border border-white/20 backdrop-blur-md transition-all duration-300 ease-in-out
+        className={`flex justify-between items-center px-6 rounded-full w-[90%] max-w-4xl text-white border backdrop-blur-xl transition-all duration-500 ease-in-out
           ${atTop
-            ? 'py-3 bg-gradient-to-br from-[#8a5f3f]/80 to-[#7a5236]/80 shadow-md'
-            : 'py-2.5 bg-gradient-to-br from-[#7a5236]/95 to-[#6b4830]/95 shadow-2xl shadow-black/30'
+            ? 'py-3 border-white/25 bg-gradient-to-br from-[#8a5f3f]/50 to-[#7a5236]/40 shadow-[0_8px_20px_rgba(0,0,0,0.15),inset_0_1px_0_rgba(255,255,255,0.12)]'
+            : 'py-2.5 border-white/30 bg-gradient-to-br from-[#7a5236]/80 to-[#6b4830]/70 shadow-[0_10px_30px_rgba(0,0,0,0.35),inset_0_1px_0_rgba(255,255,255,0.12)]'
           }`}
       >
         <Link to="/" className="flex flex-col items-start justify-center leading-none">
@@ -91,7 +90,7 @@ const Navbar = () => {
 
         <Link
           to="/application"
-          className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase hover:bg-[#d6ac4f] transition-colors"
+          className="hidden md:block bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase hover:bg-[#d6ac4f] hover:scale-[1.02] active:scale-[0.98] transition-all duration-200 shadow-[0_4px_14px_rgba(238,193,91,0.3)]"
         >
           Apply Now
         </Link>
@@ -123,7 +122,7 @@ const Navbar = () => {
           <Link to="/contact" className={mobileLinkClass('/contact')} onClick={() => setIsOpen(false)}>contact</Link>
           <Link
             to="/application"
-            className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase w-full text-center hover:bg-[#d6ac4f] transition-colors inline-block"
+            className="bg-[#eec15b] text-[#1c1c1c] px-6 py-2 rounded-full text-xs font-semibold uppercase w-full text-center hover:bg-[#d6ac4f] active:scale-[0.98] transition-all duration-200 inline-block"
             onClick={() => setIsOpen(false)}
           >
             Apply Now

@@ -25,6 +25,11 @@ class StudentPolicy
         return $user->id === $student->user_id;
     }
 
+    public function updateStatus(User $user, Student $student): bool
+    {
+        return $user->isSuperAdmin() || $user->isRegistrar();
+    }
+
     public function updateAssessment(User $user, Student $student): bool
     {
         if ($user->isSuperAdmin()) {

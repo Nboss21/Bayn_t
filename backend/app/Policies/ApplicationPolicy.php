@@ -45,6 +45,16 @@ class ApplicationPolicy
         return $user->email === $application->applicant_email;
     }
 
+    public function update(User $user, Application $application): bool
+    {
+        return $application->status?->value === 'draft' && $this->view($user, $application);
+    }
+
+    public function submit(User $user, Application $application): bool
+    {
+        return $this->view($user, $application);
+    }
+
     public function viewDocument(User $user, Application $application): bool
     {
         return $this->view($user, $application);

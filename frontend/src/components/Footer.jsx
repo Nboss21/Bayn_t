@@ -5,11 +5,11 @@ const Footer = () => {
   return (
     <footer className="bg-[#a87b52] text-white">
       {/* Main Footer */}
-      <div className="max-w-7xl mx-auto w-[90%] py-20 grid grid-cols-1 md:grid-cols-4 gap-16">
+      <div className="max-w-7xl mx-auto w-[90%] py-20 grid grid-cols-1 md:grid-cols-4 gap-10 md:gap-16">
 
         {/* Left - Logo + Newsletter */}
         <div className="md:col-span-1">
-          <p className="text-3xl font-script mb-6 italic" style={{ fontFamily: 'cursive' }}>Logo</p>
+          <p className="text-3xl font-script mb-6 italic">Logo</p>
           <p className="text-white/80 text-[13px] leading-relaxed mb-6">
             Join our newsletter for new course dates and academy news.
           </p>

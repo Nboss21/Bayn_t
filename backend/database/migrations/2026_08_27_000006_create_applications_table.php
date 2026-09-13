@@ -11,11 +11,11 @@ return new class extends Migration
         Schema::create('applications', function (Blueprint $table) {
             $table->id();
             $table->string('reference_number')->unique();
-            $table->foreignId('program_id')->constrained()->restrictOnDelete();
-            $table->foreignId('intake_id')->constrained()->restrictOnDelete();
-            $table->string('applicant_name');
+            $table->foreignId('program_id')->nullable()->constrained()->restrictOnDelete();
+            $table->foreignId('intake_id')->nullable()->constrained()->restrictOnDelete();
+            $table->string('applicant_name')->nullable();
             $table->string('applicant_email');
-            $table->string('applicant_phone');
+            $table->string('applicant_phone')->nullable();
             $table->enum('status', ['draft', 'submitted', 'payment_pending', 'paid', 'under_review', 'approved', 'rejected', 'enrolled'])->index();
             $table->text('rejection_reason')->nullable();
             $table->foreignId('reviewed_by')->nullable()->constrained('users')->nullOnDelete();

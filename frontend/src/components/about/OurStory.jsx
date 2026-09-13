@@ -38,7 +38,7 @@ const OurStory = () => {
       {/* ── Story hero band ── */}
       <section
         className="relative overflow-hidden"
-        style={{ backgroundColor: '#c4956a', minHeight: '520px' }}
+        style={{ backgroundColor: '#c4956a' }}
       >
         {/* Woman photo — right-aligned, bleeds off top, fades out at the bottom */}
         <div
@@ -61,20 +61,20 @@ const OurStory = () => {
         </div>
 
         {/* Content area */}
-        <div className="relative z-10 max-w-6xl mx-auto px-8 py-16 md:py-24 flex flex-col justify-center"
-          style={{ minHeight: '520px' }}>
+        <div className="relative z-10 max-w-6xl mx-auto px-5 sm:px-8 py-14 md:py-24 flex flex-col justify-center"
+          style={{ minHeight: 'min(440px, 60vh)' }}>
 
           {/* Decorative line — sits above the card */}
           <div
             className="hidden md:block mb-3"
-            style={{ width: '48%' }}
+            style={{ width: '46%' }}
           >
             <div style={{ width: '48px', height: '1.5px', backgroundColor: 'rgba(255,255,255,0.55)' }} />
           </div>
 
           {/* Card */}
           <div
-            className="w-full md:w-[46%] rounded-2xl px-8 py-9"
+            className="w-full md:w-[46%] rounded-2xl px-6 sm:px-8 py-8 sm:py-9"
             style={{
               backgroundColor: 'rgba(255,255,255,0.18)',
               backdropFilter: 'blur(4px)',
@@ -82,14 +82,14 @@ const OurStory = () => {
           >
             <h2
               className="font-serif text-white mb-6"
-              style={{ fontSize: '2.75rem', lineHeight: 1.1, fontStyle: 'italic', fontWeight: 700 }}
+              style={{ fontSize: 'clamp(1.9rem, 4.5vw, 2.75rem)', lineHeight: 1.1, fontStyle: 'italic', fontWeight: 700 }}
             >
               {heading}
             </h2>
 
             <div className="space-y-4">
               {paragraphs.map((text, i) => (
-                <p key={i} style={{ color: 'rgba(255,255,255,0.88)', fontSize: '0.82rem', lineHeight: 1.75 }}>
+                <p key={i} style={{ color: 'rgba(255,255,255,0.88)', fontSize: 'clamp(0.78rem, 2vw, 0.82rem)', lineHeight: 1.75 }}>
                   {text}
                 </p>
               ))}
@@ -97,15 +97,14 @@ const OurStory = () => {
           </div>
 
           {/* Extra space below card — matches the reference breathing room */}
-          <div className="h-12" />
+          <div className="h-10 md:h-12" />
         </div>
       </section>
 
       {/* ── Value cards ── */}
-      <section className="px-6 py-14" style={{ backgroundColor: '#c4956a' }}>
+      <section className="px-5 sm:px-6 py-14" style={{ backgroundColor: '#c4956a' }}>
         <div
-          className="max-w-6xl mx-auto grid gap-5"
-          style={{ gridTemplateColumns: 'repeat(4, 1fr)' }}
+          className="max-w-6xl mx-auto grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5"
         >
           {values.map((item) => (
             <div
@@ -125,8 +124,8 @@ const OurStory = () => {
               >
                 {icons[item.icon]}
               </div>
-              <h3 style={{ color: '#1f1d1b', fontSize: '0.82rem', fontWeight: 600 }}>{item.title}</h3>
-              <p style={{ color: '#7a6f67', fontSize: '0.72rem', lineHeight: 1.7 }}>{item.description}</p>
+              <h3 style={{ color: '#1f1d1b', fontSize: 'clamp(0.78rem, 2vw, 0.82rem)', fontWeight: 600 }}>{item.title}</h3>
+              <p style={{ color: '#7a6f67', fontSize: 'clamp(0.7rem, 1.8vw, 0.72rem)', lineHeight: 1.7 }}>{item.description}</p>
             </div>
           ))}
         </div>
@@ -134,14 +133,14 @@ const OurStory = () => {
 
       {/* ── Mission band ── */}
       <section
-        className="text-center px-6 py-24"
+        className="text-center px-5 sm:px-6 py-20 md:py-24"
         style={{ backgroundColor: '#8b6340' }}
       >
         <p
           className="flex items-center justify-center gap-2 mb-10"
           style={{
             color: '#d4a96a',
-            fontSize: '0.65rem',
+            fontSize: '0.6rem',
             fontWeight: 700,
             letterSpacing: '0.2em',
             textTransform: 'uppercase',
@@ -151,12 +150,11 @@ const OurStory = () => {
           {mission.label}
         </p>
         <blockquote
-          className="font-serif mx-auto"
+          className="font-serif mx-auto max-w-[90%] md:max-w-[520px]"
           style={{
             color: '#ffffff',
-            fontSize: '1.6rem',
+            fontSize: 'clamp(1.1rem, 3.5vw, 1.6rem)',
             lineHeight: 1.45,
-            maxWidth: '520px',
           }}
         >
           {mission.quote}

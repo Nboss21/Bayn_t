@@ -9,7 +9,7 @@ class IntakePolicy
 {
     public function viewAny(User $user): bool
     {
-        return $user->isSuperAdmin() || $user->isRegistrar();
+        return $user->isSuperAdmin() || $user->isRegistrar() || $user->isStudent();
     }
 
     public function view(User $user, Intake $intake): bool

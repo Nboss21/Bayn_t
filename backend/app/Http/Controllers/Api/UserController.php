@@ -39,7 +39,6 @@ class UserController extends Controller
         $data = $request->validated();
         $data['password'] = Hash::make($data['password']);
         $data['is_active'] ??= true;
-        unset($data['password']);
 
         return (new UserResource(User::create($data)))->response()->setStatusCode(201);
     }
@@ -57,8 +56,9 @@ class UserController extends Controller
 
         $data = $request->validated();
 
-        if (array_key_exists('password', $data)) {
+        if (array_key_exists('password', $data) && $data['password'] !== null) {
             $data['password'] = Hash::make($data['password']);
+        } else {
             unset($data['password']);
         }
 

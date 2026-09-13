@@ -16,6 +16,8 @@ class ClassResource extends JsonResource
             'teacher_id' => $this->teacher_id,
             'name' => $this->name,
             'capacity' => $this->capacity,
+            'enrolled_count' => $this->when(isset($this->students_count), $this->students_count),
+            'available_capacity' => $this->when(isset($this->students_count), max(0, $this->capacity - $this->students_count)),
             'schedule' => $this->schedule,
             'program' => new ProgramResource($this->whenLoaded('program')),
             'intake' => new IntakeResource($this->whenLoaded('intake')),

@@ -17,8 +17,8 @@ const SelectedProgram = () => {
     <div className="w-full max-w-[1000px] mx-auto px-4 pb-16 flex flex-col items-center">
       <ApplicationStepper currentStep={1} />
       
-      <div className="text-center mb-10">
-        <h2 className="text-4xl md:text-[44px] font-serif leading-[1.1] text-[#111111] mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+      <div className="text-center mb-10 px-4">
+        <h2 className="text-3xl sm:text-4xl md:text-[44px] font-serif leading-[1.1] text-[#111111] mb-4">
           Let's get your application<br />started
         </h2>
         <p className="text-[14px] text-gray-500">
@@ -28,7 +28,7 @@ const SelectedProgram = () => {
 
       <div className="w-full max-w-[800px] bg-[#eef1ed] rounded-2xl flex flex-col md:flex-row overflow-hidden shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
         {/* Left Side: Image */}
-        <div className="w-full md:w-1/2 h-[300px] md:h-[450px]">
+        <div className="w-full md:w-1/2 h-[220px] sm:h-[300px] md:h-[450px]">
           <img 
             src={program.image} 
             alt={program.title} 
@@ -37,8 +37,8 @@ const SelectedProgram = () => {
         </div>
 
         {/* Right Side: Content */}
-        <div className="w-full md:w-1/2 p-8 md:p-12 flex flex-col justify-center">
-          <h3 className="text-[28px] font-serif text-[#111111] mb-4" style={{ fontFamily: 'Georgia, serif' }}>
+        <div className="w-full md:w-1/2 p-5 sm:p-8 md:p-12 flex flex-col justify-center">
+          <h3 className="text-2xl sm:text-[28px] font-serif text-[#111111] mb-4">
             {program.title}
           </h3>
           
@@ -76,16 +76,16 @@ const SelectedProgram = () => {
             <div className="h-[1px] w-full bg-gray-200/60"></div>
           </div>
           
-          <div className="flex items-center space-x-6">
+          <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <button 
               onClick={() => { completeStep('selected'); navigate('/application/location'); }}
-              className="bg-[#eec15b] hover:bg-[#d9af50] text-[#111111] text-[12px] font-bold uppercase tracking-wider py-3.5 px-8 rounded-full transition"
+              className="bg-[#eec15b] hover:bg-[#d9af50] text-[#111111] text-[12px] font-bold uppercase tracking-wider py-3.5 px-6 sm:px-8 rounded-full transition w-full sm:w-auto text-center"
             >
               Continue
             </button>
             <button 
               onClick={() => navigate('/application/program')}
-              className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-800 transition underline underline-offset-4"
+              className="text-[11px] font-semibold text-gray-500 uppercase tracking-wider hover:text-gray-800 transition underline underline-offset-4 w-full sm:w-auto text-center"
             >
               Change Program
             </button>
