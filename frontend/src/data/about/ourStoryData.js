@@ -1,4 +1,4 @@
-import storyImage from "../../assets/womans2/ourstory.png";
+import storyImage from "../../assets/womans2/ourstory.webp";
 
 export const ourStoryData = {
   heading: "Our Story",
