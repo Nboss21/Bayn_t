@@ -23,6 +23,7 @@ class StoreDocumentRequest extends FormRequest
                 'required',
                 'file',
                 'max:10240',
+                'mimes:pdf,jpg,jpeg,png,doc,docx',
                 'mimetypes:application/pdf,image/jpeg,image/png,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document',
             ],
         ];

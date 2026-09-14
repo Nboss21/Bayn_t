@@ -8,6 +8,9 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\URL;
+use Illuminate\Support\Facades\RateLimiter;
+use Illuminate\Cache\RateLimiting\Limit;
+use Illuminate\Http\Request;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,6 +28,9 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot(): void
     {
+        RateLimiter::for('auth', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('public-write', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
+        RateLimiter::for('expensive-admin', fn (Request $request) => Limit::perMinute(3)->by($request->user()?->id ?: $request->ip()));
         // Gate definitions for RBAC
         Gate::define('access-super-admin', function (User $user) {
             return $user->isSuperAdmin() && $user->is_active;

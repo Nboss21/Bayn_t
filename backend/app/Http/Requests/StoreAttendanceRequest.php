@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class StoreAttendanceRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('create', \App\Models\AttendanceRecord::class) === true; }
 
     public function rules(): array
     {

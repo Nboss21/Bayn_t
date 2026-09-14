@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateStudentStatusRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('updateStatus', $this->route('student')) === true; }
 
     public function rules(): array
     {

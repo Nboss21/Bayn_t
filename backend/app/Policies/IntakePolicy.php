@@ -19,12 +19,12 @@ class IntakePolicy
 
     public function create(User $user): bool
     {
-        return $this->viewAny($user);
+        return $user->isSuperAdmin() || $user->isRegistrar();
     }
 
     public function update(User $user, Intake $intake): bool
     {
-        return $this->viewAny($user);
+        return $user->isSuperAdmin() || $user->isRegistrar();
     }
 
     public function delete(User $user, Intake $intake): bool
