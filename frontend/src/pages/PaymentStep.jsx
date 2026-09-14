@@ -10,7 +10,7 @@ const paymentMethods = [
 
 const PaymentStep = () => {
   const navigate = useNavigate();
-  const { formData, updateField, getSelectedProgram, completeStep } = useApplication();
+  const { formData, updateField, getSelectedProgram, completeStep, saveStep, uploadDocuments } = useApplication();
   const program = getSelectedProgram();
 
   return (
@@ -74,10 +74,10 @@ const PaymentStep = () => {
           {/* Action buttons */}
           <div className="flex items-center gap-4">
             <button
-              onClick={() => { completeStep('payment'); navigate('/application/confirmation'); }}
+              onClick={async () => { await saveStep('payment'); await uploadDocuments(); completeStep('payment'); navigate('/application/confirmation'); }}
               className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition"
             >
-              Pay 15,000 ETB
+              Submit Application
             </button>
             <button
               onClick={() => navigate('/application/review')}

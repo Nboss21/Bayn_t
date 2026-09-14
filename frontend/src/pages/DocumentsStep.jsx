@@ -6,10 +6,11 @@ import { useApplication } from '../context/ApplicationContext';
 
 const DocumentsStep = () => {
   const navigate = useNavigate();
-  const { formData, errors, updateField, validateStep, completeStep } = useApplication();
+  const { formData, errors, updateField, validateStep, completeStep, uploadDocuments } = useApplication();
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (validateStep('documents')) {
+      await uploadDocuments();
       completeStep('documents');
       navigate('/application/review');
     }

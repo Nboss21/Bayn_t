@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { publicService } from '../services/applicationService';
 
 const Footer = () => {
+  const [email, setEmail] = useState(''); const [message, setMessage] = useState('');
+  const subscribe = async () => { try { await publicService.subscribe(email); setMessage('Subscribed.'); setEmail(''); } catch { setMessage('Please enter a valid email.'); } };
   return (
     <footer className="bg-[#a87b52] text-white">
       {/* Main Footer */}
@@ -14,17 +17,16 @@ const Footer = () => {
             Join our newsletter for new course dates and academy news.
           </p>
           <div className="flex items-center mb-4">
-            <input
+            <input value={email} onChange={(e) => setEmail(e.target.value)}
               type="email"
               placeholder="Enter your email"
               className="bg-transparent border border-white/50 rounded-l-full px-4 py-2.5 text-[13px] placeholder-white/60 text-white outline-none w-full focus:border-white transition"
             />
-            <button className="bg-[#c9a97a] hover:bg-[#b8975e] border border-[#c9a97a] text-white text-[13px] font-semibold px-5 py-2.5 rounded-r-full transition whitespace-nowrap">
+            <button onClick={subscribe} className="bg-[#c9a97a] hover:bg-[#b8975e] border border-[#c9a97a] text-white text-[13px] font-semibold px-5 py-2.5 rounded-r-full transition whitespace-nowrap">
               Subscribe
             </button>
           </div>
-          <p className="text-white/50 text-[11px] leading-relaxed">
-            By subscribing you agree to our Privacy Policy and consent to receive updates from our academy.
+          <p className="text-white/50 text-[11px] leading-relaxed">{message || 'By subscribing you agree to our Privacy Policy and consent to receive updates from our academy.'}
           </p>
         </div>
 

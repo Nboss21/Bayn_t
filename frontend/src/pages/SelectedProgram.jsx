@@ -5,7 +5,7 @@ import { useApplication } from '../context/ApplicationContext';
 
 const SelectedProgram = () => {
   const navigate = useNavigate();
-  const { getSelectedProgram, completeStep } = useApplication();
+  const { getSelectedProgram, intakes, formData, errors, updateField, validateStep, completeStep, saveStep } = useApplication();
   const program = getSelectedProgram();
 
   if (!program) {
@@ -49,6 +49,7 @@ const SelectedProgram = () => {
           </div>
           
           <div className="space-y-6 mb-10">
+            <label className="block text-[11px] uppercase tracking-wider text-gray-500 font-semibold">Intake<select value={formData.intakeId || ''} onChange={(e) => updateField('intakeId', e.target.value)} className="mt-2 w-full border rounded-lg p-3 text-sm"><option value="">Select an open intake</option>{intakes.map((intake) => <option key={intake.id} value={intake.id}>{intake.name} ({intake.start_date} – {intake.end_date})</option>)}</select>{errors.intakeId && <span className="text-red-600 text-xs">{errors.intakeId}</span>}</label>
             {/* Duration */}
             <div className="flex items-start">
               <svg className="w-5 h-5 text-gray-500 mr-4 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -78,7 +79,7 @@ const SelectedProgram = () => {
           
           <div className="flex items-center space-x-6">
             <button 
-              onClick={() => { completeStep('selected'); navigate('/application/location'); }}
+              onClick={async () => { if (validateStep('selected')) { await saveStep('selected'); completeStep('selected'); navigate('/application/location'); } }}
               className="bg-[#eec15b] hover:bg-[#d9af50] text-[#111111] text-[12px] font-bold uppercase tracking-wider py-3.5 px-8 rounded-full transition"
             >
               Continue

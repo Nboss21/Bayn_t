@@ -23,6 +23,9 @@ import DocumentsStep from './pages/DocumentsStep';
 import ReviewStep from './pages/ReviewStep';
 import PaymentStep from './pages/PaymentStep';
 import ApplicationConfirmation from './pages/ApplicationConfirmation';
+import Login from './pages/auth/Login';
+import Dashboard from './pages/Dashboard';
+import { useAuth } from './context/AuthContext';
 
 function ProtectedRoute({ step, children }) {
   const { canAccess } = useApplication();
@@ -41,11 +44,19 @@ function ApplicationStepsLayout() {
   );
 }
 
+function RequireAuth({ children }) {
+  const { loading, isAuthenticated } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  return isAuthenticated ? children : <Navigate to="/login" replace state={{ from: window.location.pathname }} />;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
+        <Route path="/login" element={<Login />} />
+        <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
         <Route path="/" element={<MainLayout />}>
           <Route index element={<Home />} />
           <Route path="about" element={<About />} />
@@ -58,11 +69,11 @@ function App() {
           <Route path="contact" element={<Contact />} />
         </Route>
         
-        <Route path="/application" element={<ApplicationLayout />}>
+        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
           <Route index element={<Application />} />
         </Route>
 
-        <Route path="/application" element={<ApplicationLayout />}>
+        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
           <Route element={<ApplicationStepsLayout />}>
             <Route path="program" element={<ProgramSelection />} />
             <Route path="selected" element={<ProtectedRoute step="selected"><SelectedProgram /></ProtectedRoute>} />

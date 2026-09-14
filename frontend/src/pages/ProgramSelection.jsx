@@ -2,15 +2,13 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import ProgramCard from '../components/application/ProgramCard';
 import { useApplication } from '../context/ApplicationContext';
-import { pathData } from '../data/home/pathData';
 
 const ProgramSelection = () => {
-  const { formData, errors, updateField, validateStep, completeStep } = useApplication();
+  const { formData, programs, loading, errors, updateField, validateStep, completeStep, ensureDraft } = useApplication();
   const navigate = useNavigate();
-  const { programs } = pathData;
-
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (validateStep('program')) {
+      await ensureDraft();
       completeStep('program');
       navigate('/application/selected');
     }
@@ -33,6 +31,8 @@ const ProgramSelection = () => {
 
       {/* Cards List */}
       <div className="w-full space-y-4 mb-16">
+        {loading && <p className="text-sm text-gray-500">Loading available programs…</p>}
+        {!loading && !programs.length && <p className="text-sm text-red-600">No open programs are currently available.</p>}
         {programs.map((program) => (
           <ProgramCard
             key={program.id}
