@@ -29,13 +29,28 @@ const Gallery = () => {
         <div className="flex flex-col gap-6">
           {visibleImages.slice(4, 6).map((image) => <img key={image.src} src={image.src} alt={image.alt} className="w-full rounded-2xl object-cover shadow-sm" />)}
         </div>
-      </div>
 
-      <Link to="/gallery">
-        <button className="mt-12 px-8 py-2.5 bg-[#E5CB74] text-[#1c1c1c] font-medium rounded-lg border border-[#BFA75B] hover:bg-[#d6bc65] transition shadow-sm">
-          View More
-        </button>
-      </Link>
+        {/* View More */}
+        <Reveal delay={120} className="mt-14">
+          <Link
+            to="/gallery"
+            className="group inline-flex items-center gap-3 rounded-full border border-espresso/20 px-10 py-3.5 text-xs font-bold uppercase tracking-[0.2em] text-ink transition-all duration-300 hover:bg-espresso hover:text-cream focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne"
+          >
+            View Gallery
+            <svg
+              className="h-3.5 w-3.5 transition-transform duration-300 group-hover:translate-x-1"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth={2}
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              viewBox="0 0 24 24"
+            >
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          </Link>
+        </Reveal>
+      </div>
     </section>
   );
 };

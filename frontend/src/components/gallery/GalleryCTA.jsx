@@ -10,7 +10,7 @@ const GalleryCTA = () => {
         <p className="text-[#4a4a4a] text-[13px] md:text-sm mb-10 leading-relaxed">
           Transform your passion for beauty into a professional career.<br className="hidden md:block" /> Applications for the next intake are now open.
         </p>
-        <button className="bg-[#eec15b] text-[#1c1c1c] px-8 py-3 rounded-sm text-[11px] font-bold uppercase tracking-wider hover:bg-[#d5ad52] transition">
+        <button className="bg-[#eec15b] text-[#1c1c1c] px-8 py-3 rounded-full text-[11px] font-bold uppercase tracking-wider hover:bg-[#d5ad52] transition">
           Join Our Community
         </button>
       </div>
