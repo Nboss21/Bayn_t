@@ -14,6 +14,19 @@ import PrivacyPolicy from './pages/PrivacyPolicy';
 import Contact from './pages/Contact';
 import Gallery from './pages/Gallery';
 import Application from './pages/Application';
+import LoginPage from './pages/LoginPage';
+import ForgotPasswordPage from './pages/ForgotPasswordPage';
+import ResetPasswordPage from './pages/ResetPasswordPage';
+import RegistrarLayout from './layouts/RegistrarLayout';
+import RegistrarOverview from './pages/RegistrarOverview';
+import ApplicationsPage from './pages/ApplicationsPage';
+import ApplicationReviewPage from './pages/ApplicationReviewPage';
+import ClassAssignmentPage from './pages/ClassAssignmentPage';
+import StudentsPage from './pages/StudentsPage';
+import StudentDetailPage from './pages/StudentDetailPage';
+import ClassesPage from './pages/ClassesPage';
+import EnrollmentHistoryPage from './pages/EnrollmentHistoryPage';
+import ProfilePage from './pages/ProfilePage';
 
 import ProgramSelection from './pages/ProgramSelection';
 import SelectedProgram from './pages/SelectedProgram';
@@ -46,16 +59,20 @@ function App() {
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
-        <Route path="/" element={<MainLayout />}>
-          <Route index element={<Home />} />
-          <Route path="about" element={<About />} />
-          <Route path="programs" element={<Programs />} />
-          <Route path="events" element={<EventsPage />} />
-          <Route path="teachers" element={<Teachers />} />
-          <Route path="gallery" element={<Gallery />} />
-          <Route path="faq" element={<FAQPage />} />
-          <Route path="privacy-policy" element={<PrivacyPolicy />} />
-          <Route path="contact" element={<Contact />} />
+        <Route path="/" element={<LoginPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        <Route path="/reset-password" element={<ResetPasswordPage />} />
+        
+        <Route element={<MainLayout />}>
+          <Route path="/home" element={<Home />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/programs" element={<Programs />} />
+          <Route path="/events" element={<EventsPage />} />
+          <Route path="/teachers" element={<Teachers />} />
+          <Route path="/gallery" element={<Gallery />} />
+          <Route path="/faq" element={<FAQPage />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/contact" element={<Contact />} />
         </Route>
         
         <Route path="/application" element={<ApplicationLayout />}>
@@ -73,6 +90,18 @@ function App() {
             <Route path="payment" element={<ProtectedRoute step="payment"><PaymentStep /></ProtectedRoute>} />
             <Route path="confirmation" element={<ProtectedRoute step="confirmation"><ApplicationConfirmation /></ProtectedRoute>} />
           </Route>
+        </Route>
+        
+        <Route path="/registrar" element={<RegistrarLayout />}>
+          <Route path="overview" element={<RegistrarOverview />} />
+          <Route path="applications" element={<ApplicationsPage />} />
+          <Route path="applications/:id" element={<ApplicationReviewPage />} />
+          <Route path="applications/:id/assign-class" element={<ClassAssignmentPage />} />
+          <Route path="students" element={<StudentsPage />} />
+          <Route path="students/:studentId" element={<StudentDetailPage />} />
+          <Route path="classes" element={<ClassesPage />} />
+          <Route path="history" element={<EnrollmentHistoryPage />} />
+          <Route path="profile" element={<ProfilePage />} />
         </Route>
       </Routes>
     </BrowserRouter>
