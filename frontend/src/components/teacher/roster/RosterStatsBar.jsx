@@ -1,37 +1,37 @@
 import React from 'react';
 
-const statData = [
-  {
-    label: '# OF ALL ALUMS',
-    value: '18',
-    sub: 'Active Students YoY',
-  },
-  {
-    label: 'OVERALL CLASS AT TENDANCE',
-    value: '92%',
-    sub: 'Average healthy',
-  },
-  {
-    label: 'ASSESSMENT AVERAGE',
-    value: '83%',
-    sub: 'In-class testing',
-  },
-  {
-    label: 'ACADEMIC STATUS',
-    customContent: (
-      <div className="flex items-center gap-2 mt-1">
-        <span className="bg-[#D4EDDA] text-[#2F6B43] text-[12px] font-semibold px-2.5 py-0.5 rounded-full">
-          96% On Track
-        </span>
-        <span className="bg-[#FEF0C7] text-[#B45309] text-[12px] font-semibold px-2.5 py-0.5 rounded-full">
-          2 At-risk
-        </span>
-      </div>
-    ),
-  },
-];
+const RosterStatsBar = ({ stats }) => {
+  const statData = [
+    {
+      label: '# OF ALL ALUMS',
+      value: stats.totalStudents,
+      sub: 'Active Students YoY',
+    },
+    {
+      label: 'OVERALL CLASS ATTENDANCE',
+      value: `${stats.overallAttendance}%`,
+      sub: 'Average healthy',
+    },
+    {
+      label: 'ASSESSMENT AVERAGE',
+      value: `${stats.overallMarks}%`,
+      sub: 'In-class testing',
+    },
+    {
+      label: 'ACADEMIC STATUS',
+      customContent: (
+        <div className="flex items-center gap-2 mt-1">
+          <span className="bg-[#D4EDDA] text-[#2F6B43] text-[12px] font-semibold px-2.5 py-0.5 rounded-full">
+            {stats.onTrackCount} On Track
+          </span>
+          <span className="bg-[#FEF0C7] text-[#B45309] text-[12px] font-semibold px-2.5 py-0.5 rounded-full">
+            {stats.needsAttentionCount} At-risk
+          </span>
+        </div>
+      ),
+    },
+  ];
 
-const RosterStatsBar = () => {
   return (
     <div className="grid grid-cols-4 gap-0 border border-gray-200 rounded-xl overflow-hidden mb-6 bg-white">
       {statData.map((stat, i) => (
@@ -60,4 +60,3 @@ const RosterStatsBar = () => {
 };
 
 export default RosterStatsBar;
-
