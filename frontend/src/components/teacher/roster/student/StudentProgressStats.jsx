@@ -17,7 +17,6 @@ const StatCard = ({ label, value, suffix, note, needsAttention, barColor }) => (
       <span className="text-[40px] font-bold text-[#2F4F3A] leading-none">{value}%</span>
       {note && <span className="text-[13px] text-gray-400">{note}</span>}
     </div>
-    {/* Progress bar */}
     <div className="w-full h-1.5 bg-gray-100 rounded-full overflow-hidden">
       <div
         className={`h-full rounded-full ${barColor}`}
@@ -27,25 +26,24 @@ const StatCard = ({ label, value, suffix, note, needsAttention, barColor }) => (
   </div>
 );
 
-const StudentProgressStats = ({ attendance, marks }) => {
+const StudentProgressStats = ({ attendance, marks, sessionsLogged }) => {
   return (
     <div className="flex gap-4 mb-6">
       <StatCard
         label="Current attendance"
         value={attendance}
-        note="19 sessions logged"
+        note={`${sessionsLogged} sessions logged`}
         needsAttention
-        barColor="bg-[#4A7C59]"
+        barColor={attendance >= 90 ? 'bg-[#4A7C59]' : 'bg-[#D4A373]'}
       />
       <StatCard
         label="Current overall marks"
         value={marks}
         needsAttention
-        barColor="bg-[#4A7C59]"
+        barColor={marks >= 80 ? 'bg-[#4A7C59]' : 'bg-[#D4A373]'}
       />
     </div>
   );
 };
 
 export default StudentProgressStats;
-
