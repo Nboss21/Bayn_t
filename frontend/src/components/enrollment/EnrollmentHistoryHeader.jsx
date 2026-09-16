@@ -4,12 +4,6 @@ export default function EnrollmentHistoryHeader() {
   return (
     <div className="flex items-start justify-between mb-6">
       <div>
-        {/* Breadcrumb */}
-        <div className="flex items-center text-[13px] text-[#6b7280] mb-2">
-          <span>Registrar</span>
-          <span className="mx-2 text-[#d1d5db]">/</span>
-          <span className="font-medium text-[#111827]">Enrollment History</span>
-        </div>
         {/* Title */}
         <h1 className="text-[28px] font-bold text-[#111827] leading-tight">
           Enrollment History
