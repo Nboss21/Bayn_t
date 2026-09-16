@@ -1,13 +1,5 @@
 import React from 'react';
-import { LineChart, Line, XAxis, YAxis, Tooltip, ResponsiveContainer } from 'recharts';
-
-const data = [
-  { name: 'Mon', value: 94 },
-  { name: 'Tue', value: 100 },
-  { name: 'Wed', value: 89 },
-  { name: 'Thu', value: 96 },
-  { name: 'Fri', value: 92 },
-];
+import { LineChart, Line, XAxis, Tooltip, ResponsiveContainer } from 'recharts';
 
 const CustomDot = (props) => {
   const { cx, cy, value } = props;
@@ -21,7 +13,7 @@ const CustomDot = (props) => {
   );
 };
 
-const TeacherChart = () => {
+const TeacherChart = ({ data }) => {
   return (
     <div className="w-full h-full relative">
       <div className="absolute inset-0 bg-gradient-to-t from-gray-50/50 to-transparent pointer-events-none" />

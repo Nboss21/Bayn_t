@@ -36,48 +36,52 @@ const StatCard = ({ title, dotColor, number, suffixText, pillStyle, isHighlighte
   );
 };
 
-const TeacherAttendanceStats = () => {
+const TeacherAttendanceStats = ({ stats }) => {
+  const { total, present, absent, late, excused, unmarked } = stats;
+
+  const pct = (n) => total > 0 ? ((n / total) * 100).toFixed(1) + '%' : '0.0%';
+
   return (
     <div className="grid grid-cols-6 gap-4 mb-8">
       <StatCard 
         title="Total" 
-        number="18" 
+        number={total} 
         suffixText="Students" 
       />
       <StatCard 
         title="Present" 
         dotColor="bg-[#12B76A]" 
-        number="12" 
-        suffixText="66.7%" 
+        number={present} 
+        suffixText={pct(present)} 
         pillStyle="bg-[#ECFDF3] text-[#027A48]"
       />
       <StatCard 
         title="Absent" 
         dotColor="bg-[#F04438]" 
-        number="2" 
-        suffixText="11.1%" 
+        number={absent} 
+        suffixText={pct(absent)} 
         pillStyle="bg-[#FEF3F2] text-[#B42318]"
       />
       <StatCard 
         title="Late" 
         dotColor="bg-[#F79009]" 
-        number="1" 
-        suffixText="5.5%" 
+        number={late} 
+        suffixText={pct(late)} 
         pillStyle="bg-[#FFFAEB] text-[#B54708]"
       />
       <StatCard 
         title="Excused" 
         dotColor="bg-[#2E90FA]" 
-        number="0" 
-        suffixText="0.0%" 
+        number={excused} 
+        suffixText={pct(excused)} 
         pillStyle="bg-[#EFF8FF] text-[#175CD3]"
       />
       <StatCard 
         title="Unmarked" 
         dotColor="bg-[#F79009]" 
-        number="3" 
-        suffixText="Pending"
-        isHighlighted={true}
+        number={unmarked} 
+        suffixText={unmarked > 0 ? 'Pending' : 'All marked'}
+        isHighlighted={unmarked > 0}
         highlightColors={{
           card: 'bg-[#FFFAEB] border-[#FEDF89]',
           title: 'text-[#B54708]',
@@ -90,4 +94,3 @@ const TeacherAttendanceStats = () => {
 };
 
 export default TeacherAttendanceStats;
-
