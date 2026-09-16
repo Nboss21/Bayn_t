@@ -1,20 +1,36 @@
-
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
   const handleLogin = (e) => {
     e.preventDefault();
-    navigate('/registrar/overview');
+    setError('');
+
+    const user = username.toLowerCase().trim();
+
+    if (user === 'teacher') {
+      navigate('/teacher/overview');
+    } else if (user === 'registrar') {
+      navigate('/registrar/overview');
+    } else if (user === 'superadmin') {
+      navigate('/');
+    } else {
+      setError('Invalid username or password. Try: teacher, registrar, or superadmin.');
+    }
   };
 
   return (
-    <div className="flex flex-col justify-center px-12 py-10 w-1/2">
+    <form onSubmit={handleLogin} className="flex flex-col justify-center px-12 py-10 w-1/2">
       <h2 className="text-3xl font-bold mb-8 text-black tracking-widest text-center">LOGIN</h2>
+
+      {error && <div className="text-red-500 text-sm mb-4 text-center">{error}</div>}
 
       <div className="mb-4">
         <label className="block text-[11px] font-bold text-black mb-1 ml-4" htmlFor="username">
@@ -23,6 +39,8 @@ export default function LoginForm() {
         <input
           type="text"
           id="username"
+          value={username}
+          onChange={(e) => setUsername(e.target.value)}
           className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm"
         />
       </div>
@@ -35,6 +53,8 @@ export default function LoginForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             id="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
             className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm pr-12"
           />
           <button
@@ -56,13 +76,12 @@ export default function LoginForm() {
 
       <div className="flex justify-center">
         <button
-          onClick={handleLogin}
-          type="button"
+          type="submit"
           className="bg-[#B0C4A4] text-[#355E67] font-bold text-sm px-12 py-2.5 rounded-full hover:bg-[#a0b494] transition-colors shadow-sm"
         >
           LOG IN
         </button>
       </div>
-    </div>
+    </form>
   );
 }

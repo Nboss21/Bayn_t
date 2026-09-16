@@ -28,6 +28,15 @@ import ClassesPage from './pages/ClassesPage';
 import EnrollmentHistoryPage from './pages/EnrollmentHistoryPage';
 import ProfilePage from './pages/ProfilePage';
 
+import TeacherLayout from './layouts/TeacherLayout';
+import TeacherOverview from './pages/teacher/TeacherOverview';
+import TeacherClasses from './pages/teacher/TeacherClasses';
+import TeacherAttendance from './pages/teacher/TeacherAttendance';
+import TeacherMarks from './pages/teacher/TeacherMarks';
+import TeacherCurriculum from './pages/teacher/TeacherCurriculum';
+import TeacherRoster from './pages/teacher/TeacherRoster';
+import TeacherStudentProgress from './pages/teacher/TeacherStudentProgress';
+
 import ProgramSelection from './pages/ProgramSelection';
 import SelectedProgram from './pages/SelectedProgram';
 import LocationStep from './pages/LocationStep';
@@ -102,6 +111,18 @@ function App() {
           <Route path="classes" element={<ClassesPage />} />
           <Route path="history" element={<EnrollmentHistoryPage />} />
           <Route path="profile" element={<ProfilePage />} />
+        </Route>
+
+        <Route path="/teacher" element={<TeacherLayout />}>
+          <Route path="overview" element={<TeacherOverview />} />
+          <Route path="classes" element={<TeacherClasses />} />
+          <Route path="attendance" element={<TeacherAttendance />} />
+          <Route path="marks" element={<TeacherMarks />} />
+          <Route path="curriculum" element={<TeacherCurriculum />} />
+          <Route path="roster" element={<TeacherRoster />} />
+          <Route path="roster/:studentId" element={<TeacherStudentProgress />} />
+          {/* Default redirect to overview */}
+          <Route index element={<Navigate to="/teacher/overview" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
