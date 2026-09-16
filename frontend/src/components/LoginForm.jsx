@@ -1,8 +1,11 @@
 
+import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { Eye, EyeOff } from 'lucide-react';
 
 export default function LoginForm() {
   const navigate = useNavigate();
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleLogin = (e) => {
     e.preventDefault();
@@ -30,24 +33,23 @@ export default function LoginForm() {
         </label>
         <div className="relative">
           <input
-            type="password"
+            type={showPassword ? 'text' : 'password'}
             id="password"
             className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm pr-12"
           />
           <button
             type="button"
+            onClick={() => setShowPassword(!showPassword)}
             className="absolute inset-y-0 right-4 flex items-center text-gray-400 hover:text-gray-600"
+            aria-label={showPassword ? 'Hide password' : 'Show password'}
           >
-            <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="lucide lucide-eye">
-              <path d="M2.062 12.348a1 1 0 0 1 0-.696 10.75 10.75 0 0 1 19.876 0 1 1 0 0 1 0 .696 10.75 10.75 0 0 1-19.876 0" />
-              <circle cx="12" cy="12" r="3" />
-            </svg>
+            {showPassword ? <EyeOff className="w-[18px] h-[18px]" /> : <Eye className="w-[18px] h-[18px]" />}
           </button>
         </div>
       </div>
 
       <div className="flex justify-end mb-8">
-        <Link to="/forgot-password" className="text-[12px] text-[#355E67] hover:underline mr-4">
+        <Link to="/auth/forgot-password" className="text-[12px] text-[#355E67] hover:underline mr-4">
           Forgot password?
         </Link>
       </div>

@@ -7,14 +7,14 @@ export default function ForgotPasswordForm() {
   const handleReset = (e) => {
     e.preventDefault();
     // Simulate sending email, then navigate to reset password page for demo purposes
-    navigate('/reset-password'); 
+    navigate('/auth/reset-password'); 
   };
 
   return (
     <div className="flex flex-col justify-center px-10 py-10 w-1/2 relative h-full">
       {/* Back link */}
       <div className="absolute top-8 left-10">
-        <Link to="/" className="flex items-center text-[13px] text-gray-500 hover:text-black transition-colors">
+        <Link to="/auth/login" className="flex items-center text-[13px] text-gray-500 hover:text-black transition-colors">
           <ArrowLeft className="w-4 h-4 mr-2" />
           Back to login
         </Link>
