@@ -24,19 +24,21 @@ export default function ApplicantHeader({ applicant, onRequestInfo, onReject, on
             </div>
           </div>
         </div>
-        
-        <div className="flex items-center gap-3">
-          <button onClick={onReject} className="px-4 py-2 border border-[#fecaca] text-[#dc2626] bg-[#fef2f2] hover:bg-[#fee2e2] rounded-lg text-[14px] font-medium transition-colors">
-            Reject
-          </button>
-          <button onClick={onRequestInfo} className="px-4 py-2 border border-[#e5e7eb] text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-[14px] font-medium transition-colors">
-            Request Info
-          </button>
-          <button onClick={onApprove} className="px-4 py-2 border border-transparent text-white bg-[#1a1a1a] hover:bg-black rounded-lg text-[14px] font-medium flex items-center gap-2 transition-colors">
-            <Check className="w-4 h-4" strokeWidth={3} />
-            Approve Application
-          </button>
-        </div>
+
+        {applicant.isDecisionable() && (
+          <div className="flex items-center gap-3">
+            <button onClick={onReject} className="px-4 py-2 border border-[#fecaca] text-[#dc2626] bg-[#fef2f2] hover:bg-[#fee2e2] rounded-lg text-[14px] font-medium transition-colors">
+              Reject
+            </button>
+            <button onClick={onRequestInfo} className="px-4 py-2 border border-[#e5e7eb] text-gray-700 bg-white hover:bg-gray-50 rounded-lg text-[14px] font-medium transition-colors">
+              Request Info
+            </button>
+            <button onClick={onApprove} className="px-4 py-2 border border-transparent text-white bg-[#1a1a1a] hover:bg-black rounded-lg text-[14px] font-medium flex items-center gap-2 transition-colors">
+              <Check className="w-4 h-4" strokeWidth={3} />
+              Approve Application
+            </button>
+          </div>
+        )}
       </div>
 
       <div className="grid grid-cols-4 gap-6 pt-6 border-t border-[#f3f4f6]">
@@ -62,4 +64,3 @@ export default function ApplicantHeader({ applicant, onRequestInfo, onReject, on
     </div>
   );
 }
-
