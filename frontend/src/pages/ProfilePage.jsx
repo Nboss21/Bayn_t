@@ -7,13 +7,6 @@ import AccountContextCard from '../components/AccountContextCard';
 export default function ProfilePage() {
   return (
     <div className="max-w-[1000px] w-full">
-      {/* Breadcrumb below Topbar */}
-      <div className="flex items-center text-sm mb-4">
-        <span className="text-[#6b7280]">Profile</span>
-        <span className="mx-2 text-[#d1d5db]">/</span>
-        <span className="font-medium text-[#111827]">Account</span>
-      </div>
-
       <div className="mb-8">
         <h1 className="text-3xl font-bold text-[#111827] mb-2">My Profile</h1>
         <p className="text-[#6b7280]">Manage your account information and security.</p>
