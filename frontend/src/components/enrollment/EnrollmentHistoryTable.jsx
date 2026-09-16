@@ -1,54 +1,6 @@
 import React from 'react';
 import EnrollmentHistoryTableRow from './EnrollmentHistoryTableRow';
 
-const enrollmentData = [
-  {
-    student: 'Mekdes Tesfaye',
-    studentId: 'HOB-ST-2026-0041',
-    program: 'Professional Makeup Artistry',
-    intake: 'September 2026',
-    class: 'PMA - Morning',
-    enrollmentDate: 'September 3, 2026',
-    status: 'Enrolled',
-  },
-  {
-    student: 'Hana Bekele',
-    studentId: 'HOB-ST-2026-0038',
-    program: 'Bridal Makeup Professional',
-    intake: 'September 2026',
-    class: 'BMP - Afternoon',
-    enrollmentDate: 'September 2, 2026',
-    status: 'Enrolled',
-  },
-  {
-    student: 'Saron Alemu',
-    studentId: 'HOB-ST-2026-0035',
-    program: 'Professional Makeup Artistry',
-    intake: 'August 2026',
-    class: 'PMA - Evening',
-    enrollmentDate: 'August 4, 2026',
-    status: 'Completed',
-  },
-  {
-    student: 'Liya Tadesse',
-    studentId: 'HOB-ST-2026-0029',
-    program: 'Beauty & Makeup Fundamentals',
-    intake: 'August 2026',
-    class: 'BMF - Morning',
-    enrollmentDate: 'August 5, 2026',
-    status: 'Enrolled',
-  },
-  {
-    student: 'Bethel Girma',
-    studentId: 'HOB-ST-2026-0024',
-    program: 'Advanced Beauty Techniques',
-    intake: 'July 2026',
-    class: 'ABT - Weekend',
-    enrollmentDate: 'July 28, 2026',
-    status: 'Completed',
-  },
-];
-
 const columns = [
   { label: 'STUDENT' },
   { label: 'STUDENT ID' },
@@ -60,7 +12,7 @@ const columns = [
   { label: 'ACTION' },
 ];
 
-export default function EnrollmentHistoryTable() {
+export default function EnrollmentHistoryTable({ rows, onView }) {
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-xl overflow-hidden flex-1 mb-4">
       <div className="overflow-x-auto">
@@ -78,9 +30,17 @@ export default function EnrollmentHistoryTable() {
             </tr>
           </thead>
           <tbody>
-            {enrollmentData.map((record, index) => (
-              <EnrollmentHistoryTableRow key={index} record={record} />
-            ))}
+            {rows.length === 0 ? (
+              <tr>
+                <td colSpan={columns.length} className="px-6 py-12 text-center text-[14px] text-[#9ca3af]">
+                  No enrollment records found.
+                </td>
+              </tr>
+            ) : (
+              rows.map((record) => (
+                <EnrollmentHistoryTableRow key={record.id} record={record} onView={onView} />
+              ))
+            )}
           </tbody>
         </table>
       </div>
