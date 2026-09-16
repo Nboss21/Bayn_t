@@ -121,6 +121,7 @@ function App() {
           <Route path="curriculum" element={<TeacherCurriculum />} />
           <Route path="roster" element={<TeacherRoster />} />
           <Route path="roster/:studentId" element={<TeacherStudentProgress />} />
+          <Route path="profile" element={<ProfilePage />} />
           {/* Default redirect to overview */}
           <Route index element={<Navigate to="/teacher/overview" replace />} />
         </Route>
