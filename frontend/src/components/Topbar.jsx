@@ -1,15 +1,17 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, ChevronDown } from 'lucide-react';
-import { useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import studentsDetailData from '../data/studentsDetailData';
 
+const WORKSPACE = { label: 'Registrar Workspace', to: '/registrar/overview' };
+
 const ROUTE_CRUMBS = {
-  '/registrar/overview': [{ label: 'Registrar Workspace' }, { label: 'Overview', active: true }],
-  '/registrar/applications': [{ label: 'Registrar Workspace' }, { label: 'Applications', active: true }],
-  '/registrar/students': [{ label: 'Registrar Workspace' }, { label: 'Students', active: true }],
-  '/registrar/classes': [{ label: 'Registrar', active: true }],
-  '/registrar/history': [{ label: 'Registrar Workspace' }, { label: 'Enrollment History', active: true }],
-  '/registrar/profile': [{ label: 'Registrar', active: false }],
+  '/registrar/overview': [WORKSPACE, { label: 'Overview', active: true }],
+  '/registrar/applications': [WORKSPACE, { label: 'Applications', active: true }],
+  '/registrar/students': [WORKSPACE, { label: 'Students', active: true }],
+  '/registrar/classes': [WORKSPACE, { label: 'Classes', active: true }],
+  '/registrar/history': [WORKSPACE, { label: 'Enrollment History', active: true }],
+  '/registrar/profile': [WORKSPACE, { label: 'Profile', active: true }],
 };
 
 function getBreadcrumbs(pathname) {
@@ -19,8 +21,8 @@ function getBreadcrumbs(pathname) {
   const appReviewMatch = pathname.match(/^\/registrar\/applications\/([^/]+)$/);
   if (appReviewMatch) {
     return [
-      { label: 'Registrar Workspace' },
-      { label: 'Applications' },
+      WORKSPACE,
+      { label: 'Applications', to: '/registrar/applications' },
       { label: appReviewMatch[1], active: true },
     ];
   }
@@ -28,9 +30,9 @@ function getBreadcrumbs(pathname) {
   const assignMatch = pathname.match(/^\/registrar\/applications\/([^/]+)\/assign-class$/);
   if (assignMatch) {
     return [
-      { label: 'Registrar Workspace' },
-      { label: 'Applications' },
-      { label: assignMatch[1] },
+      WORKSPACE,
+      { label: 'Applications', to: '/registrar/applications' },
+      { label: assignMatch[1], to: `/registrar/applications/${assignMatch[1]}` },
       { label: 'Class Assignment', active: true },
     ];
   }
@@ -41,19 +43,30 @@ function getBreadcrumbs(pathname) {
     const studentData = studentsDetailData[studentId];
     const label = studentData ? studentData.name : studentId;
     return [
-      { label: 'Registrar' },
-      { label: 'Students' },
+      WORKSPACE,
+      { label: 'Students', to: '/registrar/students' },
       { label, active: true },
     ];
   }
-  return [{ label: 'Registrar', active: false }];
+  return [WORKSPACE];
 }
 
-export default function Topbar() {
+export default function Topbar({ onToggleNotifications, unreadCount }) {
   const { pathname } = useLocation();
+  const navigate = useNavigate();
   const crumbs = getBreadcrumbs(pathname);
-  const [dropdownOpen, setDropdownOpen] = useState(true); // default open in design image
+  const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+
+  const handleSignOut = () => {
+    setDropdownOpen(false);
+    navigate('/auth/login');
+  };
+
+  const handleViewProfile = () => {
+    setDropdownOpen(false);
+    navigate('/registrar/profile');
+  };
 
   useEffect(() => {
     function handleClickOutside(event) {
@@ -74,15 +87,16 @@ export default function Topbar() {
         {crumbs.map((crumb, i) => (
           <React.Fragment key={i}>
             {i > 0 && <span className="mx-2 text-[#d1d5db]">/</span>}
-            <span
-              className={
-                crumb.active
-                  ? 'font-medium text-[#111827]'
-                  : 'text-[#111827]'
-              }
-            >
-              {crumb.label}
-            </span>
+            {crumb.active ? (
+              <span className="font-medium text-[#111827]">{crumb.label}</span>
+            ) : (
+              <Link
+                to={crumb.to}
+                className="text-[#111827] hover:text-[#6b7280] transition-colors"
+              >
+                {crumb.label}
+              </Link>
+            )}
           </React.Fragment>
         ))}
       </div>
@@ -96,7 +110,7 @@ export default function Topbar() {
           </div>
           <input
             type="text"
-            defaultValue="mekdes"
+            placeholder="Search"
             className="block w-64 pl-10 pr-10 py-2 border border-[#e5e7eb] rounded-lg text-sm text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:ring-1 focus:ring-[#9ca3af] focus:border-[#9ca3af] bg-[#f4f5f5]"
           />
           <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
@@ -107,9 +121,13 @@ export default function Topbar() {
         </div>
 
         {/* Notification bell */}
-        <button className="text-[#4b5563] hover:text-[#111827] relative">
+        <button onClick={onToggleNotifications} className="text-[#4b5563] hover:text-[#111827] relative" title="Notifications">
           <Bell className="w-5 h-5" />
-          <span className="absolute top-0 right-0 block h-2 w-2 rounded-full bg-[#ef4444] ring-2 ring-[#fafafa]" />
+          {unreadCount > 0 && (
+            <span className="absolute -top-1.5 -right-1.5 min-w-[18px] h-[18px] px-1 bg-[#ef4444] text-white text-[10px] font-bold rounded-full ring-2 ring-[#fafafa] flex items-center justify-center">
+              {unreadCount}
+            </span>
+          )}
         </button>
 
         {/* User Profile Mini */}
@@ -127,12 +145,18 @@ export default function Topbar() {
           {/* Dropdown Menu */}
           {dropdownOpen && (
             <div className="absolute right-0 mt-2 w-56 bg-white border border-[#e5e7eb] rounded-xl shadow-lg py-2 z-50">
-              <button className="w-full flex items-center justify-between px-4 py-2 hover:bg-[#f9fafb] text-sm text-[#111827] font-medium mb-1">
+              <button
+                onClick={handleViewProfile}
+                className="w-full flex items-center justify-between px-4 py-2 hover:bg-[#f9fafb] text-sm text-[#111827] font-medium mb-1"
+              >
                 Sandra Alemu
                 <ChevronDown className="w-4 h-4 text-[#6b7280]" />
               </button>
               <div className="border-t border-[#f3f4f6] my-1"></div>
-              <button className="w-full flex items-center px-4 py-2 hover:bg-[#f9fafb] text-sm text-[#111827] mt-1">
+              <button
+                onClick={handleSignOut}
+                className="w-full flex items-center px-4 py-2 hover:bg-[#f9fafb] text-sm text-[#111827] mt-1"
+              >
                 Sign out
               </button>
             </div>
