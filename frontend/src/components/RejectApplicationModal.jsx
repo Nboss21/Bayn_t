@@ -1,6 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 
-export default function RejectApplicationModal({ applicant, isOpen, onClose }) {
+export default function RejectApplicationModal({ applicant, isOpen, onClose, onConfirm }) {
+  const [reason, setReason] = useState(
+    'Application prerequisites for secondary education equivalence could not be verified, and applicant did not provide required documentation within the designated window.',
+  );
+
   if (!isOpen) return null;
 
   return (
@@ -77,8 +81,9 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose }) {
               <span className="text-[12px] text-gray-400">Required</span>
             </div>
             <textarea
+              value={reason}
+              onChange={(e) => setReason(e.target.value)}
               className="w-full border-2 border-gray-800 rounded-xl p-3.5 text-[14px] text-gray-900 focus:outline-none focus:ring-0 resize-none h-28"
-              defaultValue="Application prerequisites for secondary education equivalence could not be verified, and applicant did not provide required documentation within the designated window."
             ></textarea>
             <p className="text-[12px] text-gray-400 mt-2">
               This reason will be recorded in the application history and is visible only to authorised staff.
@@ -88,23 +93,23 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose }) {
           {/* Summary Box */}
           <div className="bg-[#f3f6f4] rounded-xl p-4 mt-6">
             <h4 className="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-4">Summary</h4>
-            
+
             <div className="space-y-2.5 text-[13px]">
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Applicant</span>
-                <span className="text-gray-900">Mekdes Tesfaye</span>
+                <span className="text-gray-900">{applicant.name}</span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Program</span>
-                <span className="text-gray-900">Professional Makeup Artistry</span>
+                <span className="text-gray-900">{applicant.program}</span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Decision</span>
                 <span className="text-[#dc2626]">Reject Application</span>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Status will change to</span>
                 <div className="flex items-center gap-1.5 px-2 py-0.5 bg-[#fef2f2] text-[#dc2626] rounded-full border border-[#fee2e2]">
@@ -112,10 +117,10 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose }) {
                   <span className="font-medium text-[12px]">Rejected</span>
                 </div>
               </div>
-              
+
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Reason</span>
-                <span className="text-gray-900">Prerequisites verification unfulfilled</span>
+                <span className="text-gray-900 text-right max-w-[60%]">{reason || '—'}</span>
               </div>
             </div>
           </div>
@@ -130,7 +135,9 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose }) {
             Cancel
           </button>
           <button
-            className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-white bg-[#b91c1c] hover:bg-[#991b1b] transition-colors"
+            onClick={() => onConfirm(reason.trim() || 'No reason provided.')}
+            disabled={!reason.trim()}
+            className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-white bg-[#b91c1c] hover:bg-[#991b1b] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
           >
             Reject Application
           </button>
