@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const NeedsAttentionItem = ({ countText, description, actionText, badgeText, badgeColor, badgeBg, badgeBorder, lineColor }) => {
+const NeedsAttentionItem = ({ countText, description, actionText, badgeText, badgeColor, badgeBg, badgeBorder, lineColor, path }) => {
   return (
     <div className="bg-white border border-gray-200 rounded-lg p-5 flex items-center justify-between shadow-sm relative overflow-hidden group hover:shadow-md transition-shadow">
       <div className={`absolute left-0 top-5 bottom-5 w-1 ${lineColor} rounded-r-md`}></div>
@@ -15,9 +16,9 @@ const NeedsAttentionItem = ({ countText, description, actionText, badgeText, bad
         </div>
         <p className="text-[13px] text-gray-500 max-w-2xl">{description}</p>
       </div>
-      <button className="text-[13px] font-medium text-gray-600 hover:text-gray-900 flex items-center gap-1 transition-colors">
+      <Link to={path} className="text-[13px] font-medium text-gray-600 hover:text-gray-900 flex items-center gap-1 transition-colors whitespace-nowrap">
         {actionText} <span aria-hidden="true">&rarr;</span>
-      </button>
+      </Link>
     </div>
   );
 };
