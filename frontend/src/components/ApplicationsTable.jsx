@@ -1,97 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const applicationsData = [
-  {
-    id: 'HOB-2026-0142',
-    name: 'Mekdes Tesfaye',
-    initials: 'MT',
-    program: 'Professional Makeup Artistry',
-    submitted: 'Today, 9:42 AM',
-    status: 'Needs Review',
-    statusColor: 'bg-[#fef3c7] text-[#b45309]',
-    statusIconColor: 'bg-[#f59e0b]',
-    payment: 'Paid',
-    paymentColor: 'text-[#16a34a]'
-  },
-  {
-    id: 'HOB-2026-0141',
-    name: 'Hana Bekele',
-    initials: 'HB',
-    program: 'Bridal Makeup Professional',
-    submitted: 'Today, 8:15 AM',
-    status: 'Awaiting Information',
-    statusColor: 'bg-[#e0f2fe] text-[#0369a1]',
-    statusIconColor: 'bg-[#0ea5e9]',
-    payment: 'Paid',
-    paymentColor: 'text-[#16a34a]'
-  },
-  {
-    id: 'HOB-2026-0139',
-    name: 'Saron Alemu',
-    initials: 'SA',
-    program: 'Professional Makeup Artistry',
-    submitted: 'Yesterday, 4:36 PM',
-    status: 'Approved',
-    statusColor: 'bg-[#dcfce7] text-[#15803d]',
-    statusIconColor: 'bg-[#22c55e]',
-    payment: 'Paid',
-    paymentColor: 'text-[#16a34a]'
-  },
-  {
-    id: 'HOB-2026-0138',
-    name: 'Liya Tadesse',
-    initials: 'LT',
-    program: 'Beauty & Makeup Fundamentals',
-    submitted: 'Yesterday, 1:12 PM',
-    status: 'Needs Review',
-    statusColor: 'bg-[#fef3c7] text-[#b45309]',
-    statusIconColor: 'bg-[#f59e0b]',
-    payment: 'Payment Pending',
-    paymentColor: 'text-[#b45309]',
-    paymentDot: true
-  },
-  {
-    id: 'HOB-2026-0135',
-    name: 'Bethel Girma',
-    initials: 'BG',
-    program: 'Advanced Beauty Techniques',
-    submitted: 'Mon, 11:08 AM',
-    status: 'Approved',
-    statusColor: 'bg-[#dcfce7] text-[#15803d]',
-    statusIconColor: 'bg-[#22c55e]',
-    payment: 'Paid',
-    paymentColor: 'text-[#16a34a]'
-  },
-  {
-    id: 'HOB-2026-0132',
-    name: 'Meron Tadesse',
-    initials: 'MT',
-    program: 'Professional Makeup Artistry',
-    submitted: 'Mon, 09:30 AM',
-    status: 'Rejected',
-    statusColor: 'bg-[#fee2e2] text-[#b91c1c]',
-    statusIconColor: 'bg-[#ef4444]',
-    payment: 'Unpaid',
-    paymentColor: 'text-[#b91c1c]',
-    paymentDot: true,
-    paymentDotColor: 'bg-[#ef4444]'
-  },
-  {
-    id: 'HOB-2026-0128',
-    name: 'Rahel Worku',
-    initials: 'RW',
-    program: 'Bridal Makeup Professional',
-    submitted: '12 Jul, 3:20 PM',
-    status: 'Approved',
-    statusColor: 'bg-[#dcfce7] text-[#15803d]',
-    statusIconColor: 'bg-[#22c55e]',
-    payment: 'Paid',
-    paymentColor: 'text-[#16a34a]'
-  }
-];
-
-const ApplicationsTable = () => {
+const ApplicationsTable = ({ rows }) => {
   const navigate = useNavigate();
 
   return (
@@ -109,9 +19,9 @@ const ApplicationsTable = () => {
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
-            {applicationsData.map((app, index) => (
-              <tr 
-                key={index} 
+            {rows.map((app) => (
+              <tr
+                key={app.id}
                 onClick={() => navigate(`/registrar/applications/${app.id}`)}
                 className="hover:bg-gray-50/50 transition-colors cursor-pointer"
               >
@@ -146,11 +56,17 @@ const ApplicationsTable = () => {
                     {app.payment}
                   </span>
                 </td>
-                <td className="px-6 py-4">
-                  
-                </td>
+                <td className="px-6 py-4"></td>
               </tr>
             ))}
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan="6" className="px-6 py-16 text-center">
+                  <p className="text-[15px] font-medium text-gray-700 mb-1">No applications found</p>
+                  <p className="text-[13px] text-gray-500">Try adjusting your search or filter selection.</p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
       </div>
