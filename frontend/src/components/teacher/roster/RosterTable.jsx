@@ -2,27 +2,6 @@ import React from 'react';
 import { ChevronDown } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 
-export const studentsData = [
-  { id: 1,  name: 'Mekdes Tesfaye',     initials: 'MT', avatarBg: 'bg-[#EAF4EC]', studentId: 'HOB-ST-2026-0041', attendance: 92, marks: 84, status: 'On Track' },
-  { id: 2,  name: 'Hana Bekele',        initials: 'HB', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0038', attendance: 96, marks: 85, status: 'On Track' },
-  { id: 3,  name: 'Saron Alemu',        initials: 'SA', avatarBg: 'bg-[#FEF5D9]', studentId: 'HOB-ST-2026-0035', attendance: 88, marks: 76, status: 'Needs Attention' },
-  { id: 4,  name: 'Liya Tadesse',       initials: 'LT', avatarBg: 'bg-[#EAF4EC]', studentId: 'HOB-ST-2026-0029', attendance: 94, marks: 82, status: 'On Track' },
-  { id: 5,  name: 'Bethel Girma',       initials: 'BG', avatarBg: 'bg-[#E0F2FE]', studentId: 'HOB-ST-2026-0027', attendance: 90, marks: 79, status: 'On Track' },
-  { id: 6,  name: 'Ruth Alemu',         initials: 'RA', avatarBg: 'bg-[#FEE4E2]', studentId: 'HOB-ST-2026-0024', attendance: 80, marks: 71, status: 'Needs Attention' },
-  { id: 7,  name: 'Selamawit Kebede',   initials: 'SK', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0021', attendance: 98, marks: 91, status: 'On Track' },
-  { id: 8,  name: 'Marta Tesfaye',      initials: 'MT', avatarBg: 'bg-[#EAF4EC]', studentId: 'HOB-ST-2026-0018', attendance: 95, marks: 87, status: 'On Track' },
-  { id: 9,  name: 'Eden Worku',         initials: 'EW', avatarBg: 'bg-[#F3E8FF]', studentId: 'HOB-ST-2026-0016', attendance: 91, marks: 86, status: 'On Track' },
-  { id: 10, name: 'Rahel Bekele',       initials: 'RB', avatarBg: 'bg-[#FCE7F3]', studentId: 'HOB-ST-2026-0014', attendance: 80, marks: 80, status: 'On Track' },
-  { id: 11, name: 'Bethlehem Alemu',    initials: 'BA', avatarBg: 'bg-[#EAF4EC]', studentId: 'HOB-ST-2026-0012', attendance: 93, marks: 86, status: 'On Track' },
-  { id: 12, name: 'Yordanos Tesfaye',   initials: 'YT', avatarBg: 'bg-[#EAF4EC]', studentId: 'HOB-ST-2026-0010', attendance: 90, marks: 81, status: 'On Track' },
-  { id: 13, name: 'Kalkidan Girma',     initials: 'KG', avatarBg: 'bg-[#FFEDD5]', studentId: 'HOB-ST-2026-0008', attendance: 94, marks: 88, status: 'On Track' },
-  { id: 14, name: 'Ruth Tadesse',       initials: 'RT', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0006', attendance: 96, marks: 90, status: 'On Track' },
-  { id: 15, name: 'Selamawit Alemu',    initials: 'SA', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0005', attendance: 97, marks: 92, status: 'On Track' },
-  { id: 16, name: 'Meron Bekele',       initials: 'MB', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0004', attendance: 92, marks: 83, status: 'On Track' },
-  { id: 17, name: 'Hana Girma',         initials: 'HG', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0003', attendance: 91, marks: 82, status: 'On Track' },
-  { id: 18, name: 'Sara Tesfaye',       initials: 'ST', avatarBg: 'bg-[#F3F4F6]', studentId: 'HOB-ST-2026-0002', attendance: 93, marks: 84, status: 'On Track' },
-];
-
 const AttendanceBar = ({ value }) => {
   const color =
     value >= 90 ? 'bg-[#4A7C59]' :
@@ -74,7 +53,6 @@ const RosterTable = ({ students }) => {
         <tbody>
           {students.map((student) => (
             <tr key={student.id} className="border-b border-gray-100 last:border-none hover:bg-[#FAFFF9] transition-colors">
-              {/* Student */}
               <td className="py-3 px-5">
                 <div className="flex items-center gap-3">
                   <div className={`w-9 h-9 rounded-full flex items-center justify-center text-[12px] font-semibold text-gray-700 flex-shrink-0 ${student.avatarBg}`}>
@@ -87,27 +65,22 @@ const RosterTable = ({ students }) => {
                 </div>
               </td>
 
-              {/* Student ID */}
               <td className="py-3 px-4 text-[12px] text-gray-500 font-mono whitespace-nowrap">
                 {student.studentId}
               </td>
 
-              {/* Attendance */}
               <td className="py-3 px-4">
                 <AttendanceBar value={student.attendance} />
               </td>
 
-              {/* Marks */}
               <td className="py-3 px-4 text-[14px] font-medium text-[#1A1A1A]">
                 {student.marks}%
               </td>
 
-              {/* Status */}
               <td className="py-3 px-4">
                 <StatusBadge status={student.status} />
               </td>
 
-              {/* Action */}
               <td className="py-3 px-5 text-right">
                 <button
                   onClick={() => navigate(`/teacher/roster/${student.id}`)}
@@ -126,4 +99,3 @@ const RosterTable = ({ students }) => {
 };
 
 export default RosterTable;
-

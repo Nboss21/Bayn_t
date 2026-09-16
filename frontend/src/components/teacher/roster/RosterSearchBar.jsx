@@ -1,16 +1,13 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Search } from 'lucide-react';
 
-const tabs = ['All (18)', 'Needs Attention (2)', 'On Track (16)'];
-
-const RosterSearchBar = ({ activeTab, onTabChange, searchQuery, onSearchChange }) => {
+const RosterSearchBar = ({ tabs, activeTab, onTabChange }) => {
   return (
     <div className="flex items-center justify-between mb-4">
-      {/* Left: title + tabs */}
       <div>
         <div className="flex items-center gap-2 mb-3">
           <h2 className="text-[18px] font-semibold text-[#1A1A1A]">Enrolled Students</h2>
-          <span className="bg-gray-100 text-gray-600 text-[12px] font-semibold px-2 py-0.5 rounded-full">18</span>
+          <span className="bg-gray-100 text-gray-600 text-[12px] font-semibold px-2 py-0.5 rounded-full">{tabs.find((t) => t.value === 'all')?.label?.match(/\d+/)?.[0]}</span>
         </div>
         <p className="text-[12px] text-gray-400 -mt-2 mb-3">
           Add students or manage enrollment, view for tracking, etc...
@@ -18,15 +15,15 @@ const RosterSearchBar = ({ activeTab, onTabChange, searchQuery, onSearchChange }
         <div className="flex items-center gap-1 bg-[#F4F5F4] p-1 rounded-lg">
           {tabs.map((tab) => (
             <button
-              key={tab}
-              onClick={() => onTabChange(tab)}
+              key={tab.value}
+              onClick={() => onTabChange(tab.value)}
               className={`px-4 py-1.5 rounded-md text-[13px] font-medium transition-colors whitespace-nowrap ${
-                activeTab === tab
+                activeTab === tab.value
                   ? 'bg-white shadow-sm text-[#1A1A1A]'
                   : 'text-gray-500 hover:text-gray-700'
               }`}
             >
-              {tab}
+              {tab.label}
             </button>
           ))}
         </div>
@@ -49,4 +46,3 @@ export const RosterSearchInput = ({ searchQuery, onSearchChange }) => (
 );
 
 export default RosterSearchBar;
-
