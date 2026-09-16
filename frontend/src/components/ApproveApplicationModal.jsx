@@ -1,8 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
 
-export default function ApproveApplicationModal({ applicant, isOpen, onClose }) {
-  const navigate = useNavigate();
+export default function ApproveApplicationModal({ applicant, isOpen, onClose, onConfirm }) {
   if (!isOpen) return null;
 
   return (
@@ -42,24 +40,24 @@ export default function ApproveApplicationModal({ applicant, isOpen, onClose }) 
             <div className="border border-gray-200 rounded-xl overflow-hidden text-[13px]">
               <div className="flex justify-between items-center p-3 border-b border-gray-100">
                 <span className="text-gray-500">Applicant</span>
-                <span className="text-gray-900 font-medium">Mekdes Tesfaye</span>
+                <span className="text-gray-900 font-medium">{applicant.name}</span>
               </div>
               <div className="flex justify-between items-center p-3 border-b border-gray-100">
                 <span className="text-gray-500">Application ID</span>
-                <span className="text-gray-900">HOB-2026-0142</span>
+                <span className="text-gray-900">{applicant.id}</span>
               </div>
               <div className="flex justify-between items-center p-3 border-b border-gray-100">
                 <span className="text-gray-500">Program</span>
-                <span className="text-gray-900">Professional Makeup Artistry</span>
+                <span className="text-gray-900">{applicant.program}</span>
               </div>
               <div className="flex justify-between items-center p-3 border-b border-gray-100">
                 <span className="text-gray-500">Intake</span>
-                <span className="text-gray-900">September 2026</span>
+                <span className="text-gray-900">{applicant.intake}</span>
               </div>
               <div className="flex justify-between items-center p-3">
                 <span className="text-gray-500">Current Status</span>
-                <span className="bg-[#fff9c2] border border-[#fde047] text-[#a16207] px-2.5 py-0.5 rounded-full text-[12px] font-medium">
-                  Pending Review
+                <span className={`px-2.5 py-0.5 rounded-full text-[12px] font-medium ${applicant.statusBadgeClass}`}>
+                  {applicant.statusBadgeLabel}
                 </span>
               </div>
             </div>
@@ -69,29 +67,26 @@ export default function ApproveApplicationModal({ applicant, isOpen, onClose }) 
           <div className="mb-6">
             <h4 className="text-[11px] font-medium text-gray-500 uppercase tracking-wider mb-3">Application Readiness</h4>
             <div className="space-y-2">
-              {/* Box 1 */}
               <div className="bg-[#f4f7f5] border border-[#cbdcca] rounded-lg p-3 flex gap-3 items-start">
                 <div className="w-5 h-5 mt-0.5 rounded-full bg-[#cbdcca] flex items-center justify-center shrink-0">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#82a584]"></div>
                 </div>
                 <div>
                   <h5 className="text-[13px] font-medium text-gray-900 mb-0.5">Application complete</h5>
-                  <p className="text-[12px] text-gray-500">All 3 required documents submitted. Eligibility confirmed.</p>
+                  <p className="text-[12px] text-gray-500">All required documents submitted. Eligibility confirmed.</p>
                 </div>
               </div>
 
-              {/* Box 2 */}
               <div className="bg-[#f4f7f5] border border-[#cbdcca] rounded-lg p-3 flex gap-3 items-start">
                 <div className="w-5 h-5 mt-0.5 rounded-full bg-[#cbdcca] flex items-center justify-center shrink-0">
                   <div className="w-2.5 h-2.5 rounded-full bg-[#82a584]"></div>
                 </div>
                 <div>
-                  <h5 className="text-[13px] font-medium text-gray-900 mb-0.5">Payment confirmed - Paid</h5>
-                  <p className="text-[12px] text-gray-500">18,500 ETB • Ref: HOB-PAY-2026-0142</p>
+                  <h5 className="text-[13px] font-medium text-gray-900 mb-0.5">Payment confirmed - {applicant.paymentBadge}</h5>
+                  <p className="text-[12px] text-gray-500">{applicant.paymentAmount} • Ref: {applicant.paymentRef}</p>
                 </div>
               </div>
 
-              {/* Box 3 */}
               <div className="bg-[#f9fafb] border border-[#e5e7eb] rounded-lg p-3 flex gap-3 items-start">
                 <div className="w-5 h-5 mt-0.5 rounded-md bg-white border border-gray-200 shrink-0"></div>
                 <div>
@@ -108,12 +103,12 @@ export default function ApproveApplicationModal({ applicant, isOpen, onClose }) 
             <div className="space-y-3 text-[13px]">
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Applicant</span>
-                <span className="text-gray-900 font-medium">Mekdes Tesfaye</span>
+                <span className="text-gray-900 font-medium">{applicant.name}</span>
               </div>
 
               <div className="flex justify-between items-center">
                 <span className="text-gray-500">Program</span>
-                <span className="text-gray-900">Professional Makeup Artistry</span>
+                <span className="text-gray-900">{applicant.program}</span>
               </div>
 
               <div className="flex justify-between items-center">
@@ -142,10 +137,7 @@ export default function ApproveApplicationModal({ applicant, isOpen, onClose }) 
             Cancel
           </button>
           <button
-            onClick={() => {
-              onClose();
-              navigate('/registrar/applications/HOB-2026-0142/assign-class');
-            }}
+            onClick={onConfirm}
             className="px-5 py-2.5 rounded-lg text-[14px] font-medium text-[#2d412e] bg-[#b7c9b8] hover:bg-[#a3b8a6] transition-colors"
           >
             Approve Application
