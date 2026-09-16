@@ -1,6 +1,7 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
-const TeacherAttentionItem = ({ type, message, id, buttonText }) => {
+const TeacherAttentionItem = ({ type, message, id, buttonText, path }) => {
   return (
     <div className="flex items-center justify-between py-4 border-b border-gray-100 last:border-0">
       <div className="flex items-center gap-16 w-full">
@@ -9,9 +10,12 @@ const TeacherAttentionItem = ({ type, message, id, buttonText }) => {
       </div>
       <div className="flex items-center gap-6">
         <span className="text-[12px] text-gray-400 font-mono">{id}</span>
-        <button className="bg-[#4A5D4E] hover:bg-[#3D4C40] text-white text-[13px] font-medium px-4 py-2 rounded-md transition-colors whitespace-nowrap">
+        <Link
+          to={path}
+          className="bg-[#4A5D4E] hover:bg-[#3D4C40] text-white text-[13px] font-medium px-4 py-2 rounded-md transition-colors whitespace-nowrap"
+        >
           {buttonText}
-        </button>
+        </Link>
       </div>
     </div>
   );

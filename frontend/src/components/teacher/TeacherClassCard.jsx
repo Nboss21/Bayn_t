@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { Calendar, Clock, Users, ArrowRight } from 'lucide-react';
 
 const TeacherClassCard = ({ 
@@ -10,7 +11,8 @@ const TeacherClassCard = ({
   totalStudents, 
   status, 
   seatsAvailable,
-  isFull
+  isFull,
+  path
 }) => {
   const isAttendanceDue = status === 'Attendance due';
   
@@ -74,10 +76,13 @@ const TeacherClassCard = ({
       
       {/* Action */}
       <div className="mt-auto pt-2">
-        <button className="w-full bg-[#242424] hover:bg-[#1A1A1A] text-white text-[14px] font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2">
+        <Link
+          to={path}
+          className="w-full bg-[#242424] hover:bg-[#1A1A1A] text-white text-[14px] font-medium py-3 rounded-xl transition-colors flex items-center justify-center gap-2"
+        >
           Open Class
           <ArrowRight className="w-4 h-4" />
-        </button>
+        </Link>
       </div>
     </div>
   );
