@@ -5,7 +5,7 @@ import ExampleCalculation from '../../components/super-admin/grading/ExampleCalc
 
 export default function SuperAdminGrading() {
   return (
-    <div className="p-8 max-w-[1200px] mx-auto w-full">
+    <div className="p-8 w-full">
       {/* Header Section */}
       <div className="flex justify-between items-start mb-8">
         <div>

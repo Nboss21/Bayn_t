@@ -10,7 +10,7 @@ export default function SuperAdminPaymentVerification() {
   const navigate = useNavigate();
 
   return (
-    <div className="w-full max-w-[1200px] mx-auto text-[#333333]">
+    <div className="w-full text-[#333333]">
       {/* Top Navigation */}
       <button 
         onClick={() => navigate('/super-admin/payments')}
