@@ -83,6 +83,15 @@ export default class SuperAdminProgramsModel {
       currentIntake: program.intakes?.data?.[0]?.name || program.intakes?.[0]?.name || '—',
       lastUpdated: program.updated_at ? new Date(program.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
     }]));
-    return new SuperAdminProgramsModel({ ...superAdminPrograms, programs, programDetails: details });
+    const levels = unique(programs, 'level');
+    const statuses = unique(programs, 'status');
+    const intakes = unique(programs, 'currentIntake').filter((intake) => intake !== '—');
+    return new SuperAdminProgramsModel({
+      ...superAdminPrograms,
+      filters: { ...superAdminPrograms.filters, statuses, levels },
+      formOptions: { ...superAdminPrograms.formOptions, levels, statuses, intakes },
+      programs,
+      programDetails: details,
+    });
   }
 }

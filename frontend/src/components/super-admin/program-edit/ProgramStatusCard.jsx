@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
 
-export default function ProgramStatusCard({ program = null, options = {} }) {
+export default function ProgramStatusCard({ program = null, options = {}, value, onChange }) {
   const statuses = options.statuses || ['Open', 'Upcoming', 'Closed'];
 
   return (
@@ -14,7 +14,8 @@ export default function ProgramStatusCard({ program = null, options = {} }) {
         </label>
         <div className="relative mb-5">
           <select
-            defaultValue={program?.status || ''}
+            value={value}
+            onChange={(event) => onChange(event.target.value)}
             className="w-full pl-4 pr-10 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] appearance-none focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm bg-white cursor-pointer"
           >
             {!program && <option value="" disabled>Select status</option>}

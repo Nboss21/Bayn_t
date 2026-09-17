@@ -1,7 +1,7 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
 
-export default function ProgramInformationCard({ program = null, options = {} }) {
+export default function ProgramInformationCard({ program = null, options = {}, values, onChange }) {
   const levels = options.levels || ['Beginner', 'Intermediate', 'Advanced'];
   const durationUnits = options.durationUnits || ['Weeks', 'Months', 'Years'];
   const descriptionLength = program?.description ? program.description.length : 0;
@@ -28,7 +28,8 @@ export default function ProgramInformationCard({ program = null, options = {} })
             <input
               type="text"
               placeholder="e.g. Professional Makeup Artistry"
-              defaultValue={program?.name || ''}
+              value={values.name}
+              onChange={(event) => onChange('name', event.target.value)}
               className="w-full px-4 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm"
             />
             <div className="flex items-center mt-2.5 text-[#6b7280] text-sm">
@@ -45,7 +46,8 @@ export default function ProgramInformationCard({ program = null, options = {} })
             <textarea
               rows={4}
               placeholder="Describe the program's focus, skills, and career outcomes."
-              defaultValue={program?.description || ''}
+              value={values.description}
+              onChange={(event) => onChange('description', event.target.value)}
               className="w-full px-4 py-3 border border-[#d1d5db] rounded-lg text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm resize-none"
             />
             <div className="flex items-center justify-between mt-2.5 text-[#6b7280] text-xs">
@@ -62,7 +64,8 @@ export default function ProgramInformationCard({ program = null, options = {} })
               </label>
               <div className="relative">
                 <select
-                  defaultValue={program?.level || ''}
+                  value={values.level}
+                  onChange={(event) => onChange('level', event.target.value)}
                   className="w-full pl-4 pr-10 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] appearance-none focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm bg-white cursor-pointer"
                 >
                   {!program && <option value="" disabled>Select level</option>}
@@ -86,12 +89,14 @@ export default function ProgramInformationCard({ program = null, options = {} })
                 <input
                   type="text"
                   placeholder="e.g. 12"
-                  defaultValue={program?.duration || ''}
+                  value={values.duration}
+                  onChange={(event) => onChange('duration', event.target.value)}
                   className="w-20 px-3 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] placeholder-[#9ca3af] text-center focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm"
                 />
                 <div className="relative flex-1">
                   <select
-                    defaultValue={program?.durationUnit || ''}
+                    value={values.durationUnit}
+                    onChange={(event) => onChange('durationUnit', event.target.value)}
                     className="w-full pl-4 pr-10 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] appearance-none focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm bg-white cursor-pointer"
                   >
                     {!program && <option value="" disabled>Unit</option>}

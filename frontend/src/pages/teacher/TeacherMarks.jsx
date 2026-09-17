@@ -6,6 +6,7 @@ import TeacherMarksTableSection from '../../components/teacher/TeacherMarksTable
 import TeacherMarksFooter from '../../components/teacher/TeacherMarksFooter';
 import useTeacherMarks from '../../hooks/useTeacherMarks';
 import { computeStats } from '../../utils/marks';
+import { teacherService } from '../../services/applicationService';
 
 const TeacherMarks = () => {
   const { marksModel, loading } = useTeacherMarks();
@@ -67,9 +68,17 @@ const TeacherMarks = () => {
     setActiveFilter('All');
   }, [originalStudents]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
+    if (!marksModel?.header?.classId) return;
+    const categories = ['practical', 'theory', 'professional'];
+    await Promise.all(students.flatMap((student) => categories.filter((category) => student[category] !== null && student[category] !== '').map(async (category) => {
+      const existingId = marksModel.initialStudents.find((item) => item.id === student.id)?.[`${category}_id`];
+      const payload = { class_id: marksModel.header.classId, student_id: student.id, category, raw_score: Number(student[category]), weighted_score: Number(student[category]) };
+      if (existingId) return teacherService.updateAssessment(existingId, payload);
+      return teacherService.createAssessment(payload);
+    })));
     setOriginalStudents(JSON.parse(JSON.stringify(students)));
-  }, [students]);
+  }, [marksModel, students]);
 
   if (loading || !marksModel) {
     return (

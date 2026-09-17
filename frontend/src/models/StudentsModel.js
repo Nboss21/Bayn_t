@@ -1,4 +1,4 @@
-import studentsDetailData from '../data/studentsDetailData';
+import { registrarService } from '../services/applicationService';
 
 const DEFAULT_PER_PAGE = 7;
 
@@ -11,15 +11,19 @@ const makeInitials = (name) =>
     .join('')
     .toUpperCase();
 
+const statusLabel = (status) => status ? status.charAt(0).toUpperCase() + status.slice(1).replace('_', ' ') : 'Unknown';
+
 const toTableRow = (student) => ({
-  initials: makeInitials(student.name),
-  name: student.name,
-  studentId: student.studentId,
-  program: student.program,
-  intake: student.intake,
-  class: student.enrollment?.class || student.class,
-  status: student.status,
-  highlightAction: student.status === 'Completed',
+  initials: makeInitials(student.user?.name),
+  name: student.user?.name || 'Unnamed student',
+  studentId: `STU-${student.id}`,
+  resourceId: student.id,
+  resourceId: student.id,
+  program: student.application?.program?.name || 'Unassigned',
+  intake: student.application?.intake?.name || '—',
+  class: student.class?.name || 'Unassigned',
+  status: statusLabel(student.status),
+  highlightAction: student.status === 'completed',
 });
 
 const unique = (rows, key) => [...new Set(rows.map((row) => row[key]).filter(Boolean))];
@@ -73,7 +77,8 @@ export default class StudentsModel {
   }
 
   static async fetch() {
-    const rows = Object.values(studentsDetailData).map(toTableRow);
+    const response = await registrarService.students({ per_page: 100 });
+    const rows = (response?.data || response || []).map(toTableRow);
     return new StudentsModel(rows);
   }
 }

@@ -1,4 +1,4 @@
-import { rosterClassInfo, rosterAttendanceBanner, studentsData } from '../data/teacherRosterData';
+import { teacherService } from '../services/applicationService';
 
 export default class TeacherRosterModel {
   constructor({ classInfo, attendanceBanner, students }) {
@@ -8,10 +8,41 @@ export default class TeacherRosterModel {
   }
 
   static async fetch() {
-    const students = studentsData.map((s) => new StudentRecord(s));
+    const [studentsResponse, attendanceResponse, assessmentsResponse, classesResponse] = await Promise.all([
+      teacherService.students({ per_page: 100 }),
+      teacherService.attendance({ per_page: 100 }),
+      teacherService.assessments({ per_page: 100 }),
+      teacherService.classes({ per_page: 1 }),
+    ]);
+    const attendance = attendanceResponse?.data || attendanceResponse || [];
+    const assessments = assessmentsResponse?.data || assessmentsResponse || [];
+    const classItem = (classesResponse?.data || classesResponse || [])[0];
+    const students = (studentsResponse?.data || studentsResponse || []).map((student) => {
+      const studentAttendance = attendance.filter((record) => record.student_id === student.id);
+      const studentAssessments = assessments.filter((record) => record.student_id === student.id);
+      const attendanceDetails = {
+        present: studentAttendance.filter((record) => record.status === 'present').length,
+        absent: studentAttendance.filter((record) => record.status === 'absent').length,
+        excused: studentAttendance.filter((record) => record.status === 'excused').length,
+      };
+      const attendanceTotal = Object.values(attendanceDetails).reduce((sum, value) => sum + value, 0);
+      const attendancePercent = attendanceTotal ? Math.round(((attendanceDetails.present + studentAttendance.filter((record) => record.status === 'late').length) / attendanceTotal) * 100) : 0;
+      const marksTotal = studentAssessments.length * 100;
+      const marksScore = studentAssessments.reduce((sum, record) => sum + Number(record.raw_score || 0), 0);
+      return new StudentRecord({
+      id: student.id,
+      name: student.name || 'Unnamed student',
+      studentId: `STU-${student.id}`,
+      status: attendancePercent >= 80 ? 'On Track' : 'Needs Attention',
+      attendance: attendancePercent,
+      marks: marksTotal ? Math.round((marksScore / marksTotal) * 100) : 0,
+      attendanceDetails,
+      marksDetails: studentAssessments.map((record) => ({ score: Number(record.raw_score || 0), total: 100 })),
+      });
+    });
     return new TeacherRosterModel({
-      classInfo: rosterClassInfo,
-      attendanceBanner: rosterAttendanceBanner,
+      classInfo: classItem ? { name: classItem.name, program: classItem.program?.name || 'Program', cohort: classItem.intake?.name || 'Current intake' } : {},
+      attendanceBanner: { eyebrow: 'Live roster', title: 'Student progress overview', description: 'Attendance and marks are calculated from recorded classroom data.' },
       students,
     });
   }

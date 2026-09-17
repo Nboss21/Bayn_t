@@ -1,8 +1,9 @@
-import { superAdminClasses } from '../data/superAdminClassesData';
+import { adminService } from '../services/applicationService';
 
 const DEFAULT_PER_PAGE = 5;
 
 const unique = (rows, key) => [...new Set(rows.map((row) => row[key]).filter(Boolean))];
+const scheduleLabel = (schedule) => typeof schedule === 'string' ? schedule : schedule?.label || schedule?.description || (schedule ? Object.values(schedule).filter(Boolean).join(' · ') : '—');
 
 export default class SuperAdminClassesModel {
   constructor(data) {
@@ -67,6 +68,50 @@ export default class SuperAdminClassesModel {
   }
 
   static async fetch() {
-    return new SuperAdminClassesModel(superAdminClasses);
+    const result = await adminService.classes({ per_page: 100 });
+    const classes = (result?.data || result || []).map((item) => {
+      const capacity = Number(item.capacity || 0);
+      const enrolled = Number(item.enrolled_count || 0);
+      const percentage = capacity ? Math.round((enrolled / capacity) * 100) : 0;
+      const intakeStatus = item.intake?.status;
+      return {
+        id: item.id,
+        name: item.name,
+        type: item.schedule?.type || 'Class cohort',
+        program: item.program?.name || '—',
+        intake: item.intake?.name || '—',
+        schedule: scheduleLabel(item.schedule),
+        capacity: enrolled,
+        maxCapacity: capacity,
+        percentage,
+        status: percentage >= 100 ? 'Full' : (intakeStatus === 'upcoming' ? 'Upcoming' : 'Active'),
+        barColor: percentage >= 100 ? 'bg-[#d97706]' : 'bg-[#1f5f40]',
+      };
+    });
+    const statuses = unique(classes, 'status');
+    const programs = unique(classes, 'program');
+    const intakes = unique(classes, 'intake');
+    return new SuperAdminClassesModel({
+      header: {
+        title: 'Classes & Intakes',
+        description: 'Manage class groups, schedules, intakes, and capacity.',
+        activeCountLabel: 'active classes',
+        addClassPath: '/super-admin/classes/add',
+        viewPathPrefix: '/super-admin/classes',
+      },
+      statCards: [
+        { key: 'active', label: 'Active Classes', dotClass: 'bg-[#10b981]', suffix: 'Currently running' },
+        { key: 'upcoming', label: 'Upcoming Intakes', dotClass: 'bg-[#d97706]', suffix: 'Scheduled to start' },
+        { key: 'atCapacity', label: 'Classes at Capacity', dotClass: 'bg-[#d97706]', badgeText: 'Needs attention', suffix: '100% capacity' },
+      ],
+      filters: { searchPlaceholder: 'Search classes or programs...', sorts: [
+        { value: 'name-asc', label: 'Class name A-Z' }, { value: 'name-desc', label: 'Class name Z-A' },
+        { value: 'capacity-desc', label: 'Capacity: High to Low' }, { value: 'capacity-asc', label: 'Capacity: Low to High' },
+      ] },
+      classes,
+      statuses,
+      programs,
+      intakes,
+    });
   }
 }

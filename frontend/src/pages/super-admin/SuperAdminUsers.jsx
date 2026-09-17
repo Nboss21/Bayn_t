@@ -94,7 +94,7 @@ export default function SuperAdminUsers() {
 
   const reviewPending = () => applyStatus('Pending');
 
-  const handleView = (user) => navigate(`/super-admin/users/${encodeURIComponent(user.id)}`);
+  const handleView = (user) => navigate(`/super-admin/users/${encodeURIComponent(user.resourceId || user.id)}`);
 
   return (
     <div className="w-full">

@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
+import { adminService } from '../../../services/applicationService';
 import ProgramInformationCard from '../program-edit/ProgramInformationCard';
 import PublicProgramCard from '../program-edit/PublicProgramCard';
 import ProgramOverviewCard from '../program-edit/ProgramOverviewCard';
@@ -32,9 +33,41 @@ export default function ProgramFormLayout({
   const navigate = useNavigate();
   const isAdd = mode === 'add';
   const title = program?.name || (isAdd ? 'New Program' : 'Program');
+  const [values, setValues] = useState({
+    name: program?.name || '',
+    description: program?.description || '',
+    level: program?.level || options.levels?.[0] || '',
+    duration: program?.duration && program.duration !== '—' ? String(program.duration) : '',
+    durationUnit: program?.durationUnit || options.durationUnits?.[0] || 'Weeks',
+    status: program?.status || options.statuses?.[0] || '',
+    currentIntake: program?.currentIntake === '—' ? '' : (program?.currentIntake || options.intakes?.[0] || ''),
+  });
+  const [saving, setSaving] = useState(false);
+
+  const updateValue = (key, value) => setValues((current) => ({ ...current, [key]: value }));
 
   const handleCancel = () => navigate(backPath);
-  const handleSubmit = () => navigate(backPath);
+  const handleSubmit = async () => {
+    setSaving(true);
+    const payload = {
+      name: values.name,
+      slug: program?.slug || values.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
+      description: values.description,
+      category: program?.category || 'makeup',
+      level: values.level,
+      status: values.status.toLowerCase(),
+      tuition_fee: program?.tuition_fee || 0,
+      fee_currency: program?.fee_currency || 'USD',
+      duration_weeks: Number(values.duration),
+    };
+    try {
+      if (isAdd) await adminService.createProgram(payload);
+      else await adminService.updateProgram(program.id, payload);
+      navigate(backPath);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
     <div className="w-full pb-12">
@@ -79,9 +112,10 @@ export default function ProgramFormLayout({
             </button>
             <button
               onClick={handleSubmit}
+              disabled={saving}
               className="px-4 py-2 bg-[#1f2937] text-white rounded-lg text-sm font-medium hover:bg-[#111827] transition-colors shadow-sm cursor-pointer"
             >
-              {isAdd ? 'Create Program' : 'Save Changes'}
+              {saving ? 'Saving...' : (isAdd ? 'Create Program' : 'Save Changes')}
             </button>
           </div>
         </div>
@@ -91,15 +125,15 @@ export default function ProgramFormLayout({
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column (Wider) */}
         <div className="lg:col-span-2 space-y-6">
-          <ProgramInformationCard program={program} options={options} />
+          <ProgramInformationCard program={program} options={options} values={values} onChange={updateValue} />
           <PublicProgramCard />
           <ProgramOverviewCard program={program} />
         </div>
 
         {/* Right Column (Narrower) */}
         <div className="space-y-6">
-          <ProgramStatusCard program={program} options={options} />
-          <CurrentIntakeCard program={program} options={options} />
+          <ProgramStatusCard program={program} options={options} value={values.status} onChange={(value) => updateValue('status', value)} />
+          <CurrentIntakeCard program={program} options={options} value={values.currentIntake} onChange={(value) => updateValue('currentIntake', value)} />
         </div>
       </div>
 
@@ -113,9 +147,10 @@ export default function ProgramFormLayout({
         </button>
         <button
           onClick={handleSubmit}
+          disabled={saving}
           className="px-4 py-2 bg-[#1f2937] text-white rounded-lg text-sm font-medium hover:bg-[#111827] transition-colors shadow-sm cursor-pointer"
         >
-          {isAdd ? 'Create Program' : 'Save Changes'}
+          {saving ? 'Saving...' : (isAdd ? 'Create Program' : 'Save Changes')}
         </button>
       </div>
     </div>

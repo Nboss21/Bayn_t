@@ -1,4 +1,4 @@
-import { enrollmentData } from '../data/enrollmentData';
+import { registrarService } from '../services/applicationService';
 
 const DEFAULT_PER_PAGE = 7;
 
@@ -52,6 +52,16 @@ export default class EnrollmentHistoryModel {
   }
 
   static async fetch() {
-    return new EnrollmentHistoryModel(enrollmentData);
+    const response = await registrarService.students({ per_page: 100 });
+    const records = (response?.data || response || []).map((student) => ({
+      id: `ENR-${student.id}`,
+      student: student.user?.name || 'Unnamed student',
+      studentId: String(student.id),
+      program: student.application?.program?.name || 'Unassigned',
+      intake: student.application?.intake?.name || '—',
+      status: student.status ? student.status.charAt(0).toUpperCase() + student.status.slice(1) : 'Unknown',
+      enrolledAt: student.enrolled_at,
+    }));
+    return new EnrollmentHistoryModel(records);
   }
 }
