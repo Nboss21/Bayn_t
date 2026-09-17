@@ -7,7 +7,7 @@ import AvailableReportsSection from '../../components/super-admin/reports/Availa
 
 export default function SuperAdminReports() {
   return (
-    <div className="max-w-7xl mx-auto space-y-6">
+    <div className="w-full space-y-6">
       <ReportsHeader />
       <ReportsFilterCard />
       <SchoolOverviewSection />

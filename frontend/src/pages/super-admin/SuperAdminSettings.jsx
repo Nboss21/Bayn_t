@@ -4,7 +4,7 @@ import MyProfileCard from '../../components/super-admin/settings/MyProfileCard';
 
 export default function SuperAdminSettings() {
   return (
-    <div className="w-full max-w-[1100px]">
+    <div className="w-full">
       <SettingsHeaderSection />
       
       <div>
