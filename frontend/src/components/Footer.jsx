@@ -20,17 +20,18 @@ const Footer = () => {
           <p className="mb-4 text-[13px] leading-relaxed text-cream/60">
             Join our newsletter for new course dates and academy news.
           </p>
-          <div className="flex items-center mb-4">
-            <input value={email} onChange={(e) => setEmail(e.target.value)}
+          <div className="mb-4 flex items-center">
+            <input
               type="email"
               placeholder="Enter your email"
               className="w-full rounded-l-full border border-white/20 bg-transparent px-4 py-2.5 text-[13px] text-cream placeholder-white/50 outline-none transition focus:border-champagne"
             />
-            <button onClick={subscribe} className="bg-[#c9a97a] hover:bg-[#b8975e] border border-[#c9a97a] text-white text-[13px] font-semibold px-5 py-2.5 rounded-r-full transition whitespace-nowrap">
+            <button className="whitespace-nowrap rounded-r-full bg-champagne px-5 py-2.5 text-[13px] font-semibold text-espresso transition-colors duration-300 hover:bg-champagne-light focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-champagne-light">
               Subscribe
             </button>
           </div>
-          <p className="text-white/50 text-[11px] leading-relaxed">{message || 'By subscribing you agree to our Privacy Policy and consent to receive updates from our academy.'}
+          <p className="text-[11px] leading-relaxed text-cream/40">
+            By subscribing you agree to our Privacy Policy and consent to receive updates from our academy.
           </p>
         </div>
 
