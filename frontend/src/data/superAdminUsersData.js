@@ -1,0 +1,51 @@
+const HOME = '/super-admin';
+
+export const superAdminUsers = {
+  header: {
+    title: 'Users',
+    description: 'Manage staff accounts and access to the HOB system.',
+    activeAccountsLabel: 'active accounts',
+    addUserPath: `${HOME}/users/add`,
+  },
+  attentionBanner: {
+    actionText: 'Review accounts',
+    filterStatus: 'Pending',
+  },
+  filters: {
+    searchPlaceholder: 'Search by name or email...',
+    roles: ['Registrar', 'Teacher', 'Super Admin'],
+    statuses: ['Active', 'Pending'],
+    sorts: [
+      { value: 'recent', label: 'Recently added' },
+      { value: 'name', label: 'Name' },
+      { value: 'role', label: 'Role' },
+      { value: 'status', label: 'Status' },
+    ],
+  },
+  users: [
+    { id: '#USR-1092', name: 'Sandra Example', role: 'Registrar', email: 'sandra@example.com', status: 'Active', lastSignIn: 'Today' },
+    { id: '#USR-1088', name: 'Hana Example', role: 'Teacher', email: 'hana@example.com', status: 'Active', lastSignIn: 'Today' },
+    { id: '#USR-1001', name: 'Daniel Example', role: 'Super Admin', email: 'daniel@example.com', status: 'Active', lastSignIn: 'Yesterday' },
+    { id: '#USR-1074', name: 'Marta Example', role: 'Teacher', email: 'marta@example.com', status: 'Active', lastSignIn: 'Sep 5, 2026' },
+    { id: '#USR-1094', name: 'Ruth Example', role: 'No role assigned', email: 'ruth@example.com', status: 'Pending', lastSignIn: 'Never' },
+    { id: '#USR-1091', name: 'Jada Bell', role: 'Teacher', email: 'jada.bell@example.com', status: 'Active', lastSignIn: 'Today' },
+    { id: '#USR-1090', name: 'Marcus Reed', role: 'Registrar', email: 'marcus.reed@example.com', status: 'Active', lastSignIn: 'Sep 4, 2026' },
+    { id: '#USR-1089', name: 'Amara Cole', role: 'Teacher', email: 'amara.cole@example.com', status: 'Active', lastSignIn: 'Sep 3, 2026' },
+    { id: '#USR-1087', name: 'Omar Haddad', role: 'Registrar', email: 'omar.haddad@example.com', status: 'Active', lastSignIn: 'Sep 2, 2026' },
+    { id: '#USR-1086', name: 'Nia Grant', role: 'Teacher', email: 'nia.grant@example.com', status: 'Active', lastSignIn: 'Sep 1, 2026' },
+    { id: '#USR-1085', name: 'Lucas Silva', role: 'Teacher', email: 'lucas.silva@example.com', status: 'Active', lastSignIn: 'Aug 30, 2026' },
+    { id: '#USR-1084', name: 'Priya Malhotra', role: 'Registrar', email: 'priya.malhotra@example.com', status: 'Active', lastSignIn: 'Aug 29, 2026' },
+    { id: '#USR-1083', name: 'Elena Rossi', role: 'Teacher', email: 'elena.rossi@example.com', status: 'Active', lastSignIn: 'Aug 28, 2026' },
+    { id: '#USR-1082', name: 'David Vega', role: 'Teacher', email: 'david.vega@example.com', status: 'Active', lastSignIn: 'Aug 27, 2026' },
+    { id: '#USR-1081', name: 'Farida Ali', role: 'Registrar', email: 'farida.ali@example.com', status: 'Active', lastSignIn: 'Aug 26, 2026' },
+    { id: '#USR-1080', name: 'Tom Reyes', role: 'Teacher', email: 'tom.reyes@example.com', status: 'Active', lastSignIn: 'Aug 25, 2026' },
+    { id: '#USR-1079', name: 'Sofia Ferro', role: 'Registrar', email: 'sofia.ferro@example.com', status: 'Active', lastSignIn: 'Aug 24, 2026' },
+    { id: '#USR-1078', name: 'Adam Reed', role: 'Teacher', email: 'adam.reed@example.com', status: 'Active', lastSignIn: 'Aug 23, 2026' },
+    { id: '#USR-1077', name: 'Yara Mounir', role: 'Teacher', email: 'yara.mounir@example.com', status: 'Active', lastSignIn: 'Aug 22, 2026' },
+    { id: '#USR-1076', name: 'Kenji Ito', role: 'Registrar', email: 'kenji.ito@example.com', status: 'Active', lastSignIn: 'Aug 21, 2026' },
+    { id: '#USR-1075', name: 'Maya Cohen', role: 'Teacher', email: 'maya.cohen@example.com', status: 'Active', lastSignIn: 'Aug 20, 2026' },
+    { id: '#USR-1093', name: 'Kevin White', role: 'No role assigned', email: 'kevin.white@example.com', status: 'Pending', lastSignIn: 'Never' },
+    { id: '#USR-1073', name: 'Nadia Thompson', role: 'Teacher', email: 'nadia.thompson@example.com', status: 'Active', lastSignIn: 'Aug 19, 2026' },
+    { id: '#USR-1072', name: 'Peter Kwon', role: 'Registrar', email: 'peter.kwon@example.com', status: 'Active', lastSignIn: 'Aug 18, 2026' },
+  ],
+};

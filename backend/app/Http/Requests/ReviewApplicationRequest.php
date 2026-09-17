@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class ReviewApplicationRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('approve', $this->route('application')) === true; }
 
     public function rules(): array
     {

@@ -15,12 +15,14 @@ class GalleryImage extends Model
         'file_path',
         'category',
         'sort_order',
+        'is_public',
     ];
 
     protected function casts(): array
     {
         return [
             'sort_order' => 'integer',
+            'is_public' => 'boolean',
         ];
     }
 

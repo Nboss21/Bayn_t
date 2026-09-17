@@ -1,5 +1,5 @@
 import React from 'react';
-import image1 from '../../assets/image/image 1.jpg';
+import image1 from '../../assets/image/image 1.webp';
 
 const EventsHero = () => {
   return (

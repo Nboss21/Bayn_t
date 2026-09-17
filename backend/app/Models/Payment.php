@@ -19,6 +19,8 @@ class Payment extends Model
         'status',
         'gateway_name',
         'gateway_transaction_id',
+        'checkout_url',
+        'metadata',
         'paid_at',
     ];
 
@@ -27,6 +29,7 @@ class Payment extends Model
         return [
             'status' => PaymentStatus::class,
             'amount' => 'decimal:2',
+            'metadata' => 'array',
             'paid_at' => 'datetime',
         ];
     }

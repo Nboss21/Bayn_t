@@ -1,4 +1,4 @@
-import passionImage from "../../assets/womans/woman 1.png";
+import passionImage from "../../assets/womans/woman 1.webp";
 
 export const passionData = {
   image: {

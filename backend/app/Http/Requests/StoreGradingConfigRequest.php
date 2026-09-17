@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class StoreGradingConfigRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('create', \App\Models\GradingConfig::class) === true; }
 
     public function rules(): array
     {

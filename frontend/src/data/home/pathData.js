@@ -1,15 +1,15 @@
-import image1 from "../../assets/image/image 1.jpg";
-import image2 from "../../assets/image/image 2.jpg";
-import image3 from "../../assets/image/image 3.jpg";
-import image4 from "../../assets/image/image 4.jpg";
-import woman1 from "../../assets/womans2/woman 1.jpg";
-import woman2 from "../../assets/womans2/woman 2.jpg";
-import woman3 from "../../assets/womans2/woman 3.jpg";
-import woman4 from "../../assets/womans2/woman 4.jpg";
-import woman5 from "../../assets/womans/woman 5.jpg";
-import woman6 from "../../assets/womans/woman 6.png";
-import woman7 from "../../assets/womans/woman 7.jpg";
-import woman8 from "../../assets/womans2/ourstory.png";
+import image1 from "../../assets/image/image 1.webp";
+import image2 from "../../assets/image/image 2.webp";
+import image3 from "../../assets/image/image 3.webp";
+import image4 from "../../assets/image/image 4.webp";
+import woman1 from "../../assets/womans2/woman 1.webp";
+import woman2 from "../../assets/womans2/woman 2.webp";
+import woman3 from "../../assets/womans2/woman 3.webp";
+import woman4 from "../../assets/womans2/woman 4.webp";
+import woman5 from "../../assets/womans/woman 5.webp";
+import woman6 from "../../assets/womans/woman 6.webp";
+import woman7 from "../../assets/womans/woman 7.webp";
+import woman8 from "../../assets/womans2/ourstory.webp";
 
 export const pathData = {
   heading: "Find Your Path to Success",

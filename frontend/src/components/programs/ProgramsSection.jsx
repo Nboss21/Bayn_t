@@ -1,12 +1,13 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import ProgramHeaderPill from './ProgramHeaderPill';
 import ProgramCategories from './ProgramCategories';
 import HorizontalProgramCard from './HorizontalProgramCard';
 import VerticalProgramCard from './VerticalProgramCard';
-import { pathData } from '../../data/home/pathData';
+import { contentService } from '../../services/applicationService';
 
 const ProgramsSection = () => {
-  const { programs } = pathData;
+  const [programs, setPrograms] = useState([]);
+  useEffect(() => { contentService.programs({ status: 'open', per_page: 100 }).then((data) => setPrograms(data?.data || data || [])).catch(() => setPrograms([])); }, []);
   const [activeCategory, setActiveCategory] = useState('All Programs');
 
   const filteredPrograms = activeCategory === 'All Programs'
@@ -44,7 +45,7 @@ const ProgramsSection = () => {
                 <HorizontalProgramCard
                   duration={program.duration}
                   level={program.level}
-                  title={program.title}
+                  title={program.name || program.title}
                   description={program.description}
                   image={program.image}
                   className="h-full w-full"
@@ -53,7 +54,7 @@ const ProgramsSection = () => {
                 <VerticalProgramCard
                   duration={program.duration}
                   level={program.level}
-                  title={program.title}
+                  title={program.name || program.title}
                   description={program.description}
                   image={program.image}
                   className={`h-full w-full ${getMinHeight(index)}`}

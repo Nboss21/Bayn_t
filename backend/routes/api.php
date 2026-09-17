@@ -15,7 +15,11 @@ use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\UserController;
 use App\Http\Controllers\Api\GradingConfigController;
 use App\Http\Controllers\Api\AuditLogController;
+use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Api\ReportController;
+use App\Http\Controllers\Api\ContentController;
+use App\Http\Controllers\Api\BackupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,17 +27,21 @@ use Illuminate\Support\Facades\Route;
 |--------------------------------------------------------------------------
 */
 
+// Payment Gateway Webhook (Public Gateway Callback)
+Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
+
+
 // --------------------------------------------------------------------------
 // Authentication
 // --------------------------------------------------------------------------
 
 // Public Auth Endpoints
 Route::prefix('auth')->group(function () {
-    Route::post('/login', [AuthController::class, 'login']);
-    Route::post('/forgot-password', [AuthController::class, 'forgotPassword']);
-    Route::post('/reset-password', [AuthController::class, 'resetPassword']);
-    Route::get('/google/redirect', [AuthController::class, 'googleRedirect']);
-    Route::get('/google/callback', [AuthController::class, 'googleCallback']);
+    Route::post('/login', [AuthController::class, 'login'])->middleware('throttle:auth');
+    Route::post('/forgot-password', [AuthController::class, 'forgotPassword'])->middleware('throttle:auth');
+    Route::post('/reset-password', [AuthController::class, 'resetPassword'])->middleware('throttle:auth');
+    Route::get('/google/redirect', [AuthController::class, 'googleRedirect'])->middleware('throttle:auth');
+    Route::get('/google/callback', [AuthController::class, 'googleCallback'])->middleware('throttle:auth');
 });
 
 // Protected Auth Endpoints (Requires Sanctum Bearer Token)
@@ -50,13 +58,17 @@ Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
     Route::post('/{notification}/read', [NotificationController::class, 'markAsRead']);
 });
 
+Route::middleware(['auth:sanctum', 'role:student,super_admin,registrar'])->group(function () {
+    Route::post('/payments/initiate', [PaymentController::class, 'initiate']);
+});
+
 Route::middleware(['auth:sanctum', 'role:student'])->prefix('applications')->group(function () {
     Route::post('/', [ApplicationController::class, 'store']);
     Route::get('/', [ApplicationController::class, 'index']);
     Route::get('/{application}', [ApplicationController::class, 'show']);
     Route::patch('/{application}/steps/{step}', [ApplicationController::class, 'updateStep'])
         ->where('step', '[A-Za-z0-9_-]+');
-    Route::post('/{application}/documents', [DocumentController::class, 'storeForApplication']);
+    Route::post('/{application}/documents', [DocumentController::class, 'storeForApplication'])->middleware('throttle:public-write');
     Route::get('/{application}/documents', [ApplicationController::class, 'documents']);
     Route::post('/{application}/submit', [ApplicationController::class, 'submit']);
 });
@@ -70,10 +82,10 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(fu
 // --------------------------------------------------------------------------
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->group(function () {
-    Route::apiResources([
-        'programs' => ProgramController::class,
-        'intakes' => IntakeController::class,
-    ]);
+    Route::apiResources(['programs' => ProgramController::class, 'intakes' => IntakeController::class], ['only' => ['index', 'show']]);
+});
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
+    Route::apiResources(['programs' => ProgramController::class, 'intakes' => IntakeController::class], ['except' => ['index', 'show']]);
 });
 
 
@@ -104,7 +116,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])
     ->prefix('documents')
     ->group(function () {
-        Route::post('/', [DocumentController::class, 'store']);
+    Route::post('/', [DocumentController::class, 'store'])->middleware('throttle:public-write');
         Route::get('/{document}/temporary-url', [DocumentController::class, 'temporaryUrl']);
     });
 
@@ -132,6 +144,42 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student']
 Route::get('/documents/{document}/download', [DocumentController::class, 'download'])
     ->middleware('signed')
     ->name('documents.download');
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])->prefix('reports')->group(function () {
+    Route::get('/dashboard', [ReportController::class, 'dashboard']);
+    Route::get('/applications', [ReportController::class, 'applications']);
+    Route::get('/students', [ReportController::class, 'students']);
+    Route::get('/enrollment', [ReportController::class, 'enrollment']);
+    Route::get('/attendance', [ReportController::class, 'attendance']);
+    Route::get('/assessments', [ReportController::class, 'assessments']);
+    Route::get('/performance', [ReportController::class, 'performance']);
+    Route::get('/payments', [ReportController::class, 'payments']);
+    Route::get('/{type}/export', [ReportController::class, 'export'])->where('type', 'students|attendance|payments');
+});
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->prefix('backups')->group(function () {
+    Route::post('/', [BackupController::class, 'store'])->middleware('throttle:expensive-admin');
+    Route::get('/', [BackupController::class, 'index']);
+    Route::get('/{backup}', [BackupController::class, 'show']);
+    Route::delete('/{backup}', [BackupController::class, 'destroy']);
+});
+Route::middleware(['auth:sanctum', 'role:super_admin', 'throttle:expensive-admin'])->post('/backups/{backup}/restore', [BackupController::class, 'restore']);
+Route::get('/backups/{backup}/download', [BackupController::class, 'download'])->middleware(['auth:sanctum', 'role:super_admin,registrar', 'signed'])->name('backups.download');
+
+Route::get('/site/settings', [ContentController::class, 'settings']);
+Route::get('/public/gallery', [ContentController::class, 'gallery']);
+Route::post('/newsletter/subscribe', [ContentController::class, 'subscribe'])->middleware('throttle:public-write');
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
+    Route::put('/site/settings', [ContentController::class, 'updateSettings']);
+    Route::get('/gallery', [ContentController::class, 'galleryAdmin']);
+    Route::get('/gallery/{galleryImage}', [ContentController::class, 'showGallery']);
+    Route::post('/gallery', [ContentController::class, 'storeGallery']);
+    Route::match(['put','patch'], '/gallery/{galleryImage}', [ContentController::class, 'updateGallery']);
+    Route::delete('/gallery/{galleryImage}', [ContentController::class, 'deleteGallery']);
+});
+
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar', 'throttle:expensive-admin'])->post('/students/{student}/certificate', [DocumentController::class, 'certificate']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->get('/students/{student}/certificate', [DocumentController::class, 'certificateView']);
 
 // --------------------------------------------------------------------------
 // Role-Gated Routes
