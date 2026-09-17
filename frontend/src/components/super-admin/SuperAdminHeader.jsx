@@ -3,6 +3,7 @@ import { Search, Bell } from 'lucide-react';
 
 import { useLocation } from 'react-router-dom';
 import { superAdminPrograms } from '../../data/superAdminProgramsData';
+import { superAdminClasses } from '../../data/superAdminClassesData';
 
 export default function SuperAdminHeader() {
   const location = useLocation();
@@ -28,6 +29,16 @@ export default function SuperAdminHeader() {
     title = "Users";
   } else if (location.pathname.includes('/programs')) {
     title = "Programs";
+  } else if (location.pathname.match(/^\/super-admin\/classes\/[^/]+$/)) {
+    category = "Academic Management";
+    const classMatch = location.pathname.match(/^\/super-admin\/classes\/([^/]+)$/);
+    const cls = classMatch
+      ? superAdminClasses.classes.find((c) => String(c.id) === String(classMatch[1]))
+      : null;
+    title = cls ? cls.name : 'Class';
+  } else if (location.pathname.includes('/classes')) {
+    category = "Academic Management";
+    title = "Classes & Intakes";
   } else if (location.pathname.includes('/grading')) {
     title = "Grading";
   } else if (location.pathname.includes('/roles')) {
@@ -47,6 +58,8 @@ export default function SuperAdminHeader() {
   const isAddUser = location.pathname === '/super-admin/users/add';
   const isAddProgram = location.pathname === '/super-admin/programs/add';
   const isEditProgram = location.pathname.includes('/programs/edit');
+  const isAddClass = location.pathname === '/super-admin/classes/add';
+  const isViewClass = !isAddClass && /^\/super-admin\/classes\/[^/]+$/.test(location.pathname);
 
   return (
     <header className="h-[72px] bg-white border-b border-[#e5e7eb] flex items-center justify-between px-8 shrink-0">
@@ -71,6 +84,18 @@ export default function SuperAdminHeader() {
         ) : isEditProgram ? (
           <>
             <span className="text-[#6b7280]">Programs</span>
+            <span className="mx-2 text-[#9ca3af]">/</span>
+            <span className="font-semibold text-[#111827]">{title}</span>
+          </>
+        ) : isAddClass ? (
+          <>
+            <span className="text-[#6b7280]">Classes & Intakes</span>
+            <span className="mx-2 text-[#9ca3af]">/</span>
+            <span className="font-semibold text-[#111827]">Add Class</span>
+          </>
+        ) : isViewClass ? (
+          <>
+            <span className="text-[#6b7280]">Classes & Intakes</span>
             <span className="mx-2 text-[#9ca3af]">/</span>
             <span className="font-semibold text-[#111827]">{title}</span>
           </>

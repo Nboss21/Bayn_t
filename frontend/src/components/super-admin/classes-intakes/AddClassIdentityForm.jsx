@@ -1,7 +1,18 @@
 import React from 'react';
 import { ChevronDown } from 'lucide-react';
 
-export default function AddClassIdentityForm() {
+export default function AddClassIdentityForm({ options = {} }) {
+  const {
+    defaultName = '',
+    namePlaceholder = '',
+    intakes = [],
+    defaultIntake = '',
+    intakePlaceholder = 'Select intake cohort...',
+    instructors = [],
+    defaultInstructor = '',
+    instructorPlaceholder = 'Select lead master artist...',
+  } = options;
+
   return (
     <div className="bg-white rounded-lg border border-[#e5e7eb] p-6 mb-6 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
       <div className="flex justify-between items-start mb-6">
@@ -26,7 +37,8 @@ export default function AddClassIdentityForm() {
           <input
             type="text"
             className="w-full border border-[#e5e7eb] rounded-md px-3 py-2 text-[14px] text-[#1a1a1a] focus:outline-none focus:border-[#d1d5db]"
-            defaultValue="Mastering Editorial"
+            defaultValue={defaultName}
+            placeholder={namePlaceholder}
           />
         </div>
 
@@ -35,8 +47,16 @@ export default function AddClassIdentityForm() {
             Intake Cohort <span className="text-[#ef4444]">*</span>
           </label>
           <div className="relative">
-            <select className="w-full border border-[#e5e7eb] rounded-md px-3 py-2 text-[14px] text-[#1a1a1a] appearance-none focus:outline-none focus:border-[#d1d5db] cursor-pointer">
-              <option>Spring Intake (May - August 2025)</option>
+            <select
+              defaultValue={defaultIntake}
+              className="w-full border border-[#e5e7eb] rounded-md px-3 py-2 text-[14px] text-[#1a1a1a] appearance-none focus:outline-none focus:border-[#d1d5db] cursor-pointer"
+            >
+              {defaultIntake === '' && (
+                <option value="" disabled>{intakePlaceholder}</option>
+              )}
+              {intakes.map((intake) => (
+                <option key={intake} value={intake}>{intake}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af] pointer-events-none" />
           </div>
@@ -47,8 +67,16 @@ export default function AddClassIdentityForm() {
             Primary Instructor (Lead Master Artist) <span className="text-[#ef4444]">*</span>
           </label>
           <div className="relative">
-            <select className="w-full border border-[#e5e7eb] rounded-md px-3 py-2 text-[14px] text-[#1a1a1a] appearance-none focus:outline-none focus:border-[#d1d5db] cursor-pointer">
-              <option>Charlotte Dupont</option>
+            <select
+              defaultValue={defaultInstructor}
+              className="w-full border border-[#e5e7eb] rounded-md px-3 py-2 text-[14px] text-[#1a1a1a] appearance-none focus:outline-none focus:border-[#d1d5db] cursor-pointer"
+            >
+              {defaultInstructor === '' && (
+                <option value="" disabled>{instructorPlaceholder}</option>
+              )}
+              {instructors.map((instructor) => (
+                <option key={instructor} value={instructor}>{instructor}</option>
+              ))}
             </select>
             <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-[#9ca3af] pointer-events-none" />
           </div>
