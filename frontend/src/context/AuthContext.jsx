@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
 
   useEffect(() => {
     if (!authService.hasToken()) return;
-    authService.me().then(setUser).catch(() => localStorage.removeItem(TOKEN_KEY)).finally(() => setLoading(false));
+    authService.me().then((result) => setUser(result?.user || result)).catch(() => localStorage.removeItem(TOKEN_KEY)).finally(() => setLoading(false));
   }, []);
   useEffect(() => { const clear = () => setUser(null); window.addEventListener('bayn:unauthorized', clear); return () => window.removeEventListener('bayn:unauthorized', clear); }, []);
 

@@ -9,7 +9,7 @@ export const authService = {
   async logout() {
     try { await api.post('/auth/logout'); } finally { localStorage.removeItem(TOKEN_KEY); }
   },
-  async me() { return unwrap(await api.get('/auth/me')); },
+  async me() { const result = await api.get('/auth/me'); return result.data.user || unwrap(result); },
   async refresh(device_name) {
     const result = await api.post('/auth/refresh', { device_name });
     localStorage.setItem(TOKEN_KEY, result.data.access_token);

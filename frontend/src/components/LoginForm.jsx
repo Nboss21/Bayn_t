@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
+import { useAuth } from '../context/AuthContext';
+import { toUserMessage } from '../services/api';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -8,22 +10,18 @@ export default function LoginForm() {
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
+  const { login } = useAuth();
 
   const handleLogin = (e) => {
     e.preventDefault();
     setError('');
 
-    const user = username.toLowerCase().trim();
-
-    if (user === 'teacher') {
-      navigate('/teacher/overview');
-    } else if (user === 'registrar') {
-      navigate('/registrar/overview');
-    } else if (user === 'superadmin') {
-      navigate('/super-admin/overview');
-    } else {
-      setError('Invalid username or password. Try: teacher, registrar, or superadmin.');
-    }
+    setBusy(true);
+    login({ email: username.trim(), password })
+      .then((user) => navigate(user.role === 'registrar' ? '/registrar/overview' : user.role === 'teacher' ? '/teacher/overview' : user.role === 'super_admin' ? '/super-admin/overview' : '/dashboard', { replace: true }))
+      .catch((err) => setError(toUserMessage(err)))
+      .finally(() => setBusy(false));
   };
 
   return (
@@ -34,13 +32,14 @@ export default function LoginForm() {
 
       <div className="mb-4">
         <label className="block text-[11px] font-bold text-black mb-1 ml-4" htmlFor="username">
-          USER NAME
+          EMAIL ADDRESS
         </label>
         <input
-          type="text"
+          type="email"
           id="username"
           value={username}
           onChange={(e) => setUsername(e.target.value)}
+          required
           className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm"
         />
       </div>
@@ -53,8 +52,9 @@ export default function LoginForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             id="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
+          value={password}
+          onChange={(e) => setPassword(e.target.value)}
+          required
             className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm pr-12"
           />
           <button
@@ -77,9 +77,10 @@ export default function LoginForm() {
       <div className="flex justify-center">
         <button
           type="submit"
-          className="bg-[#B0C4A4] text-[#355E67] font-bold text-sm px-12 py-2.5 rounded-full hover:bg-[#a0b494] transition-colors shadow-sm"
+          disabled={busy}
+          className="bg-[#B0C4A4] text-[#355E67] font-bold text-sm px-12 py-2.5 rounded-full hover:bg-[#a0b494] transition-colors shadow-sm disabled:opacity-50"
         >
-          LOG IN
+          {busy ? 'SIGNING IN…' : 'LOG IN'}
         </button>
       </div>
     </form>

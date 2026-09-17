@@ -7,6 +7,7 @@ import { ApplicationProvider, useApplication } from './context/ApplicationContex
 import Home from './pages/Home';
 import About from './pages/About';
 import Programs from './pages/Programs';
+import PublicProgramDetails from './pages/PublicProgramDetails';
 import EventsPage from './pages/EventsPage';
 import Teachers from './pages/Teachers';
 import FAQPage from './pages/FAQPage';
@@ -68,6 +69,7 @@ import SuperAdminAuditLog from './pages/super-admin/SuperAdminAuditLog';
 import SuperAdminSettings from './pages/super-admin/SuperAdminSettings';
 import SuperAdminNotifications from './pages/super-admin/SuperAdminNotifications';
 import SuperAdminGenerateReport from './pages/super-admin/SuperAdminGenerateReport';
+import { useAuth } from './context/AuthContext';
 function ProtectedRoute({ step, children }) {
   const { canAccess } = useApplication();
   const targetStep = canAccess(step);
@@ -91,12 +93,26 @@ function RequireAuth({ children }) {
   return isAuthenticated ? children : <Navigate to="/login" replace state={{ from: window.location.pathname }} />;
 }
 
+function roleHome(role) {
+  if (role === 'registrar') return '/registrar/overview';
+  if (role === 'teacher') return '/teacher/overview';
+  if (role === 'super_admin') return '/super-admin/overview';
+  return '/dashboard';
+}
+
+function RequireRole({ roles, children }) {
+  const { user } = useAuth();
+  if (!roles.includes(user?.role)) return <Navigate to={roleHome(user?.role)} replace />;
+  return children;
+}
+
 function App() {
   return (
     <BrowserRouter>
       <ScrollToTop />
       <Routes>
         <Route path="/auth/login" element={<LoginPage />} />
+        <Route path="/login" element={<Navigate to="/auth/login" replace />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
 
@@ -104,6 +120,7 @@ function App() {
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
           <Route path="/programs" element={<Programs />} />
+          <Route path="/programs/:id" element={<PublicProgramDetails />} />
           <Route path="/events" element={<EventsPage />} />
           <Route path="/teachers" element={<Teachers />} />
           <Route path="/gallery" element={<Gallery />} />
@@ -112,7 +129,7 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
 
-        <Route path="/application" element={<ApplicationLayout />}>
+        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
           <Route index element={<Application />} />
         </Route>
 
@@ -129,7 +146,7 @@ function App() {
           </Route>
         </Route>
 
-        <Route path="/registrar" element={<RegistrarLayout />}>
+        <Route path="/registrar" element={<RequireAuth><RequireRole roles={['registrar', 'super_admin']}><RegistrarLayout /></RequireRole></RequireAuth>}>
           <Route path="overview" element={<RegistrarOverview />} />
           <Route path="applications" element={<ApplicationsPage />} />
           <Route path="applications/:id" element={<ApplicationReviewPage />} />
@@ -141,7 +158,7 @@ function App() {
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 
-        <Route path="/teacher" element={<TeacherLayout />}>
+        <Route path="/teacher" element={<RequireAuth><RequireRole roles={['teacher', 'super_admin']}><TeacherLayout /></RequireRole></RequireAuth>}>
           <Route path="overview" element={<TeacherOverview />} />
           <Route path="classes" element={<TeacherClasses />} />
           <Route path="attendance" element={<TeacherAttendance />} />
@@ -154,7 +171,7 @@ function App() {
           <Route index element={<Navigate to="/teacher/overview" replace />} />
         </Route>
 
-        <Route path="/super-admin" element={<SuperAdminLayout />}>
+        <Route path="/super-admin" element={<RequireAuth><RequireRole roles={['super_admin']}><SuperAdminLayout /></RequireRole></RequireAuth>}>
           <Route path="overview" element={<SuperAdminOverview />} />
           <Route path="users" element={<SuperAdminUsers />} />
           <Route path="users/add" element={<SuperAdminAddUser />} />

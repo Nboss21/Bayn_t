@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Search, Bell, ChevronDown } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
 
 export default function WorkspaceTopbar({
   breadcrumbs = [],
@@ -11,12 +12,17 @@ export default function WorkspaceTopbar({
   profilePath,
 }) {
   const navigate = useNavigate();
+  const { logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
 
-  const handleSignOut = () => {
+  const handleSignOut = async () => {
     setDropdownOpen(false);
-    navigate('/auth/login');
+    try {
+      await logout();
+    } finally {
+      navigate('/auth/login', { replace: true });
+    }
   };
 
   const handleViewProfile = () => {

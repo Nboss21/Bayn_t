@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import { useApplication } from '../context/ApplicationContext';
+import { paymentService } from '../services/applicationService';
 
 const paymentMethods = [
   { id: 'primary', label: 'Telebirr' },
@@ -10,7 +11,7 @@ const paymentMethods = [
 
 const PaymentStep = () => {
   const navigate = useNavigate();
-  const { formData, updateField, getSelectedProgram, completeStep, saveStep, submitApplication } = useApplication();
+  const { formData, updateField, getSelectedProgram, completeStep, saveStep, uploadDocuments, submitApplication } = useApplication();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const program = getSelectedProgram();
@@ -76,7 +77,19 @@ const PaymentStep = () => {
           {/* Action buttons */}
           <div className="flex flex-col sm:flex-row gap-3 sm:gap-4">
             <button
-              onClick={async () => { setBusy(true); setError(''); try { await saveStep('payment'); await submitApplication(); completeStep('payment'); navigate('/application/confirmation'); } catch (err) { setError(err.message || 'Your application could not be submitted. Please try again.'); } finally { setBusy(false); } }}
+              onClick={async () => {
+                setBusy(true); setError('');
+                try {
+                  const draft = await saveStep('payment');
+                  await uploadDocuments();
+                  const submitted = await submitApplication();
+                  const payment = await paymentService.initiate({ application_id: submitted.id || draft.id });
+                  completeStep('payment');
+                  if (payment?.checkout_url) window.location.assign(payment.checkout_url);
+                  else navigate('/application/confirmation');
+                } catch (err) { setError(err.message || 'Your application could not be submitted. Please try again.'); }
+                finally { setBusy(false); }
+              }}
               disabled={busy}
               className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition disabled:opacity-50"
             >
