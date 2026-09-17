@@ -20,7 +20,7 @@ export default function LoginForm() {
     } else if (user === 'registrar') {
       navigate('/registrar/overview');
     } else if (user === 'superadmin') {
-      navigate('/');
+      navigate('/super-admin/overview');
     } else {
       setError('Invalid username or password. Try: teacher, registrar, or superadmin.');
     }

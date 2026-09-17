@@ -48,8 +48,11 @@ import ApplicationConfirmation from './pages/ApplicationConfirmation';
 import SuperAdminLayout from './layouts/SuperAdminLayout';
 import SuperAdminOverview from './pages/super-admin/SuperAdminOverview';
 import SuperAdminUsers from './pages/super-admin/SuperAdminUsers';
+import SuperAdminUserDetail from './pages/super-admin/SuperAdminUserDetail';
 import SuperAdminAddUser from './pages/super-admin/SuperAdminAddUser';
 import SuperAdminPrograms from './pages/super-admin/SuperAdminPrograms';
+import SuperAdminProgramAdd from './pages/super-admin/SuperAdminProgramAdd';
+import SuperAdminProgramView from './pages/super-admin/SuperAdminProgramView';
 import SuperAdminProgramEdit from './pages/super-admin/SuperAdminProgramEdit';
 import SuperAdminClasses from './pages/super-admin/SuperAdminClasses';
 import SuperAdminAddClass from './pages/super-admin/SuperAdminAddClass';
@@ -148,8 +151,11 @@ function App() {
           <Route path="overview" element={<SuperAdminOverview />} />
           <Route path="users" element={<SuperAdminUsers />} />
           <Route path="users/add" element={<SuperAdminAddUser />} />
+          <Route path="users/:id" element={<SuperAdminUserDetail />} />
           <Route path="programs" element={<SuperAdminPrograms />} />
-          <Route path="programs/edit" element={<SuperAdminProgramEdit />} />
+          <Route path="programs/add" element={<SuperAdminProgramAdd />} />
+          <Route path="programs/:id" element={<SuperAdminProgramView />} />
+          <Route path="programs/:id/edit" element={<SuperAdminProgramEdit />} />
           <Route path="classes" element={<SuperAdminClasses />} />
           <Route path="classes/add" element={<SuperAdminAddClass />} />
           <Route path="grading" element={<SuperAdminGrading />} />
