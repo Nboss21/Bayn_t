@@ -3,6 +3,7 @@
 namespace Tests\Feature;
 
 use App\Models\User;
+use App\Notifications\ResetPasswordNotification;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -33,6 +34,21 @@ class PasswordResetTest extends TestCase
             'email' => 'not-an-email',
         ])->assertUnprocessable()
             ->assertJsonValidationErrors(['email']);
+    }
+
+    public function test_password_reset_notification_uses_frontend_url(): void
+    {
+        $user = User::factory()->create([
+            'email' => 'reset@example.com',
+        ]);
+
+        $notification = new ResetPasswordNotification('reset-token');
+        $mailMessage = $notification->toMail($user);
+        $rendered = $mailMessage->render();
+
+        $this->assertStringContainsString('http://localhost:5173/reset-password', $rendered);
+        $this->assertStringContainsString('token=reset-token', $rendered);
+        $this->assertStringContainsString('email=reset%40example.com', $rendered);
     }
 
     public function test_user_can_reset_password_with_valid_token(): void

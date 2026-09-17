@@ -3,11 +3,11 @@ import ProgramHeaderPill from './ProgramHeaderPill';
 import ProgramCategories from './ProgramCategories';
 import HorizontalProgramCard from './HorizontalProgramCard';
 import VerticalProgramCard from './VerticalProgramCard';
-import { contentService } from '../../services/applicationService';
+import { publicContentService } from '../../services/applicationService';
 
 const ProgramsSection = () => {
   const [programs, setPrograms] = useState([]);
-  useEffect(() => { contentService.programs({ status: 'open', per_page: 100 }).then((data) => setPrograms(data?.data || data || [])).catch(() => setPrograms([])); }, []);
+  useEffect(() => { publicContentService.programs({ per_page: 100 }).then((data) => setPrograms(data?.data || data || [])).catch(() => setPrograms([])); }, []);
   const [activeCategory, setActiveCategory] = useState('All Programs');
 
   const filteredPrograms = activeCategory === 'All Programs'

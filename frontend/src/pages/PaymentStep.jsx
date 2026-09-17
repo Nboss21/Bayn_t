@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import { useApplication } from '../context/ApplicationContext';
@@ -10,7 +10,9 @@ const paymentMethods = [
 
 const PaymentStep = () => {
   const navigate = useNavigate();
-  const { formData, updateField, getSelectedProgram, completeStep, saveStep, uploadDocuments } = useApplication();
+  const { formData, updateField, getSelectedProgram, completeStep, saveStep, submitApplication } = useApplication();
+  const [busy, setBusy] = useState(false);
+  const [error, setError] = useState('');
   const program = getSelectedProgram();
 
   return (
@@ -74,10 +76,11 @@ const PaymentStep = () => {
           {/* Action buttons */}
           <div className="flex items-center gap-4">
             <button
-              onClick={async () => { await saveStep('payment'); await uploadDocuments(); completeStep('payment'); navigate('/application/confirmation'); }}
-              className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition"
+              onClick={async () => { setBusy(true); setError(''); try { await saveStep('payment'); await submitApplication(); completeStep('payment'); navigate('/application/confirmation'); } catch (err) { setError(err.message || 'Your application could not be submitted. Please try again.'); } finally { setBusy(false); } }}
+              disabled={busy}
+              className="bg-[#c9a227] hover:bg-[#b8911f] text-white text-[12px] font-bold uppercase tracking-wider py-4 px-8 rounded-sm transition disabled:opacity-50"
             >
-              Submit Application
+              {busy ? 'Submitting…' : 'Submit Application'}
             </button>
             <button
               onClick={() => navigate('/application/review')}
@@ -86,6 +89,7 @@ const PaymentStep = () => {
               Back
             </button>
           </div>
+          {error && <p role="alert" className="mt-4 text-sm text-red-600">{error}</p>}
         </div>
 
         {/* Right: Application Summary */}

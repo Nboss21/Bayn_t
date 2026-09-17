@@ -13,6 +13,10 @@ export const contentService = {
   intakes: async (params) => resource(await api.get('/intakes', params)),
 };
 
+export const publicContentService = {
+  programs: async (params) => resource(await api.get('/public/programs', params)),
+};
+
 export const applicationService = {
   list: async (params) => resource(await api.get('/applications', params)),
   show: async (id) => resource(await api.get(`/applications/${id}`)),

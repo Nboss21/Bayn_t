@@ -159,6 +159,7 @@ Route::get('/backups/{backup}/download', [BackupController::class, 'download'])-
 
 Route::get('/site/settings', [ContentController::class, 'settings']);
 Route::get('/public/gallery', [ContentController::class, 'gallery']);
+Route::get('/public/programs', [ProgramController::class, 'publicIndex']);
 Route::post('/newsletter/subscribe', [ContentController::class, 'subscribe'])->middleware('throttle:public-write');
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
     Route::put('/site/settings', [ContentController::class, 'updateSettings']);

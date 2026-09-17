@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use App\Services\DocumentGenerationService;
-use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\Response;
 
 class DocumentController extends Controller
 {
@@ -104,7 +104,7 @@ class DocumentController extends Controller
         ]);
     }
 
-    public function download(Request $request, Document $document): BinaryFileResponse
+    public function download(Request $request, Document $document): Response
     {
         $path = Storage::disk('private_documents')->path($document->file_path);
 

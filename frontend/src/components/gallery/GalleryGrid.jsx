@@ -13,13 +13,16 @@ const heightClasses = {
   short: 'h-[150px] md:h-[250px]',
 };
 
-const GalleryGrid = () => {
+const GalleryGrid = ({ images }) => {
+  const resolvedImages = images?.length
+    ? images.map((image, index) => ({ id: image.id || index, src: image.url || image.image_url, alt: image.category || 'Academy gallery', colSpan: 1, height: index === 0 ? 'tall' : 'medium' }))
+    : galleryImages;
   return (
     <div className="w-full flex justify-center py-4 px-4 bg-[#fdfbf8] pb-32">
       <div className="w-full max-w-[800px] flex flex-col gap-4 md:gap-6">
         
         <div className="grid grid-cols-3 gap-4 md:gap-6">
-          {galleryImages.map((image) => (
+          {resolvedImages.map((image) => (
             <div key={image.id} className={colSpanClasses[image.colSpan]}>
               <img src={image.src} alt={image.alt} className={`w-full ${heightClasses[image.height]} object-cover`} />
             </div>

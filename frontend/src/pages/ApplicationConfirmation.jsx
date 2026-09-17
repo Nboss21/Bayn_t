@@ -1,7 +1,5 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState } from 'react';
 import { useApplication } from '../context/ApplicationContext';
-import { applicationService } from '../services/applicationService';
-import { toUserMessage } from '../services/api';
 
 const nextSteps = [
   {
@@ -26,11 +24,10 @@ const nextSteps = [
 
 const ApplicationConfirmation = () => {
   const [copied, setCopied] = useState(false);
-  const [submitted, setSubmitted] = useState(false); const [error, setError] = useState('');
   const { formData, application, getSelectedProgram } = useApplication();
+  const submitted = application?.status === 'submitted';
   const program = getSelectedProgram();
   const appId = application?.reference_number || '—';
-  useEffect(() => { if (application?.id && application.status === 'draft') applicationService.submit(application.id).then(() => setSubmitted(true)).catch((err) => setError(toUserMessage(err))); }, [application]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(appId);
@@ -91,7 +88,7 @@ const ApplicationConfirmation = () => {
                 )}
               </button>
             </div>
-          </div>{error && <p role="alert" className="w-full mt-4 text-sm text-red-600">{error}</p>}
+          </div>
 
           {/* Payment Details */}
           <div className="border border-gray-200 rounded-md p-6">

@@ -21,9 +21,11 @@ return new class extends Migration
             $table->index(['application_id', 'student_id']);
         });
 
-        DB::statement(
-            'ALTER TABLE documents ADD CONSTRAINT documents_application_student_xor CHECK ((application_id IS NOT NULL) <> (student_id IS NOT NULL))'
-        );
+        if (DB::getDriverName() !== 'sqlite') {
+            DB::statement(
+                'ALTER TABLE documents ADD CONSTRAINT documents_application_student_xor CHECK ((application_id IS NOT NULL) <> (student_id IS NOT NULL))'
+            );
+        }
     }
 
     public function down(): void

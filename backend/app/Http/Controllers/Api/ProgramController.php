@@ -14,6 +14,19 @@ use Illuminate\Support\Facades\Gate;
 
 class ProgramController extends Controller
 {
+    public function publicIndex(Request $request)
+    {
+        $programs = Program::query()
+            ->where('status', 'open')
+            ->when($request->input('category'), fn ($query, $value) => $query->where('category', $value))
+            ->when($request->input('level'), fn ($query, $value) => $query->where('level', $value))
+            ->when($request->input('search'), fn ($query, $value) => $query->where('name', 'like', '%'.$value.'%'))
+            ->orderByDesc('created_at')
+            ->paginate(min($request->integer('per_page', 20), 100));
+
+        return ProgramResource::collection($programs);
+    }
+
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Program::class);

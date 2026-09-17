@@ -1,9 +1,9 @@
 import React, { useRef, useState } from 'react';
 
 const MAX_FILE_SIZE = 10 * 1024 * 1024;
-const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf'];
+const ALLOWED_TYPES = ['image/jpeg', 'image/png', 'application/pdf', 'application/msword', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'];
 
-const FileUploadZone = ({ icon = 'document', accept = '.jpg,.png,.pdf', file, onFileChange, error }) => {
+const FileUploadZone = ({ icon = 'document', accept = '.jpg,.jpeg,.png,.pdf,.doc,.docx', file, onFileChange, error }) => {
   const inputRef = useRef(null);
   const [dragging, setDragging] = useState(false);
   const [localError, setLocalError] = useState(null);
@@ -16,7 +16,7 @@ const FileUploadZone = ({ icon = 'document', accept = '.jpg,.png,.pdf', file, on
       return;
     }
     if (!ALLOWED_TYPES.includes(f.type)) {
-      setLocalError('Only JPG, PNG, or PDF allowed');
+      setLocalError('Only PDF, JPG, PNG, DOC, or DOCX allowed');
       return;
     }
     onFileChange(f);
@@ -89,7 +89,7 @@ const FileUploadZone = ({ icon = 'document', accept = '.jpg,.png,.pdf', file, on
       ) : (
         <>
           <p className="text-[13px] text-[#a87b52] font-medium">Click to upload or drag and drop</p>
-          <p className="text-[11px] text-gray-400 mt-1">JPG, PNG or PDF · Max 10 MB</p>
+          <p className="text-[11px] text-gray-400 mt-1">JPG, PNG, PDF, DOC or DOCX · Max 10 MB</p>
         </>
       )}
 
