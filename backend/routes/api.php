@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\AdminController;
 use App\Http\Controllers\Api\AssessmentScoreController;
 use App\Http\Controllers\Api\AttendanceController;
 use App\Http\Controllers\Api\AuditLogController;
@@ -189,11 +190,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->get('
 Route::middleware(['auth:sanctum', 'role:super_admin'])
     ->prefix('admin')
     ->group(function () {
-        Route::get('/dashboard', function () {
-            return response()->json([
-                'message' => 'Welcome Super Admin',
-            ]);
-        });
+        Route::get('/dashboard', [AdminController::class, 'dashboard']);
     });
 
 // Super Admin + Registrar
@@ -224,6 +221,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin,teacher'])
         Route::get('/dashboard', [TeacherController::class, 'dashboard']);
         Route::get('/classes', [TeacherController::class, 'classes']);
         Route::get('/students', [TeacherController::class, 'students']);
+        Route::get('/curriculum', [TeacherController::class, 'curriculum']);
         Route::get('/attendance', [AttendanceController::class, 'index']);
         Route::get('/assessments', [AssessmentScoreController::class, 'index']);
     });
