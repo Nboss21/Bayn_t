@@ -44,9 +44,9 @@ return [
     'melapays' => [
         'mode' => env('MELAPAYS_MODE', 'sandbox'),
         'base_url' => env('MELAPAYS_BASE_URL', 'https://84.247.186.98.nip.io'),
-        'publishable_key' => env('MELAPAYS_PUBLISHABLE_KEY', 'pk_test_ngKXPJGySrXlpidcKXeYwP9w54wJI7XUCut5PEs1'),
-        'secret_key' => env('MELAPAYS_SECRET_KEY', 'sk_test_FIIA6jEIBvkR9TlEmtwnIvIugv7EGwGZo8eUxhqIY'),
-        'webhook_secret' => env('MELAPAYS_WEBHOOK_SECRET') ?: env('MELAPAYS_SECRET_KEY', 'sk_test_FIIA6jEIBvkR9TlEmtwnIvIugv7EGwGZo8eUxhqIY'),
+        'publishable_key' => env('MELAPAYS_PUBLISHABLE_KEY'),
+        'secret_key' => env('MELAPAYS_SECRET_KEY'),
+        'webhook_secret' => env('MELAPAYS_WEBHOOK_SECRET'),
     ],
 
 ];

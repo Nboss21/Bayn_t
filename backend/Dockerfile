@@ -1,5 +1,5 @@
 # 1. Use the official PHP image with Apache
-FROM php:8.2-apache
+FROM php:8.3-apache
 
 # 2. Install system dependencies and PHP extensions required by Laravel
 RUN apt-get update && apt-get install -y \
@@ -10,7 +10,7 @@ RUN apt-get update && apt-get install -y \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql gd zip bcmath opcache
+    && docker-php-ext-install pdo_mysql pdo_pgsql gd zip bcmath opcache
 
 # 3. Enable Apache mod_rewrite for Laravel routing
 RUN a2enmod rewrite
@@ -26,6 +26,10 @@ WORKDIR /var/www/html
 # 6. Copy application source code
 COPY . .
 
+# Run database setup before Apache starts on each deploy/restart.
+COPY docker-entrypoint.sh /usr/local/bin/docker-entrypoint.sh
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
 # 7. Install Composer globally
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
 
@@ -39,4 +43,4 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 EXPOSE 80
 
 # 11. Run Apache in the foreground
-CMD ["apache2-foreground"]
+CMD ["docker-entrypoint.sh"]
