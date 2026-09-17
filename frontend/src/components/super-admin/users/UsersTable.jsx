@@ -1,18 +1,23 @@
 import React from 'react';
 
-const users = [
-  { id: '#USR-1092', initials: 'SE', name: 'Sandra Example', role: 'Registrar', email: 'sandra@example.com', status: 'Active', lastSignIn: 'Today', actionType: 'view', color: 'bg-[#e5e7eb]' },
-  { id: '#USR-1088', initials: 'HE', name: 'Hana Example', role: 'Teacher', email: 'hana@example.com', status: 'Active', lastSignIn: 'Today', actionType: 'view', color: 'bg-[#bbf7d0]' },
-  { id: '#USR-1001', initials: 'DE', name: 'Daniel Example', role: 'Super Admin', email: 'daniel@example.com', status: 'Active', lastSignIn: 'Yesterday', actionType: 'view', color: 'bg-[#e5e7eb]' },
-  { id: '#USR-1074', initials: 'ME', name: 'Marta Example', role: 'Teacher', email: 'marta@example.com', status: 'Active', lastSignIn: 'Sep 5, 2026', actionType: 'view', color: 'bg-[#d9f99d]' },
-  { id: '#USR-1094', initials: 'RE', name: 'Ruth Example', role: 'No role assigned', email: 'ruth@example.com', status: 'Pending', lastSignIn: 'Never', actionType: 'review', color: 'bg-[#fed7aa]' },
+const AVATAR_COLORS = [
+  'bg-[#e5e7eb]',
+  'bg-[#bbf7d0]',
+  'bg-[#d9f99d]',
+  'bg-[#fed7aa]',
+  'bg-[#bae6fd]',
+  'bg-[#e9d5ff]',
+  'bg-[#fecdd3]',
 ];
 
-export default function UsersTable() {
+function getAvatarColor(index) {
+  return AVATAR_COLORS[index % AVATAR_COLORS.length];
+}
+
+export default function UsersTable({ rows = [], onView, onReview }) {
   return (
-    <div className="bg-white border border-[#e5e7eb] rounded-xl overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse">
+    <div className="overflow-x-auto">
+      <table className="w-full text-left border-collapse">
           <thead>
             <tr className="border-b border-[#e5e7eb] text-[11px] font-semibold text-[#6b7280] uppercase tracking-wider">
               <th className="px-6 py-4 font-medium">USER</th>
@@ -24,11 +29,11 @@ export default function UsersTable() {
             </tr>
           </thead>
           <tbody className="divide-y divide-[#e5e7eb]">
-            {users.map((user, index) => (
-              <tr key={index} className="hover:bg-[#f9fafb] transition-colors group">
+            {rows.map((user, index) => (
+              <tr key={user.id} className="hover:bg-[#f9fafb] transition-colors group">
                 <td className="px-6 py-4">
                   <div className="flex items-center gap-3">
-                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-[#374151] ${user.color}`}>
+                    <div className={`w-10 h-10 rounded-full flex items-center justify-center text-sm font-semibold text-[#374151] ${getAvatarColor(index)}`}>
                       {user.initials}
                     </div>
                     <div>
@@ -58,40 +63,33 @@ export default function UsersTable() {
                 </td>
                 <td className="px-6 py-4 text-right">
                   {user.actionType === 'view' ? (
-                    <button className="px-4 py-1.5 bg-white border border-[#d1d5db] text-[#374151] text-sm font-medium rounded-lg hover:bg-[#f3f4f6] transition-colors shadow-sm cursor-pointer">
+                    <button
+                      onClick={() => onView && onView(user)}
+                      className="px-4 py-1.5 bg-white border border-[#d1d5db] text-[#374151] text-sm font-medium rounded-lg hover:bg-[#f3f4f6] transition-colors shadow-sm cursor-pointer"
+                    >
                       View
                     </button>
                   ) : (
-                    <button className="px-4 py-1.5 bg-[#fffbeb] border border-[#fcd34d] text-[#b45309] text-sm font-medium rounded-lg hover:bg-[#fef3c7] transition-colors shadow-sm cursor-pointer">
+                    <button
+                      onClick={() => onReview && onReview(user)}
+                      className="px-4 py-1.5 bg-[#fffbeb] border border-[#fcd34d] text-[#b45309] text-sm font-medium rounded-lg hover:bg-[#fef3c7] transition-colors shadow-sm cursor-pointer"
+                    >
                       Review
                     </button>
                   )}
                 </td>
               </tr>
             ))}
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan="6" className="px-6 py-16 text-center">
+                  <p className="text-[15px] font-medium text-[#111827] mb-1">No users found</p>
+                  <p className="text-[13px] text-[#6b7280]">Try adjusting your search or filter selection.</p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-      </div>
-      
-      {/* Pagination Footer */}
-      <div className="px-6 py-4 border-t border-[#e5e7eb] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <span className="text-sm text-[#6b7280]">Showing 1-5 of 24 users</span>
-        <div className="flex items-center gap-1">
-          <button className="px-3 py-1.5 border border-[#e5e7eb] text-[#9ca3af] text-sm font-medium rounded-lg bg-white cursor-not-allowed">
-            Previous
-          </button>
-          <div className="flex items-center">
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-medium rounded-lg bg-[#111827] text-white cursor-pointer">1</button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-medium rounded-lg text-[#4b5563] hover:bg-[#f3f4f6] cursor-pointer">2</button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-medium rounded-lg text-[#4b5563] hover:bg-[#f3f4f6] cursor-pointer">3</button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-medium rounded-lg text-[#4b5563] hover:bg-[#f3f4f6] cursor-pointer">4</button>
-            <button className="w-8 h-8 flex items-center justify-center text-sm font-medium rounded-lg text-[#4b5563] hover:bg-[#f3f4f6] cursor-pointer">5</button>
-          </div>
-          <button className="px-3 py-1.5 border border-[#e5e7eb] text-[#374151] text-sm font-medium rounded-lg bg-white hover:bg-[#f3f4f6] cursor-pointer">
-            Next
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
