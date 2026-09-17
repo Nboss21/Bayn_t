@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { publicService } from '../services/applicationService';
 import { galleryImages } from '../data/home/galleryData';
 import Reveal from './Reveal';
 import ImageReveal from './ImageReveal';
