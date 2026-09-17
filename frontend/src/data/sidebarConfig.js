@@ -9,6 +9,13 @@ import {
   ClipboardList,
   History,
   User,
+  Calendar,
+  BarChart2,
+  CreditCard,
+  FolderOpen,
+  Shield,
+  Bell,
+  Settings,
 } from 'lucide-react';
 
 export const teacherNavItems = [
@@ -27,4 +34,20 @@ export const registrarNavItems = [
   { name: 'Classes', path: '/registrar/classes', icon: BookOpen },
   { name: 'Enrollment History', path: '/registrar/history', icon: History },
   { name: 'Profile', path: '/registrar/profile', icon: User },
+];
+
+export const superadminNavItems = [
+  { name: 'Overview', path: '/super-admin/overview', icon: LayoutDashboard },
+  { name: 'Users', path: '/super-admin/users', icon: Users },
+  { name: 'Programs', path: '/super-admin/programs', icon: BookOpen },
+  { name: 'Classes & Intakes', path: '/super-admin/classes', icon: Calendar },
+  { name: 'Grading', path: '/super-admin/grading', icon: CheckSquare },
+  { name: 'Reports', path: '/super-admin/reports', icon: BarChart2 },
+  { name: 'Payments', path: '/super-admin/payments', icon: CreditCard, badge: '3' },
+  { name: 'Content', path: '/super-admin/content', icon: FileText },
+  { name: 'Documents', path: '/super-admin/documents', icon: FolderOpen },
+  { name: 'Roles & Permissions', path: '/super-admin/roles', icon: Shield },
+  { name: 'Audit Log', path: '/super-admin/audit', icon: History },
+  { name: 'Notifications', path: '/super-admin/notifications', icon: Bell, badge: '3' },
+  { name: 'Profile & Settings', path: '/super-admin/settings', icon: Settings },
 ];
