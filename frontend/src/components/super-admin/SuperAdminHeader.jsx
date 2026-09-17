@@ -2,6 +2,7 @@ import React from 'react';
 import { Search, Bell } from 'lucide-react';
 
 import { useLocation } from 'react-router-dom';
+import { superAdminPrograms } from '../../data/superAdminProgramsData';
 
 export default function SuperAdminHeader() {
   const location = useLocation();
@@ -15,7 +16,14 @@ export default function SuperAdminHeader() {
     title = "Reports";
   } else if (location.pathname.includes('/programs/edit')) {
     category = "Academic Management";
-    title = "Professional Makeup Artistry";
+    const programMatch = location.pathname.match(/^\/super-admin\/programs\/([^/]+)\/edit$/);
+    const program = programMatch ? superAdminPrograms.programDetails?.[programMatch[1]] : null;
+    title = program ? program.name : 'Edit Program';
+  } else if (location.pathname.match(/^\/super-admin\/programs\/[^/]+$/)) {
+    category = "Academic Management";
+    const programMatch = location.pathname.match(/^\/super-admin\/programs\/([^/]+)$/);
+    const program = programMatch ? superAdminPrograms.programDetails?.[programMatch[1]] : null;
+    title = program ? program.name : 'Program';
   } else if (location.pathname.includes('/users')) {
     title = "Users";
   } else if (location.pathname.includes('/programs')) {
@@ -37,6 +45,7 @@ export default function SuperAdminHeader() {
   }
 
   const isAddUser = location.pathname === '/super-admin/users/add';
+  const isAddProgram = location.pathname === '/super-admin/programs/add';
   const isEditProgram = location.pathname.includes('/programs/edit');
 
   return (
@@ -52,6 +61,12 @@ export default function SuperAdminHeader() {
             <span className="text-[#6b7280]">Users</span>
             <span className="mx-2 text-[#9ca3af]">/</span>
             <span className="font-semibold text-[#111827]">Add User</span>
+          </>
+        ) : isAddProgram ? (
+          <>
+            <span className="text-[#6b7280]">Programs</span>
+            <span className="mx-2 text-[#9ca3af]">/</span>
+            <span className="font-semibold text-[#111827]">Add Program</span>
           </>
         ) : isEditProgram ? (
           <>
