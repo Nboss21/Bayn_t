@@ -11,24 +11,24 @@ const ComparePrograms = () => {
         </div>
 
         {/* Table Container */}
-        <div className="bg-[#fcfaf7] rounded-b-[4px] border border-[#e5e5e5] border-t-0">
-          <table className="w-full text-left border-collapse">
+        <div className="bg-[#fcfaf7] rounded-b-[4px] border border-[#e5e5e5] border-t-0 overflow-x-auto">
+          <table className="w-full text-left border-collapse min-w-[560px]">
             <thead>
               <tr className="border-b border-[#e5e5e5]">
-                <th className="py-4 px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/3">Program</th>
-                <th className="py-4 px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/4">Duration</th>
-                <th className="py-4 px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/4">Level</th>
-                <th className="py-4 px-6 w-1/6"></th>
+                <th className="py-4 px-4 sm:px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/3">Program</th>
+                <th className="py-4 px-4 sm:px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/4">Duration</th>
+                <th className="py-4 px-4 sm:px-6 text-[10px] font-bold text-[#666] tracking-wider uppercase w-1/4">Level</th>
+                <th className="py-4 px-4 sm:px-6 w-1/6"></th>
               </tr>
             </thead>
             <tbody>
               {pathData.programs.map((program) => (
                 <tr key={program.id} className="border-b border-[#e5e5e5] last:border-none">
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#1c1c1c]">{program.title}</td>
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">{program.duration}</td>
-                  <td className="py-4 px-6 text-[12px] sm:text-[13px] text-[#666]">{program.level}</td>
-                  <td className="py-4 px-6 text-right">
-                    <a href="#" className="text-[#a87b52] text-[11px] font-semibold tracking-wider hover:text-[#8a5f3f] transition-colors underline underline-offset-4">
+                  <td className="py-4 px-4 sm:px-6 text-[12px] sm:text-[13px] text-[#1c1c1c]">{program.title}</td>
+                  <td className="py-4 px-4 sm:px-6 text-[12px] sm:text-[13px] text-[#666]">{program.duration}</td>
+                  <td className="py-4 px-4 sm:px-6 text-[12px] sm:text-[13px] text-[#666]">{program.level}</td>
+                  <td className="py-4 px-4 sm:px-6 text-right">
+                    <a href="#" className="text-[#a87b52] text-[11px] font-semibold tracking-wider hover:text-[#8a5f3f] transition-colors underline underline-offset-4 whitespace-nowrap">
                       View Details
                     </a>
                   </td>

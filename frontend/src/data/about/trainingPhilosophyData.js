@@ -1,6 +1,6 @@
-import img1 from "../../assets/womans/woman 5.jpg";
-import img2 from "../../assets/womans2/woman 2.jpg";
-import img3 from "../../assets/womans2/woman 3.jpg";
+import img1 from "../../assets/womans/woman 5.webp";
+import img2 from "../../assets/womans2/woman 2.webp";
+import img3 from "../../assets/womans2/woman 3.webp";
 
 export const trainingPhilosophyData = {
   heading: "Training Philosophy",

@@ -1,4 +1,4 @@
-import aboutImage from "../../../public/about.jpg";
+import aboutImage from "../../../public/about.webp";
 
 export const aboutHeroData = {
   image: {

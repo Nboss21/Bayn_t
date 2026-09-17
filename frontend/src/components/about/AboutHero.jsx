@@ -17,8 +17,8 @@ const AboutHero = () => {
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Centered content */}
-      <div className="relative z-10 flex flex-col items-center text-center px-6 max-w-3xl">
-        <h1 className="text-5xl md:text-[68px] font-serif leading-[1.1] mb-6 tracking-tight text-[#4ecdc4]">
+      <div className="relative z-10 flex flex-col items-center text-center px-5 sm:px-6 max-w-3xl">
+        <h1 className="text-4xl sm:text-5xl md:text-[68px] font-serif leading-[1.1] mb-6 tracking-tight text-[#4ecdc4]">
           {heading.split('\n').map((line, i) => (
             <React.Fragment key={i}>{line}{i === 0 && <br />}</React.Fragment>
           ))}

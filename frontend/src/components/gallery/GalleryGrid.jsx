@@ -24,7 +24,7 @@ const GalleryGrid = ({ images }) => {
         <div className="grid grid-cols-3 gap-4 md:gap-6">
           {resolvedImages.map((image) => (
             <div key={image.id} className={colSpanClasses[image.colSpan]}>
-              <img src={image.src} alt={image.alt} className={`w-full ${heightClasses[image.height]} object-cover`} />
+              <img src={image.src} alt={image.alt} loading="lazy" className={`w-full ${heightClasses[image.height]} object-cover`} />
             </div>
           ))}
         </div>
