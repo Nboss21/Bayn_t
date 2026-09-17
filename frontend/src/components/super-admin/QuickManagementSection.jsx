@@ -2,16 +2,16 @@ import React from 'react';
 import { Users, BookOpen, Calendar, CreditCard, FileText, Settings, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
-const quickActions = [
-  { name: 'Manage Users', icon: Users, path: '/super-admin/users' },
-  { name: 'Manage Programs', icon: BookOpen, path: '/super-admin/programs' },
-  { name: 'Manage Classes', icon: Calendar, path: '/super-admin/classes' },
-  { name: 'Review Payments', icon: CreditCard, path: '/super-admin/payments' },
-  { name: 'Manage Content', icon: FileText, path: '/super-admin/content' },
-  { name: 'Open Settings', icon: Settings, path: '/super-admin/settings' },
-];
+const iconMap = {
+  users: Users,
+  bookOpen: BookOpen,
+  calendar: Calendar,
+  creditCard: CreditCard,
+  fileText: FileText,
+  settings: Settings,
+};
 
-export default function QuickManagementSection() {
+export default function QuickManagementSection({ actions = [] }) {
   return (
     <div className="mb-8 mt-10">
       <div className="mb-4">
@@ -19,8 +19,8 @@ export default function QuickManagementSection() {
         <p className="text-sm text-[#6b7280]">Go directly to the areas you manage most often.</p>
       </div>
       <div className="grid grid-cols-2 gap-4">
-        {quickActions.map((action, index) => {
-          const Icon = action.icon;
+        {actions.map((action, index) => {
+          const Icon = iconMap[action.iconType];
           return (
             <Link
               key={index}

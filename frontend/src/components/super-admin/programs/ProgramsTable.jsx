@@ -1,47 +1,5 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-const programs = [
-  {
-    id: 1,
-    name: 'Professional Makeup Artistry',
-    code: 'PMA-100',
-    level: 'Intermediate',
-    duration: '12 weeks',
-    status: 'Open',
-    currentIntake: 'Sep 2026',
-    lastUpdated: 'Sep 5, 2026',
-  },
-  {
-    id: 2,
-    name: 'Bridal Makeup Mastery',
-    code: 'BMM-200',
-    level: 'Advanced',
-    duration: '8 weeks',
-    status: 'Open',
-    currentIntake: 'Oct 2026',
-    lastUpdated: 'Sep 3, 2026',
-  },
-  {
-    id: 3,
-    name: 'Beauty Foundations',
-    code: 'BF-101',
-    level: 'Beginner',
-    duration: '6 weeks',
-    status: 'Upcoming',
-    currentIntake: 'Nov 2026',
-    lastUpdated: 'Aug 28, 2026',
-  },
-  {
-    id: 4,
-    name: 'Advanced Beauty Techniques',
-    code: 'ABT-300',
-    level: 'Advanced',
-    duration: '10 weeks',
-    status: 'Closed',
-    currentIntake: '—',
-    lastUpdated: 'Aug 20, 2026',
-  },
-];
 
 const getLevelBadge = (level) => {
   return (
@@ -72,11 +30,10 @@ const getStatusBadge = (status) => {
   );
 };
 
-export default function ProgramsTable() {
+export default function ProgramsTable({ rows = [], viewPathPrefix = '/super-admin/programs' }) {
   return (
-    <div className="bg-white rounded-xl border border-[#e5e7eb] overflow-hidden">
-      <div className="overflow-x-auto">
-        <table className="min-w-full divide-y divide-[#e5e7eb]">
+    <div className="overflow-x-auto">
+      <table className="min-w-full divide-y divide-[#e5e7eb]">
           <thead className="bg-[#f9fafb]">
             <tr>
               <th scope="col" className="px-6 py-4 text-left text-xs font-semibold text-[#6b7280] tracking-wider uppercase">
@@ -103,7 +60,7 @@ export default function ProgramsTable() {
             </tr>
           </thead>
           <tbody className="bg-white divide-y divide-[#e5e7eb]">
-            {programs.map((program) => (
+            {rows.map((program) => (
               <tr key={program.id} className="hover:bg-[#f9fafb] transition-colors">
                 <td className="px-6 py-4 whitespace-nowrap">
                   <div className="text-sm font-medium text-[#111827]">{program.name}</div>
@@ -126,7 +83,7 @@ export default function ProgramsTable() {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-right">
                   <Link
-                    to="/super-admin/programs/edit"
+                    to={`${viewPathPrefix}/${program.id}`}
                     className="inline-flex items-center px-4 py-1.5 border border-[#e5e7eb] rounded-lg text-sm font-medium text-[#111827] bg-white hover:bg-[#f9fafb] focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-[#c6dbb6] transition-colors"
                   >
                     View
@@ -134,27 +91,16 @@ export default function ProgramsTable() {
                 </td>
               </tr>
             ))}
+            {rows.length === 0 && (
+              <tr>
+                <td colSpan="7" className="px-6 py-16 text-center">
+                  <p className="text-[15px] font-medium text-[#111827] mb-1">No programs found</p>
+                  <p className="text-[13px] text-[#6b7280]">Try adjusting your search or filter selection.</p>
+                </td>
+              </tr>
+            )}
           </tbody>
         </table>
-      </div>
-      
-      {/* Pagination Footer */}
-      <div className="px-6 py-4 border-t border-[#e5e7eb] flex items-center justify-between">
-        <div className="text-sm text-[#6b7280]">
-          Showing 1-4 of 4 programs
-        </div>
-        <div className="flex items-center gap-2">
-          <button className="px-3 py-1.5 text-sm font-medium text-[#9ca3af] bg-white border border-[#e5e7eb] rounded-lg cursor-not-allowed">
-            Previous
-          </button>
-          <button className="px-3 py-1.5 text-sm font-medium text-white bg-[#27272a] rounded-lg cursor-pointer">
-            1
-          </button>
-          <button className="px-3 py-1.5 text-sm font-medium text-[#9ca3af] bg-white border border-[#e5e7eb] rounded-lg cursor-not-allowed">
-            Next
-          </button>
-        </div>
-      </div>
     </div>
   );
 }
