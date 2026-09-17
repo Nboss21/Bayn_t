@@ -56,6 +56,7 @@ import SuperAdminProgramView from './pages/super-admin/SuperAdminProgramView';
 import SuperAdminProgramEdit from './pages/super-admin/SuperAdminProgramEdit';
 import SuperAdminClasses from './pages/super-admin/SuperAdminClasses';
 import SuperAdminAddClass from './pages/super-admin/SuperAdminAddClass';
+import SuperAdminClassDetail from './pages/super-admin/SuperAdminClassDetail';
 import SuperAdminGrading from './pages/super-admin/SuperAdminGrading';
 import SuperAdminReports from './pages/super-admin/SuperAdminReports';
 import SuperAdminPayments from './pages/super-admin/SuperAdminPayments';
@@ -158,6 +159,7 @@ function App() {
           <Route path="programs/:id/edit" element={<SuperAdminProgramEdit />} />
           <Route path="classes" element={<SuperAdminClasses />} />
           <Route path="classes/add" element={<SuperAdminAddClass />} />
+          <Route path="classes/:id" element={<SuperAdminClassDetail />} />
           <Route path="grading" element={<SuperAdminGrading />} />
           <Route path="reports" element={<SuperAdminReports />} />
           <Route path="reports/generate" element={<SuperAdminGenerateReport />} />

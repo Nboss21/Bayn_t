@@ -6,7 +6,7 @@ import NotificationsTable from '../../components/super-admin/notifications/Notif
 
 export default function SuperAdminNotifications() {
   return (
-    <div className="w-full max-w-[1200px] mx-auto pb-12">
+    <div className="w-full pb-12">
       <NotificationsHeader />
       <NotificationStats />
       <NotificationsFilter />

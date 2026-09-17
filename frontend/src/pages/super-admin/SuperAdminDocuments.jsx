@@ -8,7 +8,7 @@ import DocumentsPagination from '../../components/super-admin/documents/Document
 
 const SuperAdminDocuments = () => {
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 w-full">
+    <div className="w-full py-8">
       <div className="mb-2">
         <div className="flex items-center gap-2 text-sm text-gray-500 mb-6">
           <span>Super Admin Workspace</span>

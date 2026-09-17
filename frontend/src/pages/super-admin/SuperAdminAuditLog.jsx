@@ -5,7 +5,7 @@ import AuditLogTable from '../../components/super-admin/audit-log/AuditLogTable'
 
 export default function SuperAdminAuditLog() {
   return (
-    <div className="max-w-[1200px] w-full mx-auto pb-8">
+    <div className="w-full pb-8">
       <AuditLogHeader />
       <AuditLogFilters />
       <div className="bg-white rounded-xl border border-[#e5e7eb] shadow-sm flex flex-col mb-4">

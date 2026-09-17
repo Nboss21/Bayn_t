@@ -7,7 +7,7 @@ import ContentRecentActivitySection from '../../components/super-admin/content/C
 
 export default function SuperAdminContent() {
   return (
-    <div className="max-w-[1200px] mx-auto pb-12">
+    <div className="w-full pb-12">
       <ContentHeaderSection />
       <ContentLifecycleBar />
       <ManagedAreasSection />
