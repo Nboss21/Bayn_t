@@ -45,7 +45,25 @@ import DocumentsStep from './pages/DocumentsStep';
 import ReviewStep from './pages/ReviewStep';
 import PaymentStep from './pages/PaymentStep';
 import ApplicationConfirmation from './pages/ApplicationConfirmation';
-
+import SuperAdminLayout from './layouts/SuperAdminLayout';
+import SuperAdminOverview from './pages/super-admin/SuperAdminOverview';
+import SuperAdminUsers from './pages/super-admin/SuperAdminUsers';
+import SuperAdminAddUser from './pages/super-admin/SuperAdminAddUser';
+import SuperAdminPrograms from './pages/super-admin/SuperAdminPrograms';
+import SuperAdminProgramEdit from './pages/super-admin/SuperAdminProgramEdit';
+import SuperAdminClasses from './pages/super-admin/SuperAdminClasses';
+import SuperAdminAddClass from './pages/super-admin/SuperAdminAddClass';
+import SuperAdminGrading from './pages/super-admin/SuperAdminGrading';
+import SuperAdminReports from './pages/super-admin/SuperAdminReports';
+import SuperAdminPayments from './pages/super-admin/SuperAdminPayments';
+import SuperAdminPaymentVerification from './pages/super-admin/SuperAdminPaymentVerification';
+import SuperAdminContent from './pages/super-admin/SuperAdminContent';
+import SuperAdminDocuments from './pages/super-admin/SuperAdminDocuments';
+import SuperAdminRoles from './pages/super-admin/SuperAdminRoles';
+import SuperAdminAuditLog from './pages/super-admin/SuperAdminAuditLog';
+import SuperAdminSettings from './pages/super-admin/SuperAdminSettings';
+import SuperAdminNotifications from './pages/super-admin/SuperAdminNotifications';
+import SuperAdminGenerateReport from './pages/super-admin/SuperAdminGenerateReport';
 function ProtectedRoute({ step, children }) {
   const { canAccess } = useApplication();
   const targetStep = canAccess(step);
@@ -71,7 +89,7 @@ function App() {
         <Route path="/auth/login" element={<LoginPage />} />
         <Route path="/auth/forgot-password" element={<ForgotPasswordPage />} />
         <Route path="/auth/reset-password" element={<ResetPasswordPage />} />
-        
+
         <Route element={<MainLayout />}>
           <Route path="/" element={<Home />} />
           <Route path="/about" element={<About />} />
@@ -83,7 +101,7 @@ function App() {
           <Route path="/privacy-policy" element={<PrivacyPolicy />} />
           <Route path="/contact" element={<Contact />} />
         </Route>
-        
+
         <Route path="/application" element={<ApplicationLayout />}>
           <Route index element={<Application />} />
         </Route>
@@ -100,7 +118,7 @@ function App() {
             <Route path="confirmation" element={<ProtectedRoute step="confirmation"><ApplicationConfirmation /></ProtectedRoute>} />
           </Route>
         </Route>
-        
+
         <Route path="/registrar" element={<RegistrarLayout />}>
           <Route path="overview" element={<RegistrarOverview />} />
           <Route path="applications" element={<ApplicationsPage />} />
@@ -123,6 +141,28 @@ function App() {
           <Route path="roster/:studentId" element={<TeacherStudentProgress />} />
           {/* Default redirect to overview */}
           <Route index element={<Navigate to="/teacher/overview" replace />} />
+        </Route>
+
+        <Route path="/super-admin" element={<SuperAdminLayout />}>
+          <Route path="overview" element={<SuperAdminOverview />} />
+          <Route path="users" element={<SuperAdminUsers />} />
+          <Route path="users/add" element={<SuperAdminAddUser />} />
+          <Route path="programs" element={<SuperAdminPrograms />} />
+          <Route path="programs/edit" element={<SuperAdminProgramEdit />} />
+          <Route path="classes" element={<SuperAdminClasses />} />
+          <Route path="classes/add" element={<SuperAdminAddClass />} />
+          <Route path="grading" element={<SuperAdminGrading />} />
+          <Route path="reports" element={<SuperAdminReports />} />
+          <Route path="reports/generate" element={<SuperAdminGenerateReport />} />
+          <Route path="payments" element={<SuperAdminPayments />} />
+          <Route path="payments/:id" element={<SuperAdminPaymentVerification />} />
+          <Route path="content" element={<SuperAdminContent />} />
+          <Route path="documents" element={<SuperAdminDocuments />} />
+          <Route path="roles" element={<SuperAdminRoles />} />
+          <Route path="audit" element={<SuperAdminAuditLog />} />
+          <Route path="notifications" element={<SuperAdminNotifications />} />
+          <Route path="settings" element={<SuperAdminSettings />} />
+          <Route index element={<Navigate to="/super-admin/overview" replace />} />
         </Route>
       </Routes>
     </BrowserRouter>
