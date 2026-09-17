@@ -11,7 +11,7 @@ export default function SuperAdminGenerateReport() {
   const navigate = useNavigate();
 
   return (
-    <div className="max-w-[1200px] mx-auto p-8 font-sans bg-[#FBFBFB] min-h-screen">
+    <div className="p-8 font-sans bg-[#FBFBFB] min-h-screen">
       {/* Back link */}
       <button 
         onClick={() => navigate('/super-admin/reports')}
