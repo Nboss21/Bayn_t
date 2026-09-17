@@ -1,8 +1,6 @@
-import aboutImage from "../../../public/about.webp";
-
 export const aboutHeroData = {
   image: {
-    src: aboutImage,
+    src: "/about.webp",
     alt: "About Bayn Academy",
   },
   heading: "Redefining Ethiopian Beauty Artistry.",
