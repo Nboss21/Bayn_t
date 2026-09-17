@@ -30,9 +30,14 @@ class CoreApiTest extends TestCase
         $create->assertCreated()->assertJsonPath('data.slug', $payload['slug']);
         $program = Program::firstOrFail();
 
-        $this->api()->getJson('/api/programs')->assertOk()->assertJsonPath('data.0.id', $program->id);
+        $this->api()->getJson('/api/programs')->assertOk()
+            ->assertJsonPath('data.0.id', $program->id)
+            ->assertJsonPath('data.0.intakes', []);
         $this->api()->getJson('/api/programs/'.$program->id)->assertOk();
         $this->api()->patchJson('/api/programs/'.$program->id, ['status' => 'open'])
+            ->assertOk()->assertJsonPath('data.status', 'open');
+        $this->assertDatabaseHas('programs', ['id' => $program->id, 'status' => 'open']);
+        $this->api()->getJson('/api/programs/'.$program->id)
             ->assertOk()->assertJsonPath('data.status', 'open');
         $this->api()->postJson('/api/programs', $payload)->assertUnprocessable();
         $this->api()->deleteJson('/api/programs/'.$program->id)->assertNoContent();
@@ -82,6 +87,30 @@ class CoreApiTest extends TestCase
         $this->api()->patchJson('/api/classes/'.$class['id'], ['capacity' => 25])->assertOk();
         $this->api()->postJson('/api/classes', [...$payload, 'capacity' => 0])->assertUnprocessable();
         $this->api()->deleteJson('/api/classes/'.$class['id'])->assertNoContent();
+    }
+
+    public function test_registrar_can_create_classes(): void
+    {
+        $registrar = User::factory()->create(['role' => 'registrar']);
+        $program = Program::create($this->programPayload());
+        $intake = Intake::create([
+            'program_id' => $program->id,
+            'name' => 'September Intake',
+            'start_date' => '2026-09-01',
+            'end_date' => '2026-11-30',
+            'status' => 'upcoming',
+        ]);
+
+        $response = $this->actingAs($registrar, 'sanctum')->postJson('/api/classes', [
+            'program_id' => $program->id,
+            'intake_id' => $intake->id,
+            'name' => 'Section A',
+            'capacity' => 20,
+            'schedule' => ['monday' => [['start' => '09:00', 'end' => '12:00']]],
+        ]);
+
+        $response->assertCreated();
+        $this->assertDatabaseHas('classes', ['id' => $response->json('data.id'), 'name' => 'Section A']);
     }
 
     public function test_user_crud_hashes_password_and_never_exposes_it(): void

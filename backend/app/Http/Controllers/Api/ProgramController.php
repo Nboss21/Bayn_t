@@ -27,11 +27,19 @@ class ProgramController extends Controller
         return ProgramResource::collection($programs);
     }
 
+    public function publicShow(Program $program): ProgramResource
+    {
+        abort_unless($program->status?->value === 'open', 404);
+
+        return new ProgramResource($program->load(['intakes', 'classes', 'teachers']));
+    }
+
     public function index(Request $request)
     {
         Gate::authorize('viewAny', Program::class);
 
         $programs = Program::query()
+            ->with('intakes')
             ->when($request->input('status'), fn ($query, $value) => $query->where('status', $value))
             ->when($request->input('category'), fn ($query, $value) => $query->where('category', $value))
             ->when($request->input('level'), fn ($query, $value) => $query->where('level', $value))

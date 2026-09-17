@@ -2,7 +2,9 @@
 
 namespace Database\Seeders;
 
+use App\Enums\ProgramStatus;
 use App\Enums\UserRole;
+use App\Models\Program;
 use App\Models\StaffProfile;
 use App\Models\User;
 use Illuminate\Database\Seeder;
@@ -15,6 +17,17 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $programs = [
+            ['name' => 'Professional Makeup Artistry', 'slug' => 'professional-makeup-artistry', 'description' => 'Professional training in makeup artistry, beauty techniques, and professional practice.', 'category' => 'Makeup Artistry', 'level' => 'Intermediate', 'status' => ProgramStatus::Open, 'tuition_fee' => 15000, 'fee_currency' => 'ETB', 'duration_weeks' => 12],
+            ['name' => 'Bridal Makeup Mastery', 'slug' => 'bridal-makeup-mastery', 'description' => 'Advanced bridal-specific makeup techniques, styling, and client experience.', 'category' => 'Makeup Artistry', 'level' => 'Advanced', 'status' => ProgramStatus::Open, 'tuition_fee' => 15000, 'fee_currency' => 'ETB', 'duration_weeks' => 8],
+            ['name' => 'Beauty Foundations', 'slug' => 'beauty-foundations', 'description' => 'Core skincare, hygiene, and essential beauty application fundamentals.', 'category' => 'Skincare', 'level' => 'Beginner', 'status' => ProgramStatus::Draft, 'tuition_fee' => 15000, 'fee_currency' => 'ETB', 'duration_weeks' => 6],
+            ['name' => 'Advanced Beauty Techniques', 'slug' => 'advanced-beauty-techniques', 'description' => 'Specialist techniques for editorial, creative, and advanced client work.', 'category' => 'Makeup Artistry', 'level' => 'Advanced', 'status' => ProgramStatus::Closed, 'tuition_fee' => 15000, 'fee_currency' => 'ETB', 'duration_weeks' => 10],
+        ];
+
+        foreach ($programs as $program) {
+            Program::updateOrCreate(['slug' => $program['slug']], $program);
+        }
+
         // 1. Super Admin Account
         $superAdmin = User::updateOrCreate(
             ['email' => 'admin@makeupschool.com'],

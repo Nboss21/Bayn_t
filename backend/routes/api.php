@@ -1,25 +1,25 @@
 <?php
 
-use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ApplicationController;
 use App\Http\Controllers\Api\AssessmentScoreController;
 use App\Http\Controllers\Api\AttendanceController;
-use App\Http\Controllers\Api\ApplicationController;
+use App\Http\Controllers\Api\AuditLogController;
+use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\BackupController;
 use App\Http\Controllers\Api\ClassController;
+use App\Http\Controllers\Api\ContentController;
 use App\Http\Controllers\Api\DocumentController;
+use App\Http\Controllers\Api\GradingConfigController;
 use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\NotificationController;
+use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProgramController;
 use App\Http\Controllers\Api\RegistrarController;
+use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\StudentController;
 use App\Http\Controllers\Api\TeacherController;
 use App\Http\Controllers\Api\UserController;
-use App\Http\Controllers\Api\GradingConfigController;
-use App\Http\Controllers\Api\AuditLogController;
-use App\Http\Controllers\Api\PaymentController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Api\ReportController;
-use App\Http\Controllers\Api\ContentController;
-use App\Http\Controllers\Api\BackupController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,7 +29,6 @@ use App\Http\Controllers\Api\BackupController;
 
 // Payment Gateway Webhook (Public Gateway Callback)
 Route::post('/payments/webhook', [PaymentController::class, 'webhook']);
-
 
 // --------------------------------------------------------------------------
 // Authentication
@@ -47,11 +46,11 @@ Route::prefix('auth')->group(function () {
 // Protected Auth Endpoints (Requires Sanctum Bearer Token)
 Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
-    Route::get('/me', [AuthController::class, 'me']);
-    Route::post('/refresh', [AuthController::class, 'refresh']);
+    Route::get('/me', [AuthController::class, 'me'])->middleware('role');
+    Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('role');
 });
 
-Route::middleware('auth:sanctum')->prefix('notifications')->group(function () {
+Route::middleware(['auth:sanctum', 'role'])->prefix('notifications')->group(function () {
     Route::get('/', [NotificationController::class, 'index']);
     Route::get('/unread', [NotificationController::class, 'unread']);
     Route::post('/read-all', [NotificationController::class, 'markAllAsRead']);
@@ -88,7 +87,6 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(functio
     Route::apiResources(['programs' => ProgramController::class, 'intakes' => IntakeController::class], ['except' => ['index', 'show']]);
 });
 
-
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher'])
     ->apiResource('classes', ClassController::class);
 
@@ -116,7 +114,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin'])
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])
     ->prefix('documents')
     ->group(function () {
-    Route::post('/', [DocumentController::class, 'store'])->middleware('throttle:public-write');
+        Route::post('/', [DocumentController::class, 'store'])->middleware('throttle:public-write');
         Route::get('/{document}/temporary-url', [DocumentController::class, 'temporaryUrl']);
     });
 
@@ -169,13 +167,14 @@ Route::get('/backups/{backup}/download', [BackupController::class, 'download'])-
 Route::get('/site/settings', [ContentController::class, 'settings']);
 Route::get('/public/gallery', [ContentController::class, 'gallery']);
 Route::get('/public/programs', [ProgramController::class, 'publicIndex']);
+Route::get('/public/programs/{program}', [ProgramController::class, 'publicShow']);
 Route::post('/newsletter/subscribe', [ContentController::class, 'subscribe'])->middleware('throttle:public-write');
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(function () {
     Route::put('/site/settings', [ContentController::class, 'updateSettings']);
     Route::get('/gallery', [ContentController::class, 'galleryAdmin']);
     Route::get('/gallery/{galleryImage}', [ContentController::class, 'showGallery']);
     Route::post('/gallery', [ContentController::class, 'storeGallery']);
-    Route::match(['put','patch'], '/gallery/{galleryImage}', [ContentController::class, 'updateGallery']);
+    Route::match(['put', 'patch'], '/gallery/{galleryImage}', [ContentController::class, 'updateGallery']);
     Route::delete('/gallery/{galleryImage}', [ContentController::class, 'deleteGallery']);
 });
 

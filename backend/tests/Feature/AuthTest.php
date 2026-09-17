@@ -102,4 +102,24 @@ class AuthTest extends TestCase
 
         $this->assertCount(0, $user->tokens);
     }
+
+    public function test_deactivated_user_cannot_use_existing_token_for_profile_or_refresh(): void
+    {
+        $user = User::factory()->create([
+            'role' => UserRole::STUDENT,
+            'is_active' => true,
+        ]);
+        $token = $user->createToken('test')->plainTextToken;
+        $user->update(['is_active' => false]);
+
+        $this->withHeader('Authorization', 'Bearer '.$token)
+            ->getJson('/api/auth/me')
+            ->assertForbidden();
+
+        $this->withHeader('Authorization', 'Bearer '.$token)
+            ->postJson('/api/auth/refresh')
+            ->assertForbidden();
+
+        $this->assertCount(1, $user->tokens);
+    }
 }
