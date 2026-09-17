@@ -19,12 +19,12 @@ class ProgramPolicy
 
     public function create(User $user): bool
     {
-        return $this->viewAny($user);
+        return $user->isSuperAdmin() || $user->isRegistrar();
     }
 
     public function update(User $user, Program $program): bool
     {
-        return $this->viewAny($user);
+        return $user->isSuperAdmin() || $user->isRegistrar();
     }
 
     public function delete(User $user, Program $program): bool

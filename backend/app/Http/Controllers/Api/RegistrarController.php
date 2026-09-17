@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Enums\ApplicationStatus;
+use App\Enums\DocumentType;
 use App\Enums\PaymentStatus;
 use App\Enums\StudentStatus;
 use App\Events\ApplicationReviewed;
@@ -153,6 +154,24 @@ class RegistrarController extends Controller
         $before = $this->snapshot($payment);
         $payment->forceFill(['status' => PaymentStatus::Successful, 'paid_at' => now()])->save();
         $this->audit($request, 'payment_verified', $payment, $before, $this->snapshot($payment));
+
+        $application = $payment->application;
+        if ($application && in_array($application->status, [ApplicationStatus::Submitted, ApplicationStatus::PaymentPending])) {
+            $beforeApp = $this->snapshot($application);
+            $application->forceFill(['status' => ApplicationStatus::Paid])->save();
+            $this->audit($request, 'application_paid', $application, $beforeApp, $this->snapshot($application));
+        }
+
+        if ($application && ! Document::query()->where('application_id', $application->id)->where('type', DocumentType::Receipt->value)->exists()) {
+            Document::create([
+                'application_id' => $application->id,
+                'student_id' => $payment->student_id,
+                'type' => DocumentType::Receipt->value,
+                'file_path' => 'receipts/receipt_app_' . $application->id . '_pay_' . $payment->id . '.pdf',
+                'uploaded_at' => now(),
+            ]);
+        }
+
         event(new PaymentStatusChanged($payment, PaymentStatus::Successful));
         return new PaymentResource($payment->refresh());
     }

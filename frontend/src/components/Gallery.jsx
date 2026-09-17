@@ -1,10 +1,13 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { galleryImages } from '../data/home/galleryData';
 import Reveal from './Reveal';
 import ImageReveal from './ImageReveal';
 
 const Gallery = () => {
+  const [images, setImages] = useState([]);
+  useEffect(() => { publicService.gallery({ per_page: 100 }).then((data) => setImages(data?.data || data || [])).catch(() => setImages([])); }, []);
+  const visibleImages = images.length ? images.map((image) => ({ src: image.url || image.image_url, alt: image.category || 'Academy gallery' })) : galleryImages;
   return (
     <section className="relative overflow-hidden bg-white py-24 px-6 md:py-32 md:px-10 text-center">
       {/* Ambient glow */}

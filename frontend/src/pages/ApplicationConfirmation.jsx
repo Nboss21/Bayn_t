@@ -1,5 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useApplication } from '../context/ApplicationContext';
+import { applicationService } from '../services/applicationService';
+import { toUserMessage } from '../services/api';
 
 const nextSteps = [
   {
@@ -24,9 +26,11 @@ const nextSteps = [
 
 const ApplicationConfirmation = () => {
   const [copied, setCopied] = useState(false);
-  const [appId] = useState(() => 'APP-' + Math.random().toString(36).substring(2, 7).toUpperCase() + '-LM');
-  const { formData, getSelectedProgram } = useApplication();
+  const [submitted, setSubmitted] = useState(false); const [error, setError] = useState('');
+  const { formData, application, getSelectedProgram } = useApplication();
   const program = getSelectedProgram();
+  const appId = application?.reference_number || '—';
+  useEffect(() => { if (application?.id && application.status === 'draft') applicationService.submit(application.id).then(() => setSubmitted(true)).catch((err) => setError(toUserMessage(err))); }, [application]);
 
   const handleCopy = () => {
     navigator.clipboard.writeText(appId);
@@ -63,7 +67,7 @@ const ApplicationConfirmation = () => {
             </p>
             <div className="flex items-center space-x-2 mb-6">
               <span className="w-2.5 h-2.5 rounded-full bg-[#e6ca64] flex-shrink-0"></span>
-              <span className="text-[15px] font-semibold text-[#111111]">Under Review</span>
+          <span className="text-[15px] font-semibold text-[#111111]">{submitted || application?.status === 'submitted' ? 'Submitted' : application?.status || 'Processing'}</span>
             </div>
             <div className="h-[1px] bg-gray-100 mb-4"></div>
             <p className="text-[10px] font-bold text-gray-400 uppercase tracking-wider mb-2">
@@ -87,7 +91,7 @@ const ApplicationConfirmation = () => {
                 )}
               </button>
             </div>
-          </div>
+          </div>{error && <p role="alert" className="w-full mt-4 text-sm text-red-600">{error}</p>}
 
           {/* Payment Details */}
           <div className="border border-gray-200 rounded-lg p-6">

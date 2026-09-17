@@ -31,7 +31,7 @@ class AuthController extends Controller
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required', 'string'],
-            'device_name' => ['nullable', 'string'],
+            'device_name' => ['nullable', 'string', 'max:100'],
         ]);
 
         $user = User::where('email', $credentials['email'])->first();
@@ -123,7 +123,7 @@ class AuthController extends Controller
             $user->currentAccessToken()->delete();
         }
 
-        $deviceName = $request->input('device_name', 'refreshed_token');
+        $deviceName = $request->validate(['device_name' => ['nullable', 'string', 'max:100']])['device_name'] ?? 'refreshed_token';
         $newToken = $user->createToken($deviceName, [$user->role->value])->plainTextToken;
 
         return response()->json([
@@ -143,8 +143,8 @@ class AuthController extends Controller
         $status = Password::sendResetLink($request->only('email'));
 
         if ($status !== Password::RESET_LINK_SENT) {
-            throw ValidationException::withMessages([
-                'email' => [__($status)],
+            return response()->json([
+                'message' => 'If an account matches that email, a password reset link will be sent.',
             ]);
         }
 
@@ -223,6 +223,10 @@ class AuthController extends Controller
             ], Response::HTTP_UNPROCESSABLE_ENTITY);
         }
 
+        if (array_key_exists('email_verified', $googleUser->getRaw()) && $googleUser->getRaw()['email_verified'] !== true) {
+            return response()->json(['message' => 'Google account email could not be verified.'], Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
         $user = User::query()->where('google_id', $googleUser->getId())->first()
             ?? User::query()->where('email', $googleUser->getEmail())->first();
 
@@ -250,7 +254,7 @@ class AuthController extends Controller
             ]);
         }
 
-        $deviceName = $request->input('device_name', 'google_auth');
+        $deviceName = $request->validate(['device_name' => ['nullable', 'string', 'max:100']])['device_name'] ?? 'google_auth';
         $token = $user->createToken($deviceName, [$user->role->value])->plainTextToken;
 
         return response()->json([

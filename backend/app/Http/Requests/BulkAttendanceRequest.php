@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class BulkAttendanceRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('manageAttendance', $this->route('class')) === true; }
 
     public function rules(): array
     {

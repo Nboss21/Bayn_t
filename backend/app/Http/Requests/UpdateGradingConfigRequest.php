@@ -8,7 +8,7 @@ use Illuminate\Validation\Rule;
 
 class UpdateGradingConfigRequest extends FormRequest
 {
-    public function authorize(): bool { return true; }
+    public function authorize(): bool { return $this->user()?->can('update', $this->route('grading_config')) === true; }
 
     public function rules(): array
     {

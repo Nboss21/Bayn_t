@@ -1,7 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { publicService } from '../services/applicationService';
 
 const Footer = () => {
+  const [email, setEmail] = useState(''); const [message, setMessage] = useState('');
+  const subscribe = async () => { try { await publicService.subscribe(email); setMessage('Subscribed.'); setEmail(''); } catch { setMessage('Please enter a valid email.'); } };
   return (
     <footer className="relative overflow-hidden bg-espresso text-cream">
       <div

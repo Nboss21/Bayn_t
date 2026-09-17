@@ -5,12 +5,13 @@ namespace App\Http\Requests;
 use App\Enums\UserRole;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Validation\Rule;
+use App\Models\User;
 
 class StoreUserRequest extends FormRequest
 {
     public function authorize(): bool
     {
-        return true;
+        return $this->user()?->can('create', User::class) === true;
     }
 
     public function rules(): array

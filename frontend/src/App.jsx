@@ -85,6 +85,12 @@ function ApplicationStepsLayout() {
   );
 }
 
+function RequireAuth({ children }) {
+  const { loading, isAuthenticated } = useAuth();
+  if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
+  return isAuthenticated ? children : <Navigate to="/login" replace state={{ from: window.location.pathname }} />;
+}
+
 function App() {
   return (
     <BrowserRouter>
@@ -110,7 +116,7 @@ function App() {
           <Route index element={<Application />} />
         </Route>
 
-        <Route path="/application" element={<ApplicationLayout />}>
+        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
           <Route element={<ApplicationStepsLayout />}>
             <Route path="program" element={<ProgramSelection />} />
             <Route path="selected" element={<ProtectedRoute step="selected"><SelectedProgram /></ProtectedRoute>} />

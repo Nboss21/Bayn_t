@@ -15,10 +15,27 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use App\Services\DocumentGenerationService;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
 
 class DocumentController extends Controller
 {
+    public function certificate(Request $request, Student $student, DocumentGenerationService $generator): JsonResponse
+    {
+        Gate::authorize('view', $student);
+        abort_unless($request->user()->isSuperAdmin() || $request->user()->isRegistrar(), 403, 'Only authorized staff can generate certificates.');
+        $document = $generator->certificate($student, $request->user()->id);
+        return (new DocumentResource($document))->response()->setStatusCode(201);
+    }
+
+    public function certificateView(Request $request, Student $student): JsonResponse
+    {
+        Gate::authorize('view', $student);
+        $document = $student->documents()->where('type', DocumentType::Certificate->value)->latest()->first();
+        abort_unless($document, 404, 'No certificate has been generated.');
+        $expiresAt = now()->addMinutes(15);
+        return response()->json(['data' => new DocumentResource($document), 'temporary_url' => Storage::disk('private_documents')->temporaryUrl($document->file_path, $expiresAt), 'expires_at' => $expiresAt->toIso8601String()]);
+    }
     public function storeForApplication(StoreApplicationDocumentRequest $request, Application $application): JsonResponse
     {
         Gate::authorize('uploadDocument', $application);
