@@ -8,10 +8,13 @@ RUN apt-get update && apt-get install -y \
     libfreetype6-dev \
     libzip-dev \
     libpq-dev \
+    libicu-dev \
+    libonig-dev \
+    libcurl4-openssl-dev \
     unzip \
     git \
     && docker-php-ext-configure gd --with-freetype --with-jpeg \
-    && docker-php-ext-install pdo_mysql pdo_pgsql gd zip bcmath opcache \
+    && docker-php-ext-install pdo_mysql pdo_pgsql gd zip bcmath opcache mbstring intl curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 3. Enable Apache mod_rewrite for Laravel routing
