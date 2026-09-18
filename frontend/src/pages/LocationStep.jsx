@@ -36,6 +36,11 @@ const LocationStep = () => {
           </p>
 
           <form className="space-y-8 flex-1" onSubmit={(e) => { e.preventDefault(); handleContinue(); }}>
+            <div>
+              <label className="block text-[11px] font-bold text-[#111111] tracking-wider mb-2">PHONE NUMBER</label>
+              <input type="tel" required value={formData.applicantPhone} onChange={(e) => updateField('applicantPhone', e.target.value)} placeholder="Example: +251900000000" className="w-full border border-gray-300 rounded-sm px-4 py-3 text-[14px] text-gray-800 placeholder-gray-400 focus:outline-none focus:border-gray-400 transition-colors" />
+              <p className="text-[11px] text-gray-500 mt-2">We will use this number if the registrar needs to contact you.</p>
+            </div>
             {/* City / Town */}
             <div>
               <label className="block text-[11px] font-bold text-[#111111] tracking-wider mb-2">
@@ -95,11 +100,9 @@ const LocationStep = () => {
             </p>
             
             <div className="flex flex-col gap-2 items-end w-full">
-              {(errors.city || errors.area) && (
+              {(errors.applicantPhone || errors.city || errors.area) && (
                 <p className="text-[12px] text-red-500">
-                  {!errors.city && errors.area && errors.area}
-                  {errors.city && !errors.area && errors.city}
-                  {errors.city && errors.area && 'City and area are required'}
+                  {errors.applicantPhone || errors.city || errors.area}
                 </p>
               )}
               <div className="flex flex-col gap-3 sm:flex-row sm:justify-between sm:items-center w-full">

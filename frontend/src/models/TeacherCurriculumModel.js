@@ -1,4 +1,4 @@
-import { teacherCurriculum } from '../data/teacherCurriculumData';
+import { teacherService } from '../services/applicationService';
 
 export default class TeacherCurriculumModel {
   constructor(data) {
@@ -50,6 +50,7 @@ export default class TeacherCurriculumModel {
   }
 
   static async fetch() {
-    return new TeacherCurriculumModel(teacherCurriculum);
+    const data = await teacherService.curriculum();
+    return new TeacherCurriculumModel(data);
   }
 }

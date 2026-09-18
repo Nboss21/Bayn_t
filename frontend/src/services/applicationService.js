@@ -13,6 +13,11 @@ export const contentService = {
   intakes: async (params) => resource(await api.get('/intakes', params)),
 };
 
+export const publicContentService = {
+  programs: async (params) => resource(await api.get('/public/programs', params)),
+  program: async (id) => resource(await api.get(`/public/programs/${id}`)),
+};
+
 export const applicationService = {
   list: async (params) => resource(await api.get('/applications', params)),
   show: async (id) => resource(await api.get(`/applications/${id}`)),
@@ -24,6 +29,10 @@ export const applicationService = {
   },
   documents: async (id) => resource(await api.get(`/applications/${id}/documents`)),
   submit: async (id) => resource(await api.post(`/applications/${id}/submit`, {})),
+};
+
+export const paymentService = {
+  initiate: async (payload) => resource(await api.post('/payments/initiate', payload)),
 };
 
 export const documentService = {
@@ -54,8 +63,15 @@ export const teacherService = {
   dashboard: async () => resource(await api.get('/teacher/dashboard')),
   classes: async (params) => resource(await api.get('/teacher/classes', params)),
   students: async (params) => resource(await api.get('/teacher/students', params)),
+  curriculum: async (params) => resource(await api.get('/teacher/curriculum', params)),
   attendance: async (params) => resource(await api.get('/teacher/attendance', params)),
   assessments: async (params) => resource(await api.get('/teacher/assessments', params)),
+  classAttendance: async (id, params) => resource(await api.get(`/classes/${id}/attendance`, params)),
+  bulkAttendance: async (id, payload) => resource(await api.post(`/classes/${id}/attendance`, payload)),
+  classAssessments: async (id, params) => resource(await api.get(`/classes/${id}/assessments`, params)),
+  createAssessment: async (payload) => resource(await api.post('/assessments', payload)),
+  updateAssessment: async (id, payload) => resource(await api.put(`/assessments/${id}`, payload)),
+  deleteAssessment: async (id) => api.delete(`/assessments/${id}`),
 };
 
 export const registrarService = {
@@ -65,6 +81,7 @@ export const registrarService = {
   review: async (id, payload) => resource(await api.patch(`/registrar/applications/${id}`, payload)),
   enroll: async (id, class_id) => resource(await api.post(`/registrar/applications/${id}/enroll`, { class_id })),
   students: async (params) => resource(await api.get('/registrar/students', params)),
+  student: async (id) => resource(await api.get(`/registrar/students/${id}`)),
   updateStudentStatus: async (id, status) => resource(await api.patch(`/registrar/students/${id}/status`, { status })),
   payments: async (params) => resource(await api.get('/registrar/payments', params)),
   verifyPayment: async (id) => resource(await api.post(`/registrar/payments/${id}/verify`)),
@@ -78,4 +95,32 @@ export const adminService = {
   backups: async () => resource(await api.get('/backups')),
   createBackup: async () => resource(await api.post('/backups')),
   restoreBackup: async (name) => resource(await api.post(`/backups/${encodeURIComponent(name)}/restore`)),
+  programs: async (params) => resource(await api.get('/programs', params)),
+  program: async (id) => resource(await api.get(`/programs/${id}`)),
+  createProgram: async (payload) => resource(await api.post('/programs', payload)),
+  updateProgram: async (id, payload) => resource(await api.put(`/programs/${id}`, payload)),
+  deleteProgram: async (id) => api.delete(`/programs/${id}`),
+  classes: async (params) => resource(await api.get('/classes', params)),
+  schoolClass: async (id) => resource(await api.get(`/classes/${id}`)),
+  createClass: async (payload) => resource(await api.post('/classes', payload)),
+  updateClass: async (id, payload) => resource(await api.put(`/classes/${id}`, payload)),
+  deleteClass: async (id) => api.delete(`/classes/${id}`),
+  user: async (id) => resource(await api.get(`/users/${id}`)),
+  createUser: async (payload) => resource(await api.post('/users', payload)),
+  updateUser: async (id, payload) => resource(await api.put(`/users/${id}`, payload)),
+  deleteUser: async (id) => api.delete(`/users/${id}`),
+  grading: async (params) => resource(await api.get('/grading-configs', params)),
+  createGrading: async (payload) => resource(await api.post('/grading-configs', payload)),
+  updateGrading: async (id, payload) => resource(await api.put(`/grading-configs/${id}`, payload)),
+  deleteGrading: async (id) => api.delete(`/grading-configs/${id}`),
+  auditLogs: async (params) => resource(await api.get('/audit-logs', params)),
+  settings: async () => resource(await api.get('/site/settings')),
+  updateSettings: async (payload) => {
+    const body = new FormData(); Object.entries(payload).forEach(([key, value]) => value != null && body.append(key, value));
+    return resource(await api.put('/site/settings', body));
+  },
+  gallery: async (params) => resource(await api.get('/gallery', params)),
+  createGallery: async (payload) => { const body = new FormData(); Object.entries(payload).forEach(([key, value]) => value != null && body.append(key, value)); return resource(await api.post('/gallery', body)); },
+  updateGallery: async (id, payload) => { const body = new FormData(); Object.entries(payload).forEach(([key, value]) => value != null && body.append(key, value)); return resource(await api.post(`/gallery/${id}`, body, { params: { _method: 'PATCH' } })); },
+  deleteGallery: async (id) => api.delete(`/gallery/${id}`),
 };

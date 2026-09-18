@@ -93,7 +93,7 @@ export default function StudentsTable({ rows }) {
                 {/* Action */}
                 <td className="px-6 py-4">
                   <button
-                    onClick={() => navigate(`/registrar/students/${student.studentId}`)}
+                    onClick={() => navigate(`/registrar/students/${student.resourceId || student.studentId}`)}
                     className={`px-3 py-1 text-[13px] font-medium rounded-md border transition-colors ${
                       student.highlightAction
                         ? 'bg-white border-[#111827] text-[#111827] font-semibold shadow-sm'

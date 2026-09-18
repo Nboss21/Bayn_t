@@ -1,4 +1,5 @@
 import { superAdminPrograms } from '../data/superAdminProgramsData';
+import { adminService } from '../services/applicationService';
 
 const DEFAULT_PER_PAGE = 5;
 
@@ -60,6 +61,37 @@ export default class SuperAdminProgramsModel {
   }
 
   static async fetch() {
-    return new SuperAdminProgramsModel(superAdminPrograms);
+    const result = await adminService.programs({ per_page: 100 });
+    const rows = result?.data || result || [];
+    const programs = rows.map((program) => ({
+      id: program.id,
+      name: program.name,
+      code: program.slug || `PROGRAM-${program.id}`,
+      description: program.description || '',
+      level: program.level || '—',
+      duration: program.duration_weeks ? `${program.duration_weeks} weeks` : '—',
+      status: program.status ? `${program.status[0].toUpperCase()}${program.status.slice(1)}` : 'Draft',
+      currentIntake: program.intakes?.data?.[0]?.name || program.intakes?.[0]?.name || '—',
+      lastUpdated: program.updated_at ? new Date(program.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
+    }));
+    const details = Object.fromEntries(rows.map((program) => [program.id, {
+      ...program,
+      code: program.slug || `PROGRAM-${program.id}`,
+      duration: String(program.duration_weeks || '—'),
+      durationUnit: 'Weeks',
+      status: program.status ? `${program.status[0].toUpperCase()}${program.status.slice(1)}` : 'Draft',
+      currentIntake: program.intakes?.data?.[0]?.name || program.intakes?.[0]?.name || '—',
+      lastUpdated: program.updated_at ? new Date(program.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
+    }]));
+    const levels = unique(programs, 'level');
+    const statuses = unique(programs, 'status');
+    const intakes = unique(programs, 'currentIntake').filter((intake) => intake !== '—');
+    return new SuperAdminProgramsModel({
+      ...superAdminPrograms,
+      filters: { ...superAdminPrograms.filters, statuses, levels },
+      formOptions: { ...superAdminPrograms.formOptions, levels, statuses, intakes },
+      programs,
+      programDetails: details,
+    });
   }
 }

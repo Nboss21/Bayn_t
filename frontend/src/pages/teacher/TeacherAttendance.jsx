@@ -6,6 +6,7 @@ import TeacherAttendanceControls from '../../components/teacher/TeacherAttendanc
 import TeacherAttendanceTable from '../../components/teacher/TeacherAttendanceTable';
 import TeacherAttendanceFooter from '../../components/teacher/TeacherAttendanceFooter';
 import useTeacherAttendance from '../../hooks/useTeacherAttendance';
+import { teacherService } from '../../services/applicationService';
 
 const getSelectedDate = () => {
   return new Date().toLocaleDateString('en-US', {
@@ -95,9 +96,17 @@ const TeacherAttendance = () => {
     setActiveFilter('All');
   }, [originalStudents]);
 
-  const handleSave = useCallback(() => {
+  const handleSave = useCallback(async () => {
+    if (!attendanceModel?.header?.classId) return;
+    await teacherService.bulkAttendance(attendanceModel.header.classId, {
+      date: attendanceModel.header.date || new Date().toISOString().slice(0, 10),
+      records: students.filter((student) => student.status !== 'Unmarked').map((student) => ({
+        student_id: student.id,
+        status: student.status.toLowerCase(),
+      })),
+    });
     setOriginalStudents(JSON.parse(JSON.stringify(students)));
-  }, [students]);
+  }, [attendanceModel, students]);
 
   if (loading || !attendanceModel) {
     return (

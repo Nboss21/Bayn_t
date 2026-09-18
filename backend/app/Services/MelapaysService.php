@@ -9,9 +9,13 @@ use Illuminate\Support\Facades\Log;
 class MelapaysService
 {
     private string $baseUrl;
+
     private string $secretKey;
+
     private string $publishableKey;
+
     private string $webhookSecret;
+
     private string $mode;
 
     public function __construct()
@@ -21,18 +25,18 @@ class MelapaysService
         $this->baseUrl = rtrim($config['base_url'] ?? 'https://84.247.186.98.nip.io', '/');
         $this->secretKey = $config['secret_key'] ?? '';
         $this->publishableKey = $config['publishable_key'] ?? '';
-        $this->webhookSecret = $config['webhook_secret'] ?? $this->secretKey;
+        $this->webhookSecret = $config['webhook_secret'] ?: $this->secretKey;
     }
 
     /**
      * Initialize payment with Melapays gateway.
      *
-     * @param array{amount: float|int, currency: string, tx_ref: string, callback_url: string, return_url?: string} $data
+     * @param  array{amount: float|int, currency: string, tx_ref: string, callback_url: string, return_url?: string}  $data
      * @return array{success: bool, checkout_url: ?string, tx_ref: string, message: ?string, raw: array}
      */
     public function initializePayment(array $data): array
     {
-        $endpoint = $this->baseUrl . '/api/v1/payment/initialize';
+        $endpoint = $this->baseUrl.'/api/v1/payment/initialize';
 
         $payload = [
             'amount' => (float) $data['amount'],
@@ -47,7 +51,7 @@ class MelapaysService
 
         try {
             $response = Http::withHeaders([
-                'Authorization' => 'Bearer ' . $this->secretKey,
+                'Authorization' => 'Bearer '.$this->secretKey,
                 'Content-Type' => 'application/json',
                 'Accept' => 'application/json',
             ])->timeout(15)->post($endpoint, $payload);
@@ -81,7 +85,7 @@ class MelapaysService
                 'success' => false,
                 'checkout_url' => null,
                 'tx_ref' => $data['tx_ref'],
-                'message' => $responseData['message'] ?? 'Gateway request failed with HTTP ' . $response->status(),
+                'message' => $responseData['message'] ?? 'Gateway request failed with HTTP '.$response->status(),
                 'raw' => $responseData,
             ];
         } catch (\Throwable $e) {
@@ -94,7 +98,7 @@ class MelapaysService
                 'success' => false,
                 'checkout_url' => null,
                 'tx_ref' => $data['tx_ref'],
-                'message' => 'Failed to connect to payment gateway: ' . $e->getMessage(),
+                'message' => 'Failed to connect to payment gateway: '.$e->getMessage(),
                 'raw' => [],
             ];
         }

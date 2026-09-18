@@ -1,4 +1,4 @@
-import { superAdminOverview } from '../data/superAdminOverviewData';
+import { adminService } from '../services/applicationService';
 
 export default class SuperAdminOverviewModel {
   constructor(data) {
@@ -14,7 +14,8 @@ export default class SuperAdminOverviewModel {
   }
 
   static async fetch() {
-    return new SuperAdminOverviewModel(superAdminOverview);
+    const data = await adminService.dashboard();
+    return new SuperAdminOverviewModel(data);
   }
 }
 

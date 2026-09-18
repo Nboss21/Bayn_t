@@ -1,4 +1,4 @@
-import { superAdminUsers } from '../data/superAdminUsersData';
+import { adminService } from '../services/applicationService';
 
 const DEFAULT_PER_PAGE = 5;
 
@@ -76,6 +76,37 @@ export default class SuperAdminUsersModel {
   }
 
   static async fetch() {
-    return new SuperAdminUsersModel(superAdminUsers);
+    const result = await adminService.users({ per_page: 100 });
+    const roleLabels = { super_admin: 'Super Admin', registrar: 'Registrar', teacher: 'Teacher', student: 'Student' };
+    const users = (result?.data || result || []).map((user) => ({
+      id: `#USR-${user.id}`,
+      resourceId: user.id,
+      name: user.name,
+      role: roleLabels[user.role] || 'No role assigned',
+      email: user.email,
+      status: user.is_active ? 'Active' : 'Pending',
+      lastSignIn: user.updated_at ? new Date(user.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : 'Never',
+    }));
+    return new SuperAdminUsersModel({
+      header: {
+        title: 'Users',
+        description: 'Manage staff accounts and access to the HOB system.',
+        activeAccountsLabel: 'active accounts',
+        addUserPath: '/super-admin/users/add',
+      },
+      attentionBanner: { actionText: 'Review accounts' },
+      filters: {
+        searchPlaceholder: 'Search by name or email...',
+        roles: [...new Set(users.map((user) => user.role).filter((role) => role !== 'No role assigned'))],
+        statuses: [...new Set(users.map((user) => user.status))],
+        sorts: [
+          { value: 'recent', label: 'Recently added' },
+          { value: 'name', label: 'Name' },
+          { value: 'role', label: 'Role' },
+          { value: 'status', label: 'Status' },
+        ],
+      },
+      users,
+    });
   }
 }

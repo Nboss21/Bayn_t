@@ -9,8 +9,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::table('payments', function (Blueprint $table) {
-            $table->string('checkout_url')->nullable()->after('gateway_transaction_id');
-            $table->json('metadata')->nullable()->after('checkout_url');
+            $table->string('checkout_url')->nullable();
+            $table->json('metadata')->nullable();
         });
     }
 

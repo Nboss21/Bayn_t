@@ -7,6 +7,7 @@ use App\Http\Resources\ClassResource;
 use App\Http\Resources\TeacherStudentResource;
 use App\Models\AssessmentScore;
 use App\Models\AttendanceRecord;
+use App\Models\CurriculumModule;
 use App\Services\TeacherScopeService;
 use Illuminate\Http\Request;
 
@@ -46,5 +47,35 @@ class TeacherController extends Controller
             ->when($request->filled('search'), fn ($q) => $q->whereHas('user', fn ($user) => $user->where('name', 'like', '%'.$request->string('search')->value().'%')))
             ->latest()->paginate(min($request->integer('per_page', 20), 100));
         return TeacherStudentResource::collection($students);
+    }
+
+    public function curriculum(Request $request)
+    {
+        $class = $this->scope->classes($request->user())->with(['program', 'intake'])->when($request->integer('class_id'), fn ($query, $id) => $query->whereKey($id))->first();
+        abort_unless($class, 404, 'No assigned class exists for this teacher.');
+
+        $modules = CurriculumModule::query()->where('program_id', $class->program_id)->with('lessons')->orderBy('sort_order')->get();
+        $completedLessonIds = \DB::table('curriculum_lesson_progress')->where('class_id', $class->id)->where('completed', true)->pluck('lesson_id')->all();
+        $completed = array_fill_keys($completedLessonIds, true);
+        $moduleRows = $modules->map(function (CurriculumModule $module) use ($completed) {
+            $lessons = $module->lessons->map(fn ($lesson) => ['id' => $lesson->id, 'title' => $lesson->title, 'completed' => isset($completed[$lesson->id])]);
+            $completedCount = $lessons->where('completed', true)->count();
+            $status = $completedCount === $lessons->count() && $lessons->count() > 0 ? 'completed' : ($completedCount > 0 ? 'in_progress' : 'upcoming');
+            return ['id' => (string) $module->number, 'number' => str_pad((string) $module->number, 2, '0', STR_PAD_LEFT), 'type' => $module->type, 'title' => $module->title, 'description' => $module->description, 'status' => $status, 'lessonsCount' => $lessons->count(), 'completedLessonsCount' => $completedCount, 'lessons' => $lessons->values()];
+        });
+        $active = $moduleRows->firstWhere('status', 'in_progress') ?: $moduleRows->firstWhere('status', 'upcoming');
+        $completedModules = $moduleRows->where('status', 'completed')->count();
+        $nextLesson = $active ? $active['lessons']->get($active['completedLessonsCount']) : null;
+
+        return response()->json(['data' => [
+            'header' => ['title' => 'Curriculum', 'subtitle' => 'View the modules and lessons for '.$class->program->name.'.', 'termBadge' => 'Academic Year '.now()->year.' / Term I'],
+            'banner' => ['className' => $class->name, 'program' => $class->program->name, 'startDate' => $class->intake?->start_date?->format('F Y'), 'schedule' => is_array($class->schedule) ? implode(' · ', array_filter($class->schedule)) : $class->schedule, 'studentsCount' => $class->students()->count()],
+            'programs' => [['id' => (string) $class->program_id, 'label' => $class->program->name]],
+            'activeProgramId' => (string) $class->program_id,
+            'filterTabs' => [['id' => 'All', 'label' => 'All'], ['id' => 'module', 'label' => 'Curriculum Modules'], ['id' => 'brief', 'label' => 'Teaching Briefs']],
+            'teachingContext' => $active ? ['statusText' => $active['status'] === 'in_progress' ? 'In progress' : 'Up next', 'moduleNumber' => $active['number'], 'moduleTitle' => $active['title'], 'description' => $active['description'], 'lessonCurrent' => $active['completedLessonsCount'], 'lessonTotal' => $active['lessonsCount'], 'lessonStatusText' => $active['status'], 'upNext' => $nextLesson['title'] ?? 'All lessons complete', 'actionText' => 'View Module Lessons', 'actionModuleNumber' => $active['number']] : null,
+            'progress' => ['completedModules' => $completedModules, 'totalModules' => $moduleRows->count(), 'completedCount' => $completedModules, 'currentCount' => $moduleRows->where('status', 'in_progress')->count(), 'remainingCount' => $moduleRows->whereIn('status', ['upcoming', 'in_progress'])->count(), 'activeModuleNumber' => $active['number'] ?? null, 'termWeek' => null, 'termWeeks' => null],
+            'modules' => $moduleRows->values(),
+        ]]);
     }
 }

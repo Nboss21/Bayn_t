@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import studentsDetailData from '../data/studentsDetailData';
+import { registrarService } from '../services/applicationService';
 import StudentDetailHeader from '../components/students/StudentDetailHeader';
 import PersonalInfoCard from '../components/students/PersonalInfoCard';
 import EducationExperienceCard from '../components/students/EducationExperienceCard';
@@ -13,7 +13,31 @@ import RecentActivityPanel from '../components/students/RecentActivityPanel';
 export default function StudentDetailPage() {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const student = studentsDetailData[studentId];
+  const [student, setStudent] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    registrarService.student(studentId).then((record) => {
+      const application = record.application || {};
+      const classRecord = record.class || {};
+      setStudent({
+        name: record.user?.name || 'Unnamed student',
+        status: record.status ? record.status.charAt(0).toUpperCase() + record.status.slice(1) : 'Unknown',
+        studentId: `STU-${record.id}`,
+        program: application.program?.name || 'Unassigned',
+        intake: application.intake?.name || '—',
+        personal: { fullName: record.user?.name, email: record.user?.email, phone: record.user?.phone || '—', dateOfBirth: '—', address: '—' },
+        education: { educationalBackground: '—', makeupExperience: '—', previousTraining: '—', relevantExperience: '—' },
+        documents: (record.documents || []).map((document) => ({ name: document.type || 'Document', status: 'Uploaded' })),
+        enrollment: { studentId: `STU-${record.id}`, program: application.program?.name || 'Unassigned', intake: application.intake?.name || '—', class: classRecord.name || 'Unassigned', enrollmentDate: record.enrolled_at ? new Date(record.enrolled_at).toLocaleDateString() : '—', status: record.status || 'Unknown' },
+        classInfo: { name: classRecord.name || 'Unassigned', instructor: classRecord.teacher?.name || '—', schedule: classRecord.schedule?.label || '—' },
+        application: { id: application.reference_number || `APP-${application.id || '—'}`, submitted: application.submitted_at ? new Date(application.submitted_at).toLocaleDateString() : '—', approval: application.status || '—', payment: record.payments?.[0]?.status || '—' },
+        recentActivity: [],
+      });
+    }).finally(() => setLoading(false));
+  }, [studentId]);
+
+  if (loading) return <div className="py-20 text-center text-[#6b7280]">Loading student...</div>;
 
   if (!student) {
     return (

@@ -1,4 +1,5 @@
 import { registrarDashboard } from '../data/dashboardData';
+import { registrarService } from '../services/applicationService';
 
 const replaceCount = (template, count) => template.replace('{count}', count);
 
@@ -38,7 +39,21 @@ export default class DashboardModel {
   }
 
   static async fetch() {
-    return new DashboardModel(registrarDashboard);
+    const response = await registrarService.dashboard();
+    const stats = response?.data || response || {};
+    const applications = stats.applications || {};
+    const payments = stats.payments || {};
+    const metrics = {
+      underReview: applications.under_review ?? 0,
+      awaitingInformation: 0,
+      approvedWithoutClass: Math.max(0, (applications.approved ?? 0) - (stats.students?.enrolled ?? 0)),
+      paymentExceptions: (payments.failed ?? 0) + (payments.pending ?? 0),
+    };
+    return new DashboardModel({
+      ...registrarDashboard,
+      metrics,
+      recentActivity: [],
+    });
   }
 }
 
