@@ -20,7 +20,11 @@ export default function StudentDetailPage() {
     registrarService.student(studentId).then((record) => {
       const application = record.application || {};
       const classRecord = record.class || {};
+      const hasCertificate = (record.documents || []).some((doc) => doc.type === 'certificate');
       setStudent({
+        id: record.id,
+        rawStatus: record.status,
+        hasCertificate,
         name: record.user?.name || 'Unnamed student',
         status: record.status ? record.status.charAt(0).toUpperCase() + record.status.slice(1) : 'Unknown',
         studentId: `STU-${record.id}`,

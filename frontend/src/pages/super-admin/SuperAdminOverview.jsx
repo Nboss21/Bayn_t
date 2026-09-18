@@ -4,23 +4,24 @@ import NeedsAttentionSection from '../../components/super-admin/NeedsAttentionSe
 import QuickManagementSection from '../../components/super-admin/QuickManagementSection';
 import RecentActivitySection from '../../components/super-admin/RecentActivitySection';
 import AtelierStatusCard from '../../components/super-admin/AtelierStatusCard';
+import DashboardErrorState from '../../components/DashboardErrorState';
 import { Calendar } from 'lucide-react';
 import useSuperAdminOverview from '../../hooks/useSuperAdminOverview';
 
 export default function SuperAdminOverview() {
-  const { overview, loading } = useSuperAdminOverview();
+  const { overview, loading, error, reload } = useSuperAdminOverview();
 
-  if (loading || !overview) {
+  if (loading && !overview) {
     return (
       <div className="w-full pb-12">
-        <div className="flex items-center justify-between mb-8">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
           <div>
             <div className="h-8 w-64 bg-gray-100 rounded mb-2 animate-pulse"></div>
             <div className="h-4 w-80 bg-gray-100 rounded animate-pulse"></div>
           </div>
           <div className="h-9 w-56 bg-gray-100 rounded-lg animate-pulse"></div>
         </div>
-        <div className="grid grid-cols-4 gap-6 mb-10">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-[140px] bg-gray-100 rounded-xl animate-pulse"></div>
           ))}
@@ -29,23 +30,35 @@ export default function SuperAdminOverview() {
     );
   }
 
+  if (error && !overview) {
+    return (
+      <DashboardErrorState
+        title="Unable to load Super Admin Dashboard"
+        message={error}
+        onRetry={reload}
+      />
+    );
+  }
+
+  if (!overview) return null;
+
   return (
     <div className="w-full pb-12">
       {/* Header section of the content */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 mb-8">
         <div>
-          <h1 className="text-3xl font-bold text-[#111827] mb-1">{overview.greeting}</h1>
-          <p className="text-[#6b7280]">Here's what needs your attention today.</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#111827] mb-1">{overview.greeting}</h1>
+          <p className="text-sm text-[#6b7280]">Here's what needs your attention today.</p>
         </div>
 
-        <div className="flex items-center gap-2 bg-[#f3f4f6] px-4 py-2 rounded-lg text-sm text-[#4b5563]">
+        <div className="self-start sm:self-auto flex items-center gap-2 bg-[#f3f4f6] px-4 py-2 rounded-lg text-sm text-[#4b5563]">
           <Calendar className="w-4 h-4" />
           <span>{overview.dateText}</span>
         </div>
       </div>
 
       {/* 4 Stat Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-10">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-10">
         {overview.stats.map((stat) => (
           <OverviewStatCard
             key={stat.id}
@@ -59,9 +72,9 @@ export default function SuperAdminOverview() {
       </div>
 
       {/* Main Content Area */}
-      <div className="grid grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
         {/* Left Column (2/3 width) */}
-        <div className="col-span-2">
+        <div className="lg:col-span-2">
           <NeedsAttentionSection items={overview.attentionItems} />
           <QuickManagementSection actions={overview.quickActions} />
           <AtelierStatusCard
@@ -71,7 +84,7 @@ export default function SuperAdminOverview() {
         </div>
 
         {/* Right Column (1/3 width) */}
-        <div className="col-span-1 pt-10">
+        <div className="lg:col-span-1 pt-4 lg:pt-10">
           <RecentActivitySection activities={overview.activities} />
         </div>
       </div>

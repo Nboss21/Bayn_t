@@ -35,7 +35,7 @@ export default function EnrollmentHistoryPage() {
 
   return (
     <div className="flex flex-col h-full">
-      <EnrollmentHistoryHeader />
+      <EnrollmentHistoryHeader exportUrl={model ? model.constructor.exportCsvUrl() : null} />
       <EnrollmentHistoryFilterBar
         search={search}
         onSearchChange={setSearch}

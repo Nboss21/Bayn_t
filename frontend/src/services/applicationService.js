@@ -57,6 +57,7 @@ export const studentService = {
   attendanceSummary: async (id, params) => resource(await api.get(`/students/${id}/attendance/summary`, params)),
   assessments: async (id, params) => resource(await api.get(`/students/${id}/assessments`, params)),
   certificate: async (id) => (await api.get(`/students/${id}/certificate`)).data,
+  generateCertificate: async (id) => resource(await api.post(`/students/${id}/certificate`)),
 };
 
 export const teacherService = {

@@ -16,10 +16,17 @@ export default function LoginForm() {
   const handleLogin = (e) => {
     e.preventDefault();
     setError('');
-
     setBusy(true);
     login({ email: username.trim(), password })
-      .then((user) => navigate(user.role === 'registrar' ? '/registrar/overview' : user.role === 'teacher' ? '/teacher/overview' : user.role === 'super_admin' ? '/super-admin/overview' : '/dashboard', { replace: true }))
+      .then((user) =>
+        navigate(
+          user.role === 'registrar' ? '/registrar/overview'
+          : user.role === 'teacher' ? '/teacher/overview'
+          : user.role === 'super_admin' ? '/super-admin/overview'
+          : '/dashboard',
+          { replace: true }
+        )
+      )
       .catch((err) => setError(toUserMessage(err)))
       .finally(() => setBusy(false));
   };
@@ -52,9 +59,9 @@ export default function LoginForm() {
           <input
             type={showPassword ? 'text' : 'password'}
             id="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          required
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
             className="w-full px-5 py-3 rounded-full bg-white border border-gray-300 focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-sm pr-12"
           />
           <button
@@ -68,13 +75,13 @@ export default function LoginForm() {
         </div>
       </div>
 
-      <div className="flex justify-end mb-8">
+      <div className="flex justify-end mb-6">
         <Link to="/auth/forgot-password" className="text-[12px] text-[#355E67] hover:underline mr-4">
           Forgot password?
         </Link>
       </div>
 
-      <div className="flex justify-center">
+      <div className="flex justify-center mb-5">
         <button
           type="submit"
           disabled={busy}
@@ -83,6 +90,7 @@ export default function LoginForm() {
           {busy ? 'SIGNING IN…' : 'LOG IN'}
         </button>
       </div>
+
     </form>
   );
 }

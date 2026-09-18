@@ -5,11 +5,12 @@ import NeedsAttentionItem from '../components/NeedsAttentionItem';
 import RecentActivity from '../components/RecentActivity';
 import QuickActions from '../components/QuickActions';
 import useDashboard from '../hooks/useDashboard';
+import DashboardErrorState from '../components/DashboardErrorState';
 
 const RegistrarOverview = () => {
-  const { dashboard, loading } = useDashboard();
+  const { dashboard, loading, error, reload } = useDashboard();
 
-  if (loading || !dashboard) {
+  if (loading && !dashboard) {
     return (
       <div className="pb-10">
         <div className="h-8 w-72 bg-gray-100 rounded mb-4 animate-pulse"></div>
@@ -22,6 +23,18 @@ const RegistrarOverview = () => {
       </div>
     );
   }
+
+  if (error && !dashboard) {
+    return (
+      <DashboardErrorState
+        title="Unable to load Registrar Dashboard"
+        message={error}
+        onRetry={reload}
+      />
+    );
+  }
+
+  if (!dashboard) return null;
 
   return (
     <div className="pb-10">

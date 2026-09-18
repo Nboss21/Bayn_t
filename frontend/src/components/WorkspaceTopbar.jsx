@@ -1,5 +1,5 @@
-import React, { useState, useRef, useEffect } from 'react';
-import { Search, Bell, ChevronDown } from 'lucide-react';
+import React, { useState, useRef, useEffect, useCallback } from 'react';
+import { Search, Bell, ChevronDown, X } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
@@ -10,11 +10,19 @@ export default function WorkspaceTopbar({
   onToggleNotifications,
   unreadCount = 0,
   profilePath,
+  onSearch,          // optional: (query) => Promise<{applications, students}>
+  searchBasePath,    // e.g. '/registrar'
 }) {
   const navigate = useNavigate();
   const { logout } = useAuth();
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const dropdownRef = useRef(null);
+  const [searchQuery, setSearchQuery] = useState('');
+  const [searchResults, setSearchResults] = useState(null);
+  const [searchOpen, setSearchOpen] = useState(false);
+  const [searching, setSearching] = useState(false);
+  const searchRef = useRef(null);
+  const debounceRef = useRef(null);
 
   const handleSignOut = async () => {
     setDropdownOpen(false);
@@ -30,15 +38,40 @@ export default function WorkspaceTopbar({
     if (profilePath) navigate(profilePath);
   };
 
+  const handleSearchChange = useCallback((e) => {
+    const q = e.target.value;
+    setSearchQuery(q);
+    if (!onSearch) return;
+    clearTimeout(debounceRef.current);
+    if (!q.trim()) { setSearchResults(null); setSearchOpen(false); return; }
+    debounceRef.current = setTimeout(async () => {
+      setSearching(true);
+      try {
+        const results = await onSearch(q.trim());
+        setSearchResults(results);
+        setSearchOpen(true);
+      } catch { setSearchResults(null); }
+      finally { setSearching(false); }
+    }, 300);
+  }, [onSearch]);
+
+  const handleSearchResultClick = (path) => {
+    setSearchQuery('');
+    setSearchResults(null);
+    setSearchOpen(false);
+    navigate(path);
+  };
+
+  // Close search on outside click
   useEffect(() => {
     function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setDropdownOpen(false);
-      }
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) setDropdownOpen(false);
+      if (searchRef.current && !searchRef.current.contains(event.target)) setSearchOpen(false);
     }
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
+
 
   return (
     <header className="h-[72px] flex items-center justify-between px-8 border-b border-[#e5e7eb] bg-[#fafafa] w-full font-sans relative z-50">
@@ -64,20 +97,72 @@ export default function WorkspaceTopbar({
       {/* Right side controls */}
       <div className="flex items-center gap-6">
         {/* Search */}
-        <div className="relative">
+        <div className="relative" ref={searchRef}>
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search className="h-4 w-4 text-[#9ca3af]" />
+            <Search className={`h-4 w-4 ${searching ? 'text-[#4A5D4E] animate-pulse' : 'text-[#9ca3af]'}`} />
           </div>
           <input
             type="text"
-            placeholder="Search"
+            value={searchQuery}
+            onChange={handleSearchChange}
+            onFocus={() => searchResults && setSearchOpen(true)}
+            placeholder={onSearch ? 'Search applications, students…' : 'Search'}
             className="block w-64 pl-10 pr-10 py-2 border border-[#e5e7eb] rounded-lg text-sm text-[#111827] placeholder-[#9ca3af] focus:outline-none focus:ring-1 focus:ring-[#9ca3af] focus:border-[#9ca3af] bg-[#f4f5f5]"
           />
-          <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
-            <div className="border border-[#d1d5db] rounded px-1.5 py-0.5 text-[10px] text-[#9ca3af] bg-white font-medium">
-              ⌘K
+          {searchQuery ? (
+            <button
+              className="absolute inset-y-0 right-0 pr-3 flex items-center text-[#9ca3af] hover:text-[#111827]"
+              onClick={() => { setSearchQuery(''); setSearchResults(null); setSearchOpen(false); }}
+            >
+              <X className="w-3.5 h-3.5" />
+            </button>
+          ) : (
+            <div className="absolute inset-y-0 right-0 pr-2 flex items-center pointer-events-none">
+              <div className="border border-[#d1d5db] rounded px-1.5 py-0.5 text-[10px] text-[#9ca3af] bg-white font-medium">⌘K</div>
             </div>
-          </div>
+          )}
+
+          {/* Search Results Dropdown */}
+          {searchOpen && searchResults && (
+            <div className="absolute top-full left-0 mt-2 w-80 bg-white border border-[#e5e7eb] rounded-xl shadow-lg py-2 z-50 max-h-72 overflow-y-auto">
+              {/* Applications */}
+              {searchResults.applications?.length > 0 && (
+                <>
+                  <p className="px-4 py-1 text-[10px] font-semibold text-[#9ca3af] uppercase tracking-wider">Applications</p>
+                  {searchResults.applications.map((app) => (
+                    <button
+                      key={app.id}
+                      onClick={() => handleSearchResultClick(`${searchBasePath || '/registrar'}/applications/${app.id}`)}
+                      className="w-full text-left px-4 py-2 hover:bg-[#f9fafb] text-sm"
+                    >
+                      <span className="font-medium text-[#111827]">#{app.id}</span>
+                      <span className="text-[#6b7280] ml-2">{app.status}</span>
+                    </button>
+                  ))}
+                </>
+              )}
+              {/* Students */}
+              {searchResults.students?.length > 0 && (
+                <>
+                  <p className="px-4 py-1 text-[10px] font-semibold text-[#9ca3af] uppercase tracking-wider mt-1">Students</p>
+                  {searchResults.students.map((s) => (
+                    <button
+                      key={s.id}
+                      onClick={() => handleSearchResultClick(`${searchBasePath || '/registrar'}/students/${s.id}`)}
+                      className="w-full text-left px-4 py-2 hover:bg-[#f9fafb] text-sm"
+                    >
+                      <span className="font-medium text-[#111827]">{s.name || s.user?.name}</span>
+                      <span className="text-[#6b7280] ml-2 text-xs">ID {s.id}</span>
+                    </button>
+                  ))}
+                </>
+              )}
+              {/* No results */}
+              {!searchResults.applications?.length && !searchResults.students?.length && (
+                <p className="px-4 py-3 text-sm text-[#9ca3af] text-center">No results found</p>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Notification bell */}

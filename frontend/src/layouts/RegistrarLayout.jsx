@@ -76,6 +76,8 @@ export default function RegistrarLayout() {
           onToggleNotifications={() => setShowNotifications(!showNotifications)}
           unreadCount={unreadCount}
           profilePath="/registrar/profile"
+          onSearch={(q) => registrarService.search(q)}
+          searchBasePath="/registrar"
         />
         <main className="flex-1 overflow-y-auto bg-white p-8 relative">
           <Outlet />

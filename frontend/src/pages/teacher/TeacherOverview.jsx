@@ -5,6 +5,7 @@ import TeacherStatCard from '../../components/teacher/TeacherStatCard';
 import TeacherAttentionItem from '../../components/teacher/TeacherAttentionItem';
 import TeacherClassCard from '../../components/teacher/TeacherClassCard';
 import TeacherChart from '../../components/teacher/TeacherChart';
+import DashboardErrorState from '../../components/DashboardErrorState';
 import useTeacherOverview from '../../hooks/useTeacherOverview';
 
 const iconMap = {
@@ -15,14 +16,14 @@ const iconMap = {
 };
 
 const TeacherOverview = () => {
-  const { overview, loading } = useTeacherOverview();
+  const { overview, loading, error, reload } = useTeacherOverview();
 
-  if (loading || !overview) {
+  if (loading && !overview) {
     return (
       <div>
         <div className="h-8 w-72 bg-gray-100 rounded mb-4 animate-pulse"></div>
         <div className="h-4 w-96 bg-gray-100 rounded mb-8 animate-pulse"></div>
-        <div className="grid grid-cols-4 gap-6 mb-8">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
           {[1, 2, 3, 4].map((i) => (
             <div key={i} className="h-[140px] bg-gray-100 rounded-xl animate-pulse"></div>
           ))}
@@ -30,6 +31,18 @@ const TeacherOverview = () => {
       </div>
     );
   }
+
+  if (error && !overview) {
+    return (
+      <DashboardErrorState
+        title="Unable to load Teacher Dashboard"
+        message={error}
+        onRetry={reload}
+      />
+    );
+  }
+
+  if (!overview) return null;
 
   const today = new Date().toLocaleDateString('en-US', {
     weekday: 'long',
@@ -41,18 +54,18 @@ const TeacherOverview = () => {
   return (
     <div>
       {/* Header Section */}
-      <div className="flex justify-between items-end mb-8">
+      <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 mb-8">
         <div>
-          <h1 className="text-[28px] font-medium text-[#1A1A1A] mb-1">{overview.greeting}</h1>
+          <h1 className="text-2xl sm:text-[28px] font-medium text-[#1A1A1A] mb-1">{overview.greeting}</h1>
           <p className="text-[15px] text-gray-500">Here's what needs your attention today.</p>
         </div>
-        <div className="text-[15px] text-gray-500">
+        <div className="text-[14px] text-gray-500">
           {today}
         </div>
       </div>
 
       {/* Stats Cards */}
-      <div className="grid grid-cols-4 gap-6 mb-8">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-8">
         {overview.stats.map((stat) => (
           <TeacherStatCard
             key={stat.id}
@@ -88,22 +101,22 @@ const TeacherOverview = () => {
       </div>
 
       {/* Attendance Chart */}
-      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-8 flex h-[260px]">
-        <div className="w-[240px] pr-6 border-r border-gray-100 flex flex-col justify-center">
+      <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mb-8 flex flex-col md:flex-row min-h-[260px] gap-6">
+        <div className="w-full md:w-[240px] md:pr-6 md:border-r border-gray-100 flex flex-col justify-center">
           <h2 className="text-[16px] font-semibold text-[#1A1A1A] mb-1">{overview.attendanceChart.title}</h2>
           <p className="text-[14px] text-gray-600 font-medium mb-3">{overview.attendanceChart.className}</p>
           <p className="text-[13px] text-gray-400">{overview.attendanceChart.subtitle}</p>
         </div>
-        <div className="flex-1 pl-6">
+        <div className="flex-1 min-h-[200px] md:pl-6 overflow-x-auto">
           <TeacherChart data={overview.attendanceChart.data} />
         </div>
       </div>
 
       {/* Bottom Grid */}
-      <div className="grid grid-cols-3 gap-6">
-        <div className="col-span-2">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+        <div className="lg:col-span-2">
           <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-4">My Classes</h2>
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
             {overview.classes.map((cls) => (
               <TeacherClassCard
                 key={cls.id}
@@ -122,8 +135,8 @@ const TeacherOverview = () => {
           </div>
         </div>
         
-        <div className="col-span-1">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm h-[268px] flex flex-col mt-[44px]">
+        <div className="lg:col-span-1">
+          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm min-h-[268px] flex flex-col mt-0 lg:mt-[44px]">
             <h2 className="text-[18px] font-semibold text-[#1A1A1A] mb-6">Assessment progress</h2>
             
             <div className="flex justify-between items-end mb-2">

@@ -39,20 +39,63 @@ export default class DashboardModel {
   }
 
   static async fetch() {
-    const response = await registrarService.dashboard();
-    const stats = response?.data || response || {};
+    const [statsResponse, appsResponse, paymentsResponse] = await Promise.allSettled([
+      registrarService.dashboard(),
+      registrarService.applications({ per_page: 8, sort: 'latest' }),
+      registrarService.payments({ per_page: 5 }),
+    ]);
+
+    const stats = statsResponse.status === 'fulfilled'
+      ? (statsResponse.value?.data || statsResponse.value || {})
+      : {};
+    const apps = appsResponse.status === 'fulfilled'
+      ? (appsResponse.value?.data || appsResponse.value || [])
+      : [];
+    const payments = paymentsResponse.status === 'fulfilled'
+      ? (paymentsResponse.value?.data || paymentsResponse.value || [])
+      : [];
+
     const applications = stats.applications || {};
-    const payments = stats.payments || {};
+    const paymentStats = stats.payments || {};
+
     const metrics = {
       underReview: applications.under_review ?? 0,
-      awaitingInformation: 0,
+      awaitingInformation: applications.awaiting_information ?? 0,
       approvedWithoutClass: Math.max(0, (applications.approved ?? 0) - (stats.students?.enrolled ?? 0)),
-      paymentExceptions: (payments.failed ?? 0) + (payments.pending ?? 0),
+      paymentExceptions: (paymentStats.failed ?? 0) + (paymentStats.pending ?? 0),
     };
+
+    // Build real recent activity from latest apps + payments
+    const recentActivity = [
+      ...apps.map((a) => ({
+        id: `app-${a.id}`,
+        type: 'application',
+        text: `Application #${a.id}`,
+        detail: a.status ? a.status.replace(/_/g, ' ') : '',
+        time: a.updated_at
+          ? new Date(a.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '',
+        path: `/registrar/applications/${a.id}`,
+      })),
+      ...payments.map((p) => ({
+        id: `pay-${p.id}`,
+        type: 'payment',
+        text: `Payment #${p.id}`,
+        detail: p.status || '',
+        time: p.updated_at
+          ? new Date(p.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })
+          : '',
+        path: `/registrar/overview`,
+      })),
+    ]
+      .sort((a, b) => (a.time < b.time ? 1 : -1))
+      .slice(0, 6);
+
     return new DashboardModel({
       ...registrarDashboard,
       metrics,
-      recentActivity: [],
+      recentActivity,
+      user: stats.user || registrarDashboard.user,
     });
   }
 }
