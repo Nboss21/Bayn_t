@@ -17,6 +17,7 @@ class StoreAttendanceRequest extends FormRequest
             'class_id' => ['required', 'integer', 'exists:classes,id'],
             'date' => ['required', 'date_format:Y-m-d'],
             'status' => ['required', Rule::enum(AttendanceStatus::class)],
+            'note' => ['nullable', 'string', 'max:5000'],
         ];
     }
 }

@@ -7,9 +7,13 @@ use App\Http\Requests\StoreProgramRequest;
 use App\Http\Requests\UpdateProgramRequest;
 use App\Http\Resources\ProgramResource;
 use App\Models\Program;
+use App\Models\Intake;
+use App\Enums\IntakeStatus;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
 
 class ProgramController extends Controller
@@ -54,7 +58,17 @@ class ProgramController extends Controller
     {
         Gate::authorize('create', Program::class);
 
-        return (new ProgramResource(Program::create($request->validated())))->response()->setStatusCode(201);
+        $validated = $request->validated();
+        $months = $validated['intake_months'];
+        unset($validated['intake_months']);
+
+        $program = DB::transaction(function () use ($validated, $months): Program {
+            $program = Program::create($validated);
+            $this->syncIntakes($program, $months);
+            return $program->load('intakes');
+        });
+
+        return (new ProgramResource($program))->response()->setStatusCode(201);
     }
 
     public function show(Program $program): ProgramResource
@@ -68,9 +82,47 @@ class ProgramController extends Controller
     {
         Gate::authorize('update', $program);
 
-        $program->update($request->validated());
+        $validated = $request->validated();
+        $months = $validated['intake_months'] ?? null;
+        unset($validated['intake_months']);
 
-        return new ProgramResource($program->refresh());
+        DB::transaction(function () use ($program, $validated, $months): void {
+            $program->update($validated);
+            if ($months !== null) {
+                $this->syncIntakes($program, $months);
+            }
+        });
+
+        return new ProgramResource($program->refresh()->load('intakes'));
+    }
+
+    private function syncIntakes(Program $program, array $months): void
+    {
+        $months = array_values(array_unique($months));
+        $selected = collect($months)->mapWithKeys(function (string $month): array {
+            $start = Carbon::createFromFormat('Y-m', $month)->startOfMonth();
+            return [$month => $start];
+        });
+
+        foreach ($selected as $month => $start) {
+            Intake::updateOrCreate(
+                ['program_id' => $program->id, 'name' => $start->format('F Y')],
+                [
+                    'start_date' => $start->toDateString(),
+                    'end_date' => $start->copy()->endOfMonth()->toDateString(),
+                    'status' => $start->isCurrentMonth() ? IntakeStatus::Open : IntakeStatus::Upcoming,
+                ],
+            );
+        }
+
+        $program->intakes()->whereNotIn('name', $selected->map(fn ($start) => $start->format('F Y'))->all())
+            ->get()->each(function (Intake $intake): void {
+                if ($intake->classes()->exists() || $intake->program()->exists() && $intake->applications()->exists()) {
+                    $intake->update(['status' => IntakeStatus::Closed]);
+                } else {
+                    $intake->delete();
+                }
+            });
     }
 
     public function destroy(Program $program): JsonResponse

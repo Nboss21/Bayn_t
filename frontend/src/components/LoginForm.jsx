@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { toUserMessage } from '../services/api';
+import { roleHome } from '../utils/roleHome';
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -19,13 +20,7 @@ export default function LoginForm() {
     setBusy(true);
     login({ email: username.trim(), password })
       .then((user) =>
-        navigate(
-          user.role === 'registrar' ? '/registrar/overview'
-          : user.role === 'teacher' ? '/teacher/overview'
-          : user.role === 'super_admin' ? '/super-admin/overview'
-          : '/dashboard',
-          { replace: true }
-        )
+        navigate(roleHome(user.role), { replace: true })
       )
       .catch((err) => setError(toUserMessage(err)))
       .finally(() => setBusy(false));

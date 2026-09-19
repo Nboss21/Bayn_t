@@ -96,14 +96,14 @@ const ApplicationConfirmation = () => {
               PAYMENT DETAILS
             </p>
             <div className="flex items-center space-x-2 mb-4">
-              <span className="w-2.5 h-2.5 rounded-full bg-[#6b826d] flex-shrink-0"></span>
-              <span className="text-[15px] font-semibold text-[#111111]">Successful</span>
+              <span className="w-2.5 h-2.5 rounded-full bg-[#e6ca64] flex-shrink-0"></span>
+              <span className="text-[15px] font-semibold text-[#111111]">Payment deferred</span>
             </div>
             <div className="h-[1px] bg-gray-100 mb-4"></div>
             <div className="space-y-3">
               <div className="flex justify-between items-center">
                 <span className="text-[13px] text-gray-500">Amount</span>
-                <span className="text-[13px] font-medium text-[#111111]">15,000 ETB</span>
+                <span className="text-[13px] font-medium text-[#111111]">Due after review</span>
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[13px] text-gray-500">Program</span>

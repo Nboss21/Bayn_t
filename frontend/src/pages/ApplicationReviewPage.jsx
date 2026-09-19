@@ -18,6 +18,7 @@ export default function ApplicationReviewPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { applicant, loading, transition } = useApplicant(id);
+  const [actionError, setActionError] = useState('');
 
   const [isRequestModalOpen, setIsRequestModalOpen] = useState(false);
   const [isRejectModalOpen, setIsRejectModalOpen] = useState(false);
@@ -46,29 +47,25 @@ export default function ApplicationReviewPage() {
     return <div className="p-8 text-gray-500">Application not found.</div>;
   }
 
-  const handleApprove = () => {
-    transition({ status: 'Approved', activityTitle: 'Application approved' });
-    setIsApproveModalOpen(false);
-    navigate(`/registrar/applications/${id}/assign-class`);
+  const handleApprove = async () => {
+    try { setActionError(''); await transition({ backendStatus: 'approved' }); setIsApproveModalOpen(false); navigate(`/registrar/applications/${id}/assign-class`); }
+    catch (error) { setActionError(error.message || 'The application could not be approved.'); }
   };
 
-  const handleReject = (reason) => {
-    transition({ status: 'Rejected', activityTitle: 'Application rejected', note: reason });
-    setIsRejectModalOpen(false);
+  const handleReject = async (reason) => {
+    try { setActionError(''); await transition({ backendStatus: 'rejected', reason }); setIsRejectModalOpen(false); }
+    catch (error) { setActionError(error.message || 'The application could not be rejected.'); }
   };
 
-  const handleRequestInfo = ({ selected, message }) => {
-    transition({
-      status: 'Awaiting Information',
-      activityTitle: 'Information requested',
-      note: `${selected.join(', ') || 'Further details'} — ${message}`,
-    });
-    setIsRequestModalOpen(false);
+  const handleRequestInfo = async ({ selected, message }) => {
+    try { setActionError(''); await transition({ backendStatus: 'rejected', reason: `${selected.join(', ') || 'Further details'}: ${message}` }); setIsRequestModalOpen(false); }
+    catch (error) { setActionError(error.message || 'The information request could not be sent.'); }
   };
 
   return (
     <div className="pb-12">
       <WarningBanner applicant={applicant} />
+      {actionError && <p role="alert" className="mb-4 rounded-lg bg-red-50 px-4 py-3 text-sm text-red-700">{actionError}</p>}
 
       <ApplicantHeader
         applicant={applicant}
@@ -100,7 +97,7 @@ export default function ApplicationReviewPage() {
         <div className="lg:col-span-2 space-y-6">
           <PersonalInformation applicant={applicant} />
           <EducationAndExperience applicant={applicant} />
-          <DocumentsList />
+          <DocumentsList applicant={applicant} />
         </div>
 
         <div className="space-y-6">

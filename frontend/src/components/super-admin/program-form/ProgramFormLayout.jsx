@@ -40,15 +40,21 @@ export default function ProgramFormLayout({
     duration: program?.duration && program.duration !== '—' ? String(program.duration) : '',
     durationUnit: program?.durationUnit || options.durationUnits?.[0] || 'Weeks',
     status: program?.status || options.statuses?.[0] || '',
-    currentIntake: program?.currentIntake === '—' ? '' : (program?.currentIntake || options.intakes?.[0] || ''),
+    intakeMonths: program?.intakeMonths || [],
   });
   const [saving, setSaving] = useState(false);
+  const [error, setError] = useState('');
 
   const updateValue = (key, value) => setValues((current) => ({ ...current, [key]: value }));
 
   const handleCancel = () => navigate(backPath);
   const handleSubmit = async () => {
+    if (!values.intakeMonths.length) {
+      setError('Select at least one intake month before saving this program.');
+      return;
+    }
     setSaving(true);
+    setError('');
     const payload = {
       name: values.name,
       slug: program?.slug || values.name.toLowerCase().trim().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, ''),
@@ -59,11 +65,14 @@ export default function ProgramFormLayout({
       tuition_fee: program?.tuition_fee || 0,
       fee_currency: program?.fee_currency || 'USD',
       duration_weeks: Number(values.duration),
+      intake_months: values.intakeMonths,
     };
     try {
       if (isAdd) await adminService.createProgram(payload);
       else await adminService.updateProgram(program.id, payload);
       navigate(backPath);
+    } catch (requestError) {
+      setError(requestError.message || 'The program could not be saved.');
     } finally {
       setSaving(false);
     }
@@ -133,9 +142,10 @@ export default function ProgramFormLayout({
         {/* Right Column (Narrower) */}
         <div className="space-y-6">
           <ProgramStatusCard program={program} options={options} value={values.status} onChange={(value) => updateValue('status', value)} />
-          <CurrentIntakeCard program={program} options={options} value={values.currentIntake} onChange={(value) => updateValue('currentIntake', value)} />
+          <CurrentIntakeCard program={program} options={options} value={values.intakeMonths} onChange={(value) => updateValue('intakeMonths', value)} />
         </div>
       </div>
+      {error && <p role="alert" className="mt-4 text-sm text-[#b91c1c]">{error}</p>}
 
       {/* Bottom Actions */}
       <div className="mt-8 flex justify-end gap-3 pt-6">

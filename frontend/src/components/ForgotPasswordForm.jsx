@@ -1,13 +1,22 @@
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import { ArrowLeft, ArrowRight, Mail, Info } from 'lucide-react';
+import { authService } from '../services/authService';
+import { toUserMessage } from '../services/api';
 
 export default function ForgotPasswordForm() {
-  const navigate = useNavigate();
+  const [email, setEmail] = useState('');
+  const [message, setMessage] = useState('');
+  const [error, setError] = useState('');
+  const [busy, setBusy] = useState(false);
 
   const handleReset = (e) => {
     e.preventDefault();
-    // Simulate sending email, then navigate to reset password page for demo purposes
-    navigate('/auth/reset-password'); 
+    setBusy(true); setError(''); setMessage('');
+    authService.forgotPassword(email.trim())
+      .then((result) => setMessage(result.data?.message || 'Your request has been sent to an administrator.'))
+      .catch((err) => setError(toUserMessage(err, 'Could not submit the password reset request.')))
+      .finally(() => setBusy(false));
   };
 
   return (
@@ -23,8 +32,10 @@ export default function ForgotPasswordForm() {
       <div className="mt-6">
         <h2 className="text-[28px] font-bold mb-3 text-[#1C1F1E] tracking-tight">Reset Your Password</h2>
         <p className="text-[13px] text-gray-500 mb-8 leading-relaxed pr-4">
-          Enter your email address and we'll send you a link to reset your password.
+          Enter your email address. An administrator will review your request and provide a temporary password.
         </p>
+        {message && <div className="mb-4 rounded-lg border border-green-200 bg-green-50 px-3 py-2 text-sm text-green-700">{message}</div>}
+        {error && <div className="mb-4 rounded-lg border border-red-200 bg-red-50 px-3 py-2 text-sm text-red-700">{error}</div>}
 
         <form onSubmit={handleReset} className="w-full">
           <div className="mb-6">
@@ -38,6 +49,8 @@ export default function ForgotPasswordForm() {
               <input
                 type="email"
                 id="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
                 placeholder="Enter your email address"
                 className="w-full pl-11 pr-5 py-3 rounded-[12px] bg-white border border-transparent focus:outline-none focus:ring-2 focus:ring-[#78C4DF] text-[13px] text-gray-700 placeholder-gray-400 shadow-sm"
                 required
@@ -49,7 +62,7 @@ export default function ForgotPasswordForm() {
             type="submit"
             className="w-full bg-[#B3C9A6] text-[#1C1F1E] font-medium text-[13.5px] px-6 py-3 rounded-[12px] hover:bg-[#a3ba96] transition-colors shadow-sm flex items-center justify-center mb-6"
           >
-            Send Reset Link <ArrowRight className="w-4 h-4 ml-2" />
+            {busy ? 'Sending…' : 'Request temporary password'} <ArrowRight className="w-4 h-4 ml-2" />
           </button>
         </form>
 

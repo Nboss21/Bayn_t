@@ -10,6 +10,11 @@ export const authService = {
     try { await api.post('/auth/logout'); } finally { localStorage.removeItem(TOKEN_KEY); }
   },
   async me() { const result = await api.get('/auth/me'); return result.data.user || unwrap(result); },
+  async changePassword(payload) {
+    const result = await api.post('/auth/change-password', payload);
+    if (result.data.access_token) localStorage.setItem(TOKEN_KEY, result.data.access_token);
+    return result.data;
+  },
   async refresh(device_name) {
     const result = await api.post('/auth/refresh', { device_name });
     localStorage.setItem(TOKEN_KEY, result.data.access_token);

@@ -14,6 +14,7 @@ return new class extends Migration
             $table->foreignId('class_id')->constrained('classes')->restrictOnDelete();
             $table->date('date');
             $table->enum('status', ['present', 'absent', 'late', 'excused'])->index();
+            $table->text('note')->nullable();
             $table->foreignId('marked_by')->constrained('users')->restrictOnDelete();
             $table->timestamps();
 

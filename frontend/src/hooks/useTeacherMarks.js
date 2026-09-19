@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import TeacherMarksModel from '../models/TeacherMarksModel';
 
-export default function useTeacherMarks() {
+export default function useTeacherMarks(classId) {
   const [marksModel, setMarksModel] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
-    TeacherMarksModel.fetch()
+    TeacherMarksModel.fetch(classId)
       .then((model) => {
         if (active) setMarksModel(model);
       })
@@ -17,7 +17,7 @@ export default function useTeacherMarks() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [classId]);
 
   return { marksModel, loading };
 }

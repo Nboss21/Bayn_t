@@ -27,6 +27,8 @@ class UpdateProgramRequest extends FormRequest
             'tuition_fee' => ['sometimes', 'required', 'numeric', 'min:0'],
             'fee_currency' => ['sometimes', 'required', 'string', 'max:10'],
             'duration_weeks' => ['sometimes', 'required', 'integer', 'min:1'],
+            'intake_months' => ['sometimes', 'required', 'array', 'min:1'],
+            'intake_months.*' => ['required', 'date_format:Y-m'],
         ];
     }
 }

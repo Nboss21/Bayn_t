@@ -63,7 +63,7 @@ class AttendanceController extends Controller
         Gate::authorize('update', $attendance);
         $audit = app(\App\Services\AuditLogService::class);
         $before = $audit->snapshot($attendance);
-        $attendance->update(['status' => $request->validated('status'), 'marked_by' => $request->user()->id]);
+        $attendance->update([...$request->validated(), 'marked_by' => $request->user()->id]);
         $attendance->refresh()->load(['student.user', 'schoolClass.program', 'markedBy']);
         $audit->log('attendance.updated', $attendance, $before, $audit->snapshot($attendance));
         return new AttendanceRecordResource($attendance);

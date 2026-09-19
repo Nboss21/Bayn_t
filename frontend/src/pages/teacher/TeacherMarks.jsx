@@ -7,9 +7,15 @@ import TeacherMarksFooter from '../../components/teacher/TeacherMarksFooter';
 import useTeacherMarks from '../../hooks/useTeacherMarks';
 import { computeStats } from '../../utils/marks';
 import { teacherService } from '../../services/applicationService';
+import TeacherClassSelector from '../../components/teacher/TeacherClassSelector';
 
 const TeacherMarks = () => {
-  const { marksModel, loading } = useTeacherMarks();
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const { marksModel, loading } = useTeacherMarks(selectedClassId);
+
+  React.useEffect(() => {
+    if (!selectedClassId && marksModel?.availableClasses?.[0]) setSelectedClassId(marksModel.availableClasses[0].id);
+  }, [marksModel, selectedClassId]);
 
   const [students, setStudents] = useState([]);
   const [originalStudents, setOriginalStudents] = useState([]);
@@ -25,7 +31,7 @@ const TeacherMarks = () => {
     }
   }, [marksModel]);
 
-  const { rows, stats } = useMemo(() => computeStats(students), [students]);
+  const { rows, stats } = useMemo(() => computeStats(students, marksModel?.categories), [students, marksModel]);
 
   const filterCounts = useMemo(() => ({
     all: students.length,
@@ -70,7 +76,7 @@ const TeacherMarks = () => {
 
   const handleSave = useCallback(async () => {
     if (!marksModel?.header?.classId) return;
-    const categories = ['practical', 'theory', 'professional'];
+    const categories = marksModel.categories.map((category) => category.id);
     await Promise.all(students.flatMap((student) => categories.filter((category) => student[category] !== null && student[category] !== '').map(async (category) => {
       const existingId = marksModel.initialStudents.find((item) => item.id === student.id)?.[`${category}_id`];
       const payload = { class_id: marksModel.header.classId, student_id: student.id, category, raw_score: Number(student[category]), weighted_score: Number(student[category]) };
@@ -98,6 +104,7 @@ const TeacherMarks = () => {
 
   return (
     <>
+      <TeacherClassSelector classes={marksModel.availableClasses} value={selectedClassId} onChange={setSelectedClassId} />
       <TeacherMarksHeader
         header={marksModel.header}
         assessments={marksModel.assessments}

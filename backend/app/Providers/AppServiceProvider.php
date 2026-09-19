@@ -3,9 +3,11 @@
 namespace App\Providers;
 
 use App\Models\Document;
+use App\Models\CompletionReview;
 use App\Models\SchoolClass;
 use App\Models\User;
 use App\Policies\ClassPolicy;
+use App\Policies\CompletionReviewPolicy;
 use Illuminate\Cache\RateLimiting\Limit;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -31,6 +33,7 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(SchoolClass::class, ClassPolicy::class);
+        Gate::policy(CompletionReview::class, CompletionReviewPolicy::class);
         RateLimiter::for('auth', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
         RateLimiter::for('public-write', fn (Request $request) => Limit::perMinute(10)->by($request->ip()));
         RateLimiter::for('expensive-admin', fn (Request $request) => Limit::perMinute(3)->by($request->user()?->id ?: $request->ip()));

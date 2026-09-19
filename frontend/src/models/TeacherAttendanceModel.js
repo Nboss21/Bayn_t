@@ -12,11 +12,12 @@ export default class TeacherAttendanceModel {
     this.totalStudents = data.students.length;
   }
 
-  static async fetch() {
-    const classesResponse = await teacherService.classes({ per_page: 1 });
-    const classItem = (classesResponse?.data || classesResponse || [])[0];
+  static async fetch(classId = null, date = new Date().toISOString().slice(0, 10)) {
+    const classesResponse = await teacherService.classes({ per_page: 100 });
+    const classRows = classesResponse?.data || classesResponse || [];
+    const classItem = classRows.find((item) => String(item.id) === String(classId)) || classRows[0];
     if (!classItem) return new TeacherAttendanceModel({ header: { title: 'Attendance', subtitle: 'No assigned class.' }, classInfo: {}, students: [], footer: {} });
-    const response = await teacherService.classAttendance(classItem.id, { date: new Date().toISOString().slice(0, 10) });
+    const response = await teacherService.classAttendance(classItem.id, { date });
     const data = response?.data || response || {};
     const students = (data.students || []).map((item) => ({
       id: item.student?.id,
@@ -25,13 +26,15 @@ export default class TeacherAttendanceModel {
       station: '',
       studentId: `STU-${item.student?.id}`,
       status: item.attendance?.status ? item.attendance.status.charAt(0).toUpperCase() + item.attendance.status.slice(1) : 'Unmarked',
-      note: '',
+      note: item.attendance?.note || '',
     }));
-    return new TeacherAttendanceModel({
+    const model = new TeacherAttendanceModel({
       header: { title: 'Attendance', subtitle: `Record attendance for ${classItem.name}.`, classId: classItem.id, date: data.date },
       classInfo: { name: classItem.name, program: classItem.program?.name || 'Program', cohort: classItem.intake?.name || 'Current intake', schedule: scheduleLabel(classItem.schedule) },
       students,
       footer: { discardPath: '/teacher/overview' },
     });
+    model.availableClasses = classRows.map((item) => ({ id: item.id, name: item.name, program: item.program?.name || 'Program' }));
+    return model;
   }
 }

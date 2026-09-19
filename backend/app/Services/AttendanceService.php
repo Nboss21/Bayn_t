@@ -21,6 +21,7 @@ class AttendanceService
                 'class_id' => $class->id,
                 'date' => $date,
                 'status' => $record['status'],
+                'note' => $record['note'] ?? null,
                 'marked_by' => $markerId,
                 'created_at' => now(),
                 'updated_at' => now(),
@@ -29,7 +30,7 @@ class AttendanceService
             AttendanceRecord::query()->upsert(
                 $rows,
                 ['student_id', 'class_id', 'date'],
-                ['status', 'marked_by', 'updated_at']
+                ['status', 'note', 'marked_by', 'updated_at']
             );
 
             $saved = AttendanceRecord::query()

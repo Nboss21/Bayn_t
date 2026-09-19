@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('program_teacher', function (Blueprint $table) {
             $table->foreignId('program_id')->constrained()->cascadeOnDelete();
             $table->foreignId('user_id')->constrained()->cascadeOnDelete();
-            $table->timestamp('created_at')->useCurrent();
+            $table->timestamps();
 
             $table->primary(['program_id', 'user_id']);
             $table->index('user_id');

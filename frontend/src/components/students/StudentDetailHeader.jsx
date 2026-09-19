@@ -38,14 +38,15 @@ export default function StudentDetailHeader({ student }) {
   const handleViewCertificate = async () => {
     if (!student?.id) return;
     setViewing(true);
+    const viewer = window.open('', '_blank');
     try {
-      const res = await studentService.certificate(student.id);
-      if (res?.url) {
-        window.open(res.url, '_blank', 'noopener,noreferrer');
-      } else {
-        toast.error('Certificate link could not be generated.');
-      }
+      const pdf = await studentService.certificateFile(student.id);
+      const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+      if (viewer) viewer.location.href = url;
+      else window.open(url, '_blank', 'noopener,noreferrer');
+      setTimeout(() => URL.revokeObjectURL(url), 120000);
     } catch (err) {
+      viewer?.close();
       toast.error(toUserMessage(err, 'Unable to open certificate.'));
     } finally {
       setViewing(false);

@@ -9,6 +9,7 @@ import EnrollmentPanel from '../components/students/EnrollmentPanel';
 import ClassPanel from '../components/students/ClassPanel';
 import ApplicationPanel from '../components/students/ApplicationPanel';
 import RecentActivityPanel from '../components/students/RecentActivityPanel';
+import { scheduleLabel } from '../utils/schedule';
 
 export default function StudentDetailPage() {
   const { studentId } = useParams();
@@ -32,9 +33,9 @@ export default function StudentDetailPage() {
         intake: application.intake?.name || '—',
         personal: { fullName: record.user?.name, email: record.user?.email, phone: record.user?.phone || '—', dateOfBirth: '—', address: '—' },
         education: { educationalBackground: '—', makeupExperience: '—', previousTraining: '—', relevantExperience: '—' },
-        documents: (record.documents || []).map((document) => ({ name: document.type || 'Document', status: 'Uploaded' })),
+        documents: (record.documents || []).map((document) => ({ id: document.id, type: document.type, name: document.type || 'Document', status: 'Uploaded' })),
         enrollment: { studentId: `STU-${record.id}`, program: application.program?.name || 'Unassigned', intake: application.intake?.name || '—', class: classRecord.name || 'Unassigned', enrollmentDate: record.enrolled_at ? new Date(record.enrolled_at).toLocaleDateString() : '—', status: record.status || 'Unknown' },
-        classInfo: { name: classRecord.name || 'Unassigned', instructor: classRecord.teacher?.name || '—', schedule: classRecord.schedule?.label || '—' },
+        classInfo: { name: classRecord.name || 'Unassigned', instructor: classRecord.teacher?.name || '—', schedule: scheduleLabel(classRecord.schedule) || '—' },
         application: { id: application.reference_number || `APP-${application.id || '—'}`, submitted: application.submitted_at ? new Date(application.submitted_at).toLocaleDateString() : '—', approval: application.status || '—', payment: record.payments?.[0]?.status || '—' },
         recentActivity: [],
       });
@@ -68,7 +69,7 @@ export default function StudentDetailPage() {
         <div className="flex-1 min-w-0">
           <PersonalInfoCard student={student.personal} />
           <EducationExperienceCard student={student.education} />
-          <DocumentsCard documents={student.documents} />
+          <DocumentsCard documents={student.documents} studentId={student.id} />
         </div>
 
         {/* Right Column - Sidebar Panels */}

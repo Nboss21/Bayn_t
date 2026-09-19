@@ -8,10 +8,10 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose, onC
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
-      <div className="bg-white w-full max-w-[640px] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
+    <div className="fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/40 backdrop-blur-sm p-4">
+      <div className="bg-white w-full max-w-[640px] max-h-[calc(100vh-2rem)] rounded-2xl shadow-2xl overflow-hidden flex flex-col">
         {/* Header */}
-        <div className="px-6 pt-6 pb-4">
+        <div className="shrink-0 px-6 pt-6 pb-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="w-9 h-9 rounded-full bg-[#fce8e8] flex items-center justify-center">
@@ -56,7 +56,7 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose, onC
         <div className="w-full h-px bg-gray-100"></div>
 
         {/* Content */}
-        <div className="px-6 py-5 overflow-y-auto">
+        <div className="min-h-0 flex-1 px-6 py-5 overflow-y-auto">
           {/* Consequence Box */}
           <div className="bg-[#fff6f6] border border-[#fecaca] rounded-xl p-4">
             <div className="flex items-center gap-2 mb-2">
@@ -127,7 +127,7 @@ export default function RejectApplicationModal({ applicant, isOpen, onClose, onC
         </div>
 
         {/* Footer */}
-        <div className="px-6 py-4 bg-white flex justify-end gap-3 rounded-b-2xl mb-2">
+        <div className="shrink-0 px-6 py-4 bg-white border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
           <button
             onClick={onClose}
             className="px-5 py-2.5 border border-gray-300 rounded-lg text-[14px] font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors"

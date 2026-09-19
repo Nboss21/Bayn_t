@@ -1,4 +1,5 @@
 import React from 'react';
+import { Trash2 } from 'lucide-react';
 
 const AVATAR_COLORS = [
   'bg-[#e5e7eb]',
@@ -14,7 +15,7 @@ function getAvatarColor(index) {
   return AVATAR_COLORS[index % AVATAR_COLORS.length];
 }
 
-export default function UsersTable({ rows = [], onView, onReview }) {
+export default function UsersTable({ rows = [], onView, onReview, onDelete }) {
   return (
     <div className="overflow-x-auto">
       <table className="w-full text-left border-collapse">
@@ -62,6 +63,7 @@ export default function UsersTable({ rows = [], onView, onReview }) {
                   <span className="text-[15px] text-[#6b7280]">{user.lastSignIn}</span>
                 </td>
                 <td className="px-6 py-4 text-right">
+                  <div className="flex items-center justify-end gap-2">
                   {user.actionType === 'view' ? (
                     <button
                       onClick={() => onView && onView(user)}
@@ -77,6 +79,8 @@ export default function UsersTable({ rows = [], onView, onReview }) {
                       Review
                     </button>
                   )}
+                  <button onClick={() => onDelete && onDelete(user)} title="Delete user" className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"><Trash2 className="w-4 h-4" /></button>
+                  </div>
                 </td>
               </tr>
             ))}

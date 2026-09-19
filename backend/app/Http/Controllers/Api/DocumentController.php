@@ -36,10 +36,29 @@ class DocumentController extends Controller
         $expiresAt = now()->addMinutes(15);
         return response()->json(['data' => new DocumentResource($document), 'temporary_url' => Storage::disk('private_documents')->temporaryUrl($document->file_path, $expiresAt), 'expires_at' => $expiresAt->toIso8601String()]);
     }
+
+    /** Serve the generated certificate as an authenticated PDF response. */
+    public function certificateDownload(Request $request, Student $student): Response
+    {
+        Gate::authorize('view', $student);
+        $document = $student->documents()
+            ->where('type', DocumentType::Certificate->value)
+            ->latest()
+            ->firstOrFail();
+
+        $disk = Storage::disk('private_documents');
+        abort_unless($disk->exists($document->file_path), 404, 'Certificate file not found.');
+
+        return response($disk->get($document->file_path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.basename($document->file_path).'"',
+            'Cache-Control' => 'private, max-age=0, no-store',
+        ]);
+    }
     public function storeForApplication(StoreApplicationDocumentRequest $request, Application $application): JsonResponse
     {
         Gate::authorize('uploadDocument', $application);
-        abort_if($application->status?->value !== 'draft', 409, 'Documents can only be uploaded to draft applications.');
+        abort_unless(in_array($application->status?->value, ['draft', 'rejected'], true), 409, 'Documents can only be uploaded to draft or rejected applications.');
 
         $file = $request->file('file');
         $filePath = $file->storeAs(
@@ -110,10 +129,14 @@ class DocumentController extends Controller
 
         abort_unless(is_file($path), 404);
 
-        return Storage::disk('private_documents')->download(
-            $document->file_path,
-            basename($document->file_path)
-        );
+        if (str_ends_with(strtolower($document->file_path), '.pdf')) {
+            return response()->file($path, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.basename($document->file_path).'"',
+            ]);
+        }
+
+        return Storage::disk('private_documents')->download($document->file_path, basename($document->file_path));
     }
 
     private function authorizeDocumentAccess(Document $document, string $ability): void

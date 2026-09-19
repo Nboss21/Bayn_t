@@ -5,14 +5,13 @@ import { registrarNavItems } from '../data/sidebarConfig';
 import WorkspaceTopbar from '../components/WorkspaceTopbar';
 import { getRegistrarBreadcrumbs } from '../utils/breadcrumbs';
 import NotificationsDropdown from '../components/NotificationsDropdown';
-import { initialNotifications } from '../data/notificationsData';
 import { notificationService } from '../services/applicationService';
 import { useAuth } from '../context/AuthContext';
 
 export default function RegistrarLayout() {
   const { pathname } = useLocation();
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [notifications, setNotifications] = useState([]);
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const { user } = useAuth();
 

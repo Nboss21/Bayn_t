@@ -18,6 +18,11 @@ class UpdateApplicationStepRequest extends FormRequest
             'intake_id' => ['sometimes', 'nullable', 'integer', 'exists:intakes,id'],
             'applicant_name' => ['sometimes', 'nullable', 'string', 'max:255'],
             'applicant_phone' => ['sometimes', 'nullable', 'string', 'max:50'],
+            'city' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'area' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'landmark' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'education' => ['sometimes', 'nullable', 'string', 'max:255'],
+            'experience' => ['sometimes', 'nullable', 'string', 'max:255'],
         ];
     }
 

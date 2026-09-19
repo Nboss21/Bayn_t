@@ -29,6 +29,15 @@ class EnsureUserHasRole
             ], Response::HTTP_FORBIDDEN);
         }
 
+        if ($user->must_change_password
+            && ! $request->is('api/auth/me')
+            && ! $request->is('api/auth/change-password')) {
+            return response()->json([
+                'message' => 'You must change your temporary password before continuing.',
+                'code' => 'PASSWORD_CHANGE_REQUIRED',
+            ], Response::HTTP_FORBIDDEN);
+        }
+
         if (! empty($roles) && ! $user->hasRole($roles)) {
             return response()->json([
                 'message' => 'Unauthorized. You do not have permission to perform this action.',

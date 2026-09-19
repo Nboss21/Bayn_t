@@ -6,11 +6,17 @@ import RosterSearchBar, { RosterSearchInput } from '../../components/teacher/ros
 import RosterTable from '../../components/teacher/roster/RosterTable';
 import RosterPagination from '../../components/teacher/roster/RosterPagination';
 import useTeacherRoster from '../../hooks/useTeacherRoster';
+import TeacherClassSelector from '../../components/teacher/TeacherClassSelector';
 
 const PAGE_SIZE = 10;
 
 const TeacherRoster = () => {
-  const { rosterModel, loading } = useTeacherRoster();
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const { rosterModel, loading } = useTeacherRoster(true, selectedClassId);
+
+  React.useEffect(() => {
+    if (!selectedClassId && rosterModel?.availableClasses?.[0]) setSelectedClassId(rosterModel.availableClasses[0].id);
+  }, [rosterModel, selectedClassId]);
   const [activeTab, setActiveTab] = useState('all');
   const [searchQuery, setSearchQuery] = useState('');
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,6 +57,7 @@ const TeacherRoster = () => {
 
   return (
     <div className="pb-16">
+      <TeacherClassSelector classes={rosterModel.availableClasses} value={selectedClassId} onChange={setSelectedClassId} />
       <RosterClassInfo classInfo={rosterModel.classInfo} />
       <RosterAttendanceBanner banner={rosterModel.attendanceBanner} />
       <RosterStatsBar stats={rosterModel.stats} />

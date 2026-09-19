@@ -1,4 +1,3 @@
-import { registrarDashboard } from '../data/dashboardData';
 import { registrarService } from '../services/applicationService';
 
 const replaceCount = (template, count) => template.replace('{count}', count);
@@ -91,11 +90,27 @@ export default class DashboardModel {
       .sort((a, b) => (a.time < b.time ? 1 : -1))
       .slice(0, 6);
 
+    const user = stats.user || { name: 'Registrar' };
+    const summaryCards = [
+      { id: 'underReview', title: 'Applications requiring review', leftAction: 'Immediate triage', rightAction: 'Queue', borderColor: 'border-t-yellow-500', textColor: 'text-yellow-600', barColor: 'bg-[#fbbf24]', path: '/registrar/applications' },
+      { id: 'awaitingInformation', title: 'Applicants awaiting information', leftAction: 'Pending responses', rightAction: 'View', borderColor: 'border-t-blue-500', textColor: 'text-blue-600', barColor: 'bg-[#3b82f6]', path: '/registrar/applications' },
+      { id: 'approvedWithoutClass', title: 'Approved students requiring class assignment', leftAction: 'Allocations ready', rightAction: 'Assign', borderColor: 'border-t-[#b45309]', textColor: 'text-[#b45309]', barColor: 'bg-[#b45309]', path: '/registrar/applications' },
+      { id: 'paymentExceptions', title: 'Payment issues or exceptions', leftAction: 'Requires verification', rightAction: 'Resolve', borderColor: 'border-t-red-500', textColor: 'text-red-600', barColor: 'bg-[#ef4444]', path: '/registrar/payments' },
+    ];
+    const queues = summaryCards.map((card) => ({ ...card, badgeText: card.id === 'paymentExceptions' ? 'Payment Exception' : 'Needs Review', badgeBg: 'bg-gray-50', badgeColor: card.textColor, badgeBorder: 'border-gray-200', description: `Live ${card.title.toLowerCase()} queue.`, actionText: card.rightAction, lineColor: card.barColor, countText: `{count} ${card.title.toLowerCase()}`, path: card.path }));
     return new DashboardModel({
-      ...registrarDashboard,
+      user,
+      summaryCards,
+      queues,
+      headerAction: { label: 'REVIEW APPLICATIONS', path: '/registrar/applications' },
+      activityViewAllPath: '/registrar/applications',
       metrics,
       recentActivity,
-      user: stats.user || registrarDashboard.user,
+      quickActions: [
+        { id: 'applications', label: 'Review applications', path: '/registrar/applications' },
+        { id: 'students', label: 'View students', path: '/registrar/students' },
+        { id: 'classes', label: 'Manage classes', path: '/registrar/classes' },
+      ],
     });
   }
 }

@@ -47,12 +47,12 @@ class ApplicationPolicy
 
     public function update(User $user, Application $application): bool
     {
-        return $application->status?->value === 'draft' && $this->view($user, $application);
+        return in_array($application->status?->value, ['draft', 'rejected'], true) && $this->view($user, $application);
     }
 
     public function submit(User $user, Application $application): bool
     {
-        return $this->view($user, $application);
+        return in_array($application->status?->value, ['draft', 'rejected'], true) && $this->view($user, $application);
     }
 
     public function viewDocument(User $user, Application $application): bool

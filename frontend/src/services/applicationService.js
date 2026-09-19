@@ -25,7 +25,9 @@ export const applicationService = {
   saveStep: async (id, step, payload) => resource(await api.patch(`/applications/${id}/steps/${step}`, payload)),
   upload: async (id, type, file) => {
     const body = new FormData(); body.append('type', type); body.append('file', file);
-    return resource(await api.post(`/applications/${id}/documents`, body));
+    // File uploads can take longer than normal API requests, especially when
+    // the API is waking up or the connection to the database is remote.
+    return resource(await api.post(`/applications/${id}/documents`, body, { timeout: 120000 }));
   },
   documents: async (id) => resource(await api.get(`/applications/${id}/documents`)),
   submit: async (id) => resource(await api.post(`/applications/${id}/submit`, {})),
@@ -57,12 +59,15 @@ export const studentService = {
   attendanceSummary: async (id, params) => resource(await api.get(`/students/${id}/attendance/summary`, params)),
   assessments: async (id, params) => resource(await api.get(`/students/${id}/assessments`, params)),
   certificate: async (id) => (await api.get(`/students/${id}/certificate`)).data,
+  certificateFile: async (id) => (await api.get(`/students/${id}/certificate/download`, undefined, { responseType: 'blob', timeout: 120000 })).data,
   generateCertificate: async (id) => resource(await api.post(`/students/${id}/certificate`)),
+  completionReview: async () => resource(await api.get('/student/completion-review')),
 };
 
 export const teacherService = {
   dashboard: async () => resource(await api.get('/teacher/dashboard')),
   classes: async (params) => resource(await api.get('/teacher/classes', params)),
+  grading: async (params) => resource(await api.get('/teacher/grading', params)),
   students: async (params) => resource(await api.get('/teacher/students', params)),
   curriculum: async (params) => resource(await api.get('/teacher/curriculum', params)),
   attendance: async (params) => resource(await api.get('/teacher/attendance', params)),
@@ -73,6 +78,8 @@ export const teacherService = {
   createAssessment: async (payload) => resource(await api.post('/assessments', payload)),
   updateAssessment: async (id, payload) => resource(await api.put(`/assessments/${id}`, payload)),
   deleteAssessment: async (id) => api.delete(`/assessments/${id}`),
+  completionReviews: async (params) => resource(await api.get('/teacher/completion-reviews', params)),
+  submitCompletion: async (studentId) => resource(await api.post(`/teacher/students/${studentId}/completion-review`)),
 };
 
 export const registrarService = {
@@ -80,6 +87,10 @@ export const registrarService = {
   applications: async (params) => resource(await api.get('/registrar/applications', params)),
   application: async (id) => resource(await api.get(`/registrar/applications/${id}`)),
   review: async (id, payload) => resource(await api.patch(`/registrar/applications/${id}`, payload)),
+  classes: async (params) => resource(await api.get('/registrar/classes', params)),
+  teachers: async () => resource(await api.get('/registrar/teachers')),
+  assignTeacher: async (classId, teacherId) => resource(await api.patch(`/classes/${classId}`, { teacher_id: teacherId || null })),
+  documentUrl: async (id) => (await api.get(`/registrar/documents/${id}/temporary-url`)).data,
   enroll: async (id, class_id) => resource(await api.post(`/registrar/applications/${id}/enroll`, { class_id })),
   students: async (params) => resource(await api.get('/registrar/students', params)),
   student: async (id) => resource(await api.get(`/registrar/students/${id}`)),
@@ -87,6 +98,9 @@ export const registrarService = {
   payments: async (params) => resource(await api.get('/registrar/payments', params)),
   verifyPayment: async (id) => resource(await api.post(`/registrar/payments/${id}/verify`)),
   search: async (q) => resource(await api.get('/registrar/search', { q })),
+  completionReviews: async (params) => resource(await api.get('/registrar/completion-reviews', params)),
+  completionReview: async (id) => resource(await api.get(`/registrar/completion-reviews/${id}`)),
+  reviewCompletion: async (id, payload) => resource(await api.patch(`/registrar/completion-reviews/${id}`, payload)),
 };
 
 export const adminService = {
@@ -110,6 +124,9 @@ export const adminService = {
   createUser: async (payload) => resource(await api.post('/users', payload)),
   updateUser: async (id, payload) => resource(await api.put(`/users/${id}`, payload)),
   deleteUser: async (id) => api.delete(`/users/${id}`),
+  passwordResetRequests: async (params) => resource(await api.get('/password-reset-requests', params)),
+  approvePasswordReset: async (id, payload = {}) => resource(await api.post(`/password-reset-requests/${id}/approve`, payload)),
+  rejectPasswordReset: async (id, payload = {}) => resource(await api.post(`/password-reset-requests/${id}/reject`, payload)),
   grading: async (params) => resource(await api.get('/grading-configs', params)),
   createGrading: async (payload) => resource(await api.post('/grading-configs', payload)),
   updateGrading: async (id, payload) => resource(await api.put(`/grading-configs/${id}`, payload)),

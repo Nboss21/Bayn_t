@@ -21,6 +21,8 @@ class StoreUserRequest extends FormRequest
             'email' => ['required', 'email', 'max:255', 'unique:users,email'],
             'password' => ['required', 'string', 'min:8'],
             'role' => ['required', Rule::enum(UserRole::class)],
+            'program_ids' => ['sometimes', 'array'],
+            'program_ids.*' => ['integer', 'distinct', 'exists:programs,id'],
             'phone' => ['nullable', 'string', 'max:255'],
             'is_active' => ['sometimes', 'boolean'],
         ];

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import { useApplication } from '../context/ApplicationContext';
@@ -6,6 +6,8 @@ import { useApplication } from '../context/ApplicationContext';
 const SelectedProgram = () => {
   const navigate = useNavigate();
   const { getSelectedProgram, intakes, formData, errors, updateField, validateStep, completeStep, saveStep } = useApplication();
+  const [busy, setBusy] = useState(false);
+  const [apiError, setApiError] = useState('');
   const program = getSelectedProgram();
 
   if (!program) {
@@ -79,10 +81,11 @@ const SelectedProgram = () => {
           
           <div className="flex flex-col sm:flex-row sm:items-center gap-3 sm:gap-6">
             <button 
-              onClick={async () => { if (validateStep('selected')) { await saveStep('selected'); completeStep('selected'); navigate('/application/location'); } }}
+              onClick={async () => { if (validateStep('selected')) { setBusy(true); setApiError(''); try { await saveStep('selected'); completeStep('selected'); navigate('/application/location'); } catch (error) { setApiError(error.message || 'Your intake could not be saved. Please try again.'); } finally { setBusy(false); } } }}
+              disabled={busy}
               className="bg-[#eec15b] hover:bg-[#d9af50] text-[#111111] text-[12px] font-bold uppercase tracking-wider py-3.5 px-8 rounded-full transition"
             >
-              Continue
+              {busy ? 'Saving…' : 'Continue'}
             </button>
             <button 
               onClick={() => navigate('/application/program')}
@@ -91,6 +94,7 @@ const SelectedProgram = () => {
               Change Program
             </button>
           </div>
+          {apiError && <p role="alert" className="mt-3 text-sm text-red-600">{apiError}</p>}
         </div>
       </div>
     </div>

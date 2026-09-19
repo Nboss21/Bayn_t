@@ -28,7 +28,9 @@ export class ApiError extends Error {
 
 const client = axios.create({
   baseURL: API_BASE_URL,
-  timeout: Number(import.meta.env.VITE_API_TIMEOUT || 15000),
+  // Neon and the Render backend can need several seconds to wake from idle.
+  // Keep the timeout configurable while using a more forgiving default.
+  timeout: Number(import.meta.env.VITE_API_TIMEOUT || 60000),
   headers: { Accept: 'application/json' },
 });
 
@@ -43,7 +45,15 @@ client.interceptors.response.use(
   (response) => response,
   async (error) => {
     const response = error.response;
-    if (!response) throw new ApiError('Unable to connect to the academy server. Please try again.', {});
+    if (!response) {
+      const timedOut = error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT';
+      throw new ApiError(
+        timedOut
+          ? 'The request is taking longer than expected. Please check your connection and try again.'
+          : 'Unable to connect to the academy server. Please try again.',
+        { code: error.code }
+      );
+    }
 
     // Auto-refresh on 401 (token expired) — but not for auth endpoints themselves
     if (response.status === 401) {
@@ -93,7 +103,7 @@ client.interceptors.response.use(
 
 export const api = {
   request: (config) => client.request(config),
-  get: (url, params) => client.get(url, { params }),
+  get: (url, params, config = {}) => client.get(url, { ...config, params }),
   post: (url, data, config) => client.post(url, data, config),
   patch: (url, data) => client.patch(url, data),
   put: (url, data) => client.put(url, data),

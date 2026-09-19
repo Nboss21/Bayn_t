@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import { useApplication } from '../context/ApplicationContext';
@@ -32,12 +32,16 @@ const experienceOptions = [
 
 const ExperienceStep = () => {
   const navigate = useNavigate();
-  const { formData, errors, updateField, validateStep, completeStep } = useApplication();
+  const { formData, errors, updateField, validateStep, completeStep, saveStep } = useApplication();
+  const [busy, setBusy] = useState(false);
+  const [apiError, setApiError] = useState('');
 
-  const handleContinue = () => {
+  const handleContinue = async () => {
     if (validateStep('experience')) {
-      completeStep('experience');
-      navigate('/application/documents');
+      setBusy(true); setApiError('');
+      try { await saveStep('experience'); completeStep('experience'); navigate('/application/documents'); }
+      catch (error) { setApiError(error.message || 'Your background information could not be saved. Please try again.'); }
+      finally { setBusy(false); }
     }
   };
 
@@ -178,12 +182,13 @@ const ExperienceStep = () => {
                 onClick={handleContinue}
                 className="bg-[#e6ca64] hover:bg-[#d6b74e] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto"
               >
-                Continue
+                {busy ? 'Saving…' : 'Continue'}
                 <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
                 </svg>
               </button>
             </div>
+              {apiError && <p role="alert" className="text-[12px] text-red-500">{apiError}</p>}
           </div>
         </div>
 

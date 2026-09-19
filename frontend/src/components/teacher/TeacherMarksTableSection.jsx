@@ -1,6 +1,6 @@
 import React from 'react';
 import { Search, Keyboard } from 'lucide-react';
-import { MARK_FIELDS, MAX_MARKS, isEmptyMark } from '../../utils/marks';
+import { isEmptyMark } from '../../utils/marks';
 
 const StatusBadge = ({ status }) => {
   if (status === 'Complete') {
@@ -145,13 +145,13 @@ const TeacherMarksTableSection = ({
                 <td className="py-3 px-6 text-[13px] text-gray-600 font-medium">
                   {row.studentId}
                 </td>
-                {MARK_FIELDS.map((field) => (
-                  <td key={field} className="py-3 px-4">
+              {categories.map((category) => (
+                  <td key={category.id} className="py-3 px-4">
                     <InputCell
-                      value={row[field]}
-                      error={row.error?.[field]}
-                      max={MAX_MARKS[field]}
-                      onInputChange={(value) => onInputChange(row.id, field, value)}
+                      value={row[category.id]}
+                      error={row.error?.[category.id]}
+                      max={category.points}
+                      onInputChange={(value) => onInputChange(row.id, category.id, value)}
                     />
                   </td>
                 ))}

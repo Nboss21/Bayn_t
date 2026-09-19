@@ -1,5 +1,5 @@
 import React from 'react';
-import { Users, BookOpen, Calendar, CreditCard, FileText, Settings, ArrowRight } from 'lucide-react';
+import { Users, BookOpen, Calendar, CreditCard, FileText, Settings, UserPlus, BarChart2, ArrowRight } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 const iconMap = {
@@ -9,6 +9,9 @@ const iconMap = {
   creditCard: CreditCard,
   fileText: FileText,
   settings: Settings,
+  'user-plus': UserPlus,
+  book: BookOpen,
+  'bar-chart': BarChart2,
 };
 
 export default function QuickManagementSection({ actions = [] }) {
@@ -20,7 +23,7 @@ export default function QuickManagementSection({ actions = [] }) {
       </div>
       <div className="grid grid-cols-2 gap-4">
         {actions.map((action, index) => {
-          const Icon = iconMap[action.iconType];
+          const Icon = iconMap[action.iconType || action.icon] || FileText;
           return (
             <Link
               key={index}
@@ -31,7 +34,7 @@ export default function QuickManagementSection({ actions = [] }) {
                 <div className="w-8 h-8 rounded-lg bg-[#f3f4f6] flex items-center justify-center group-hover:bg-[#e5e7eb] transition-colors">
                   <Icon className="w-4 h-4 text-[#4b5563]" />
                 </div>
-                <span className="font-medium text-[#111827]">{action.name}</span>
+                <span className="font-medium text-[#111827]">{action.name || action.label}</span>
               </div>
               <ArrowRight className="w-4 h-4 text-[#9ca3af] group-hover:text-[#4b5563] transition-colors" />
             </Link>

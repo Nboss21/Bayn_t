@@ -1,25 +1,22 @@
-import { MAX_MARKS } from '../data/teacherMarksData';
-
-export { MAX_MARKS };
-
-export const MARK_FIELDS = ['practical', 'theory', 'professional', 'participation'];
+export const MAX_MARKS = { practical: 100, theory: 100, professional: 100 };
+export const MARK_FIELDS = Object.keys(MAX_MARKS);
 
 export const isEmptyMark = (value) => value === null || value === undefined || value === '';
 
-export function deriveRow(student) {
+export function deriveRow(student, categories = MARK_FIELDS.map((id) => ({ id, points: MAX_MARKS[id] }))) {
   const error = {};
 
-  MARK_FIELDS.forEach((field) => {
+  categories.forEach(({ id: field, points = MAX_MARKS[field] || 100 }) => {
     const value = student[field];
     if (!isEmptyMark(value)) {
       const num = Number(value);
-      if (Number.isNaN(num) || num < 0 || num > MAX_MARKS[field]) {
-        error[field] = `Max 0-${MAX_MARKS[field]}`;
+      if (Number.isNaN(num) || num < 0 || num > points) {
+        error[field] = `Max 0-${points}`;
       }
     }
   });
 
-  const filled = MARK_FIELDS.map((f) => !isEmptyMark(student[f]));
+  const filled = categories.map(({ id }) => !isEmptyMark(student[id]));
   const hasError = Object.keys(error).length > 0;
 
   let status;
@@ -30,7 +27,7 @@ export function deriveRow(student) {
     total = '-';
   } else if (filled.every(Boolean) && !hasError) {
     status = 'Complete';
-    total = MARK_FIELDS.reduce((acc, field) => acc + Number(student[field]), 0);
+    total = categories.reduce((acc, { id, percent }) => acc + (Number(student[id]) * (Number(percent || 0) / 100)), 0);
   } else {
     status = 'Incomplete';
     total = '-';
@@ -39,8 +36,8 @@ export function deriveRow(student) {
   return { ...student, error, status, total };
 }
 
-export function computeStats(students) {
-  const rows = students.map(deriveRow);
+export function computeStats(students, categories) {
+  const rows = students.map((student) => deriveRow(student, categories));
   const stats = { complete: 0, incomplete: 0, notMarked: 0, total: rows.length };
 
   rows.forEach((row) => {

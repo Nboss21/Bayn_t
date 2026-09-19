@@ -1,7 +1,12 @@
 import React from 'react';
 import { Calendar } from 'lucide-react';
 
-const TeacherAttendanceHeader = ({ header, selectedDate, hasChanges }) => {
+const getTodayIso = () => {
+  const today = new Date();
+  return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+};
+
+const TeacherAttendanceHeader = ({ header, selectedDate, hasChanges, onDateChange }) => {
   return (
     <div className="flex justify-between items-start mb-8">
       <div>
@@ -12,7 +17,14 @@ const TeacherAttendanceHeader = ({ header, selectedDate, hasChanges }) => {
         <div className="border border-gray-200 rounded-lg px-4 py-2 flex items-center gap-2 text-[13px]">
           <span className="text-gray-500">Date:</span>
           <Calendar className="w-4 h-4 text-gray-600" />
-          <span className="text-[#1A1A1A] font-medium">{selectedDate}</span>
+          <input
+            type="date"
+            value={header.date || ''}
+            max={getTodayIso()}
+            onChange={(event) => onDateChange(event.target.value)}
+            aria-label="Attendance date"
+            className="text-[#1A1A1A] font-medium bg-transparent outline-none cursor-pointer"
+          />
         </div>
         
         {hasChanges && (

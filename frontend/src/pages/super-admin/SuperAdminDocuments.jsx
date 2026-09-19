@@ -54,12 +54,9 @@ export default function SuperAdminDocuments() {
   const handleGenerate = async (student) => {
     setGenerating((prev) => ({ ...prev, [student.id]: true }));
     try {
-      await studentService.certificate
-        ? await fetch(`/students/${student.id}/certificate`, { method: 'POST' })
-        : null;
-      // Use the studentService certificate view to get the URL
+      await studentService.generateCertificate(student.id);
       const result = await studentService.certificate(student.id);
-      setCertUrls((prev) => ({ ...prev, [student.id]: result?.url || result }));
+      setCertUrls((prev) => ({ ...prev, [student.id]: result?.temporary_url }));
       showToast(`Certificate generated for ${student.user?.name || 'student'}`);
     } catch (err) {
       showToast(toUserMessage(err), 'error');
@@ -69,17 +66,16 @@ export default function SuperAdminDocuments() {
   };
 
   const handleView = async (student) => {
-    if (certUrls[student.id]) {
-      window.open(certUrls[student.id], '_blank');
-      return;
-    }
+    const viewer = window.open('', '_blank');
     try {
-      const result = await studentService.certificate(student.id);
-      const url = result?.url || result;
-      setCertUrls((prev) => ({ ...prev, [student.id]: url }));
-      window.open(url, '_blank');
-    } catch {
-      showToast('No certificate found. Generate one first.', 'error');
+      const pdf = await studentService.certificateFile(student.id);
+      const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+      if (viewer) viewer.location.href = url;
+      else window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 120000);
+    } catch (err) {
+      viewer?.close();
+      showToast(toUserMessage(err, 'The certificate could not be opened.'), 'error');
     }
   };
 

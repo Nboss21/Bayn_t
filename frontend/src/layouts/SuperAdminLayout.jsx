@@ -5,7 +5,6 @@ import { superadminNavItems } from '../data/sidebarConfig';
 import WorkspaceTopbar from '../components/WorkspaceTopbar';
 import { getSuperAdminBreadcrumbs } from '../utils/breadcrumbs';
 import NotificationsDropdown from '../components/NotificationsDropdown';
-import { initialNotifications } from '../data/notificationsData';
 import { notificationService } from '../services/applicationService';
 import { useAuth } from '../context/AuthContext';
 
@@ -13,13 +12,13 @@ export default function SuperAdminLayout() {
   const { pathname } = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(initialNotifications);
+  const [notifications, setNotifications] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
     notificationService.list({ per_page: 20 }).then((result) => {
       const rows = result?.data || result || [];
-      setNotifications(rows.map((n) => ({ ...n, title: n.type || 'Notification', name: '', time: n.created_at ? new Date(n.created_at).toLocaleString() : '', read: Boolean(n.read_at), archived: false, icon: 'alert', iconClass: 'bg-[#fef3c7] text-[#92400e]', left: { type: 'text', text: '' } })));
+      setNotifications(rows.map((n) => ({ ...n, title: n.type === 'password_reset_requested' ? 'Password reset requested' : (n.type || 'Notification'), name: '', time: n.created_at ? new Date(n.created_at).toLocaleString() : '', read: Boolean(n.read_at), archived: false, to: n.type === 'password_reset_requested' ? '/super-admin/password-resets' : undefined, icon: 'alert', iconClass: 'bg-[#fef3c7] text-[#92400e]', left: { type: 'text', text: '' } })));
     }).catch(() => {});
   }, []);
 

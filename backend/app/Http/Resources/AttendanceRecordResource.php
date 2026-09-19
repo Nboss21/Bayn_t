@@ -15,6 +15,7 @@ class AttendanceRecordResource extends JsonResource
             'class_id' => $this->class_id,
             'date' => $this->date?->toDateString(),
             'status' => $this->status?->value,
+            'note' => $this->note,
             'marked_by' => $this->marked_by,
             'student' => new StudentResource($this->whenLoaded('student')),
             'class' => new ClassResource($this->whenLoaded('schoolClass')),

@@ -9,12 +9,14 @@ use App\Http\Controllers\Api\AuthController;
 use App\Http\Controllers\Api\BackupController;
 use App\Http\Controllers\Api\ClassController;
 use App\Http\Controllers\Api\ContentController;
+use App\Http\Controllers\Api\CompletionReviewController;
 use App\Http\Controllers\Api\DocumentController;
 use App\Http\Controllers\Api\GradingConfigController;
 use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProgramController;
+use App\Http\Controllers\Api\PasswordResetRequestController;
 use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\StudentController;
@@ -47,6 +49,7 @@ Route::prefix('auth')->group(function () {
 // Protected Auth Endpoints (Requires Sanctum Bearer Token)
 Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::get('/me', [AuthController::class, 'me'])->middleware('role');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('role');
 });
@@ -75,6 +78,7 @@ Route::middleware(['auth:sanctum', 'role:student'])->prefix('applications')->gro
 
 Route::middleware(['auth:sanctum', 'role:student'])->prefix('student')->group(function () {
     Route::get('/me', [StudentController::class, 'me']);
+    Route::get('/completion-review', [CompletionReviewController::class, 'student']);
 });
 
 // --------------------------------------------------------------------------
@@ -111,6 +115,14 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student']
 
 Route::middleware(['auth:sanctum', 'role:super_admin'])
     ->apiResource('users', UserController::class);
+
+Route::middleware(['auth:sanctum', 'role:super_admin'])
+    ->prefix('password-reset-requests')->group(function () {
+        Route::get('/', [PasswordResetRequestController::class, 'index']);
+        Route::get('/{passwordResetRequest}', [PasswordResetRequestController::class, 'show']);
+        Route::post('/{passwordResetRequest}/approve', [PasswordResetRequestController::class, 'approve']);
+        Route::post('/{passwordResetRequest}/reject', [PasswordResetRequestController::class, 'reject']);
+    });
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])
     ->prefix('documents')
@@ -180,7 +192,8 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(functio
 });
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar', 'throttle:expensive-admin'])->post('/students/{student}/certificate', [DocumentController::class, 'certificate']);
-Route::middleware(['auth:sanctum', 'role:super_admin,registrar,student'])->get('/students/{student}/certificate', [DocumentController::class, 'certificateView']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->get('/students/{student}/certificate', [DocumentController::class, 'certificateView']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->get('/students/{student}/certificate/download', [DocumentController::class, 'certificateDownload']);
 
 // --------------------------------------------------------------------------
 // Role-Gated Routes
@@ -211,6 +224,10 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])
         Route::get('/students/{student}', [RegistrarController::class, 'showStudent']);
         Route::patch('/students/{student}/status', [RegistrarController::class, 'updateStudentStatus']);
         Route::get('/classes', [RegistrarController::class, 'classes']);
+        Route::get('/teachers', [RegistrarController::class, 'teachers']);
+        Route::get('/completion-reviews', [CompletionReviewController::class, 'registrarIndex']);
+        Route::get('/completion-reviews/{completionReview}', [CompletionReviewController::class, 'show']);
+        Route::patch('/completion-reviews/{completionReview}', [CompletionReviewController::class, 'review']);
         Route::get('/search', [RegistrarController::class, 'search']);
     });
 
@@ -222,6 +239,9 @@ Route::middleware(['auth:sanctum', 'role:super_admin,teacher'])
         Route::get('/classes', [TeacherController::class, 'classes']);
         Route::get('/students', [TeacherController::class, 'students']);
         Route::get('/curriculum', [TeacherController::class, 'curriculum']);
+        Route::get('/grading', [TeacherController::class, 'grading']);
+        Route::get('/completion-reviews', [CompletionReviewController::class, 'teacherIndex']);
+        Route::post('/students/{student}/completion-review', [CompletionReviewController::class, 'submit']);
         Route::get('/attendance', [AttendanceController::class, 'index']);
         Route::get('/assessments', [AssessmentScoreController::class, 'index']);
     });

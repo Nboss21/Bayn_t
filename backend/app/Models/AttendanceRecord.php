@@ -16,6 +16,7 @@ class AttendanceRecord extends Model
         'class_id',
         'date',
         'status',
+        'note',
         'marked_by',
     ];
 

@@ -18,11 +18,13 @@ use App\Http\Resources\ClassResource;
 use App\Http\Resources\DocumentResource;
 use App\Http\Resources\PaymentResource;
 use App\Http\Resources\StudentResource;
+use App\Http\Resources\UserResource;
 use App\Models\Application;
 use App\Models\Document;
 use App\Models\Payment;
 use App\Models\SchoolClass;
 use App\Models\Student;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -43,6 +45,7 @@ class RegistrarController extends Controller
         $classes = SchoolClass::query()->withCount('students')->get(['id', 'capacity']);
 
         return response()->json(['data' => [
+            'user' => ['name' => auth()->user()->name],
             'applications' => [
                 'total' => Application::count(),
                 'submitted' => $count('submitted'),
@@ -226,7 +229,7 @@ class RegistrarController extends Controller
     public function showStudent(Student $student): StudentResource
     {
         Gate::authorize('view', $student);
-        return new StudentResource($student->load(['user', 'application.program', 'application.intake', 'schoolClass.program', 'schoolClass.intake', 'documents', 'payments']));
+        return new StudentResource($student->load(['user', 'application.program', 'application.intake', 'schoolClass.program', 'schoolClass.intake', 'schoolClass.teacher', 'documents', 'payments']));
     }
 
     public function updateStudentStatus(UpdateStudentStatusRequest $request, Student $student): StudentResource
@@ -241,11 +244,23 @@ class RegistrarController extends Controller
 
     public function classes(Request $request)
     {
-        $classes = SchoolClass::query()->with(['program', 'intake'])->withCount('students')
+        $classes = SchoolClass::query()->with(['program', 'intake', 'teacher'])->withCount('students')
             ->when($request->input('program_id'), fn (Builder $q, $v) => $q->where('program_id', $v))
             ->when($request->input('intake_id'), fn (Builder $q, $v) => $q->where('intake_id', $v))
             ->latest()->paginate(min($request->integer('per_page', 20), 100));
         return ClassResource::collection($classes);
+    }
+
+    public function teachers()
+    {
+        return UserResource::collection(
+            User::query()
+                ->where('role', 'teacher')
+                ->where('is_active', true)
+                ->with('programs')
+                ->orderBy('name')
+                ->get()
+        );
     }
 
     public function search(Request $request): JsonResponse
@@ -262,14 +277,11 @@ class RegistrarController extends Controller
     {
         $current = $application->status;
         $allowed = match ($current) {
-            ApplicationStatus::Submitted, ApplicationStatus::Paid => [ApplicationStatus::UnderReview],
+            ApplicationStatus::Submitted, ApplicationStatus::Paid => [ApplicationStatus::UnderReview, ApplicationStatus::Approved, ApplicationStatus::Rejected],
             ApplicationStatus::UnderReview => [ApplicationStatus::Approved, ApplicationStatus::Rejected],
             default => [],
         };
         abort_unless(in_array($status, $allowed, true), 409, 'Invalid application status transition.');
-        if ($status === ApplicationStatus::Approved) {
-            abort_unless($application->payments()->where('status', PaymentStatus::Successful->value)->exists(), 409, 'A successful payment is required before approval.');
-        }
     }
 
     private function snapshot($model): array

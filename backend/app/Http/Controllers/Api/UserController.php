@@ -12,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 class UserController extends Controller
 {
@@ -19,7 +20,7 @@ class UserController extends Controller
     {
         Gate::authorize('viewAny', User::class);
 
-        $users = User::query()
+        $users = User::query()->with('programs')
             ->when($request->input('role'), fn ($query, $value) => $query->where('role', $value))
             ->when($request->has('is_active'), fn ($query) => $query->where('is_active', $request->boolean('is_active')))
             ->when($request->input('search'), fn ($query, $value) => $query->where(function ($query) use ($value) {
@@ -37,17 +38,28 @@ class UserController extends Controller
         Gate::authorize('create', User::class);
 
         $data = $request->validated();
+        $programIds = $data['program_ids'] ?? [];
+        unset($data['program_ids']);
         $data['password'] = Hash::make($data['password']);
+        $data['must_change_password'] = true;
         $data['is_active'] ??= true;
 
-        return (new UserResource(User::create($data)))->response()->setStatusCode(201);
+        $user = DB::transaction(function () use ($data, $programIds): User {
+            $user = User::create($data);
+            if ($user->isTeacher()) {
+                $this->syncTeacherPrograms($user, $programIds);
+            }
+            return $user->load('programs');
+        });
+
+        return (new UserResource($user))->response()->setStatusCode(201);
     }
 
     public function show(User $user): UserResource
     {
         Gate::authorize('view', $user);
 
-        return new UserResource($user);
+        return new UserResource($user->load('programs'));
     }
 
     public function update(UpdateUserRequest $request, User $user): UserResource
@@ -55,16 +67,24 @@ class UserController extends Controller
         Gate::authorize('update', $user);
 
         $data = $request->validated();
+        $programIds = $data['program_ids'] ?? null;
+        unset($data['program_ids']);
 
         if (array_key_exists('password', $data) && $data['password'] !== null) {
             $data['password'] = Hash::make($data['password']);
+            $data['must_change_password'] = true;
         } else {
             unset($data['password']);
         }
 
-        $user->update($data);
+        DB::transaction(function () use ($user, $data, $programIds): void {
+            $user->update($data);
+            if ($programIds !== null || $user->isTeacher() === false) {
+                $this->syncTeacherPrograms($user, $user->isTeacher() ? ($programIds ?? []) : []);
+            }
+        });
 
-        return new UserResource($user->refresh());
+        return new UserResource($user->refresh()->load('programs'));
     }
 
     public function destroy(User $user): JsonResponse
@@ -78,5 +98,28 @@ class UserController extends Controller
         }
 
         return response()->json(null, 204);
+    }
+
+    /**
+     * Keep teacher-program writes compatible with older installations whose
+     * pivot table only has the original created_at column.
+     */
+    private function syncTeacherPrograms(User $user, array $programIds): void
+    {
+        DB::table('program_teacher')->where('user_id', $user->id)->delete();
+
+        if ($programIds === []) {
+            return;
+        }
+
+        $now = now();
+        DB::table('program_teacher')->insert(array_map(
+            fn (int $programId): array => [
+                'program_id' => $programId,
+                'user_id' => $user->id,
+                'created_at' => $now,
+            ],
+            array_values(array_unique(array_map('intval', $programIds))),
+        ));
     }
 }

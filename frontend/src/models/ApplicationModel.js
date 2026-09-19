@@ -52,6 +52,12 @@ export default class ApplicationModel {
       intake: app.intake?.name || 'Unassigned',
       email: app.applicant_email,
       phone: app.applicant_phone || 'Not provided',
+      fullName: app.applicant_name || 'Unnamed applicant',
+      dateOfBirth: 'Not provided',
+      address: [app.city, app.area, app.landmark].filter(Boolean).join(', ') || 'Not provided',
+      educationLevel: app.education || 'Not provided',
+      experience: app.experience || 'Not provided',
+      experienceDetails: 'No additional details provided.',
       applicationDate: app.created_at ? new Date(app.created_at).toLocaleDateString() : '—',
       payment: app.payments?.[0]?.status || 'Pending',
       paymentStatus: app.payments?.[0]?.status || 'Pending',
@@ -62,6 +68,7 @@ export default class ApplicationModel {
       activities: [],
       backendStatus: app.status,
       historyNote: '',
+      rejectionReason: app.rejection_reason || '',
     });
   }
 }

@@ -25,6 +25,8 @@ class StoreProgramRequest extends FormRequest
             'tuition_fee' => ['required', 'numeric', 'min:0'],
             'fee_currency' => ['required', 'string', 'max:10'],
             'duration_weeks' => ['required', 'integer', 'min:1'],
+            'intake_months' => ['required', 'array', 'min:1'],
+            'intake_months.*' => ['required', 'date_format:Y-m'],
         ];
     }
 }

@@ -28,6 +28,10 @@ RUN sed -ri -e 's!/var/www/html!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.
 # 5. Set working directory
 WORKDIR /var/www/html
 
+# The application accepts documents up to 10 MB; keep PHP's request limits in
+# sync with the API validation so valid uploads are not discarded by PHP first.
+COPY php-upload.ini /usr/local/etc/php/conf.d/uploads.ini
+
 # 6. Copy application source code
 COPY . .
 
