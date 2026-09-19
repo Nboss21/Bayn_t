@@ -77,8 +77,8 @@ class ApplicationController extends Controller
         Gate::authorize('submit', $application);
         $submitted = DB::transaction(function () use ($request, $application): Application {
             $locked = Application::query()->lockForUpdate()->findOrFail($application->id);
-            if ($locked->status !== ApplicationStatus::Draft) {
-                abort(409, 'Only draft applications can be submitted.');
+            if (! in_array($locked->status, [ApplicationStatus::Draft, ApplicationStatus::Rejected], true)) {
+                abort(409, 'Only draft or rejected applications can be submitted.');
             }
 
             $errors = [];
@@ -99,7 +99,11 @@ class ApplicationController extends Controller
             }
 
             $before = $this->snapshot($locked);
-            $locked->forceFill(['status' => ApplicationStatus::Submitted, 'submitted_at' => now()])->save();
+            $locked->forceFill([
+                'status' => ApplicationStatus::Submitted,
+                'rejection_reason' => null,
+                'submitted_at' => now(),
+            ])->save();
             $this->audit($request, 'application_submitted', $locked, $before, $this->snapshot($locked));
             event(new ApplicationSubmitted($locked));
             return $locked;

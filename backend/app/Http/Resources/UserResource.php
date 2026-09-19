@@ -14,11 +14,13 @@ class UserResource extends JsonResource
             'name' => $this->name,
             'email' => $this->email,
             'role' => $this->role?->value,
+            'role_label' => $this->role?->label(),
             'phone' => $this->phone,
             'is_active' => $this->is_active,
             'email_verified_at' => $this->email_verified_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
+            'programs' => ProgramResource::collection($this->whenLoaded('programs')),
         ];
     }
 }

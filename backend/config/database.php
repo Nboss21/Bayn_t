@@ -97,6 +97,15 @@ return [
             'prefix_indexes' => true,
             'search_path' => 'public',
             'sslmode' => env('DB_SSLMODE', 'prefer'),
+            // Neon and other pooled PostgreSQL providers can reuse a server-side
+            // prepared statement after a schema change. Emulated prepares keep
+            // requests from failing with "cached plan must not change result type".
+            'options' => [
+                \PDO::ATTR_EMULATE_PREPARES => filter_var(
+                    env('DB_EMULATE_PREPARES', true),
+                    FILTER_VALIDATE_BOOLEAN
+                ),
+            ],
         ],
 
         'sqlsrv' => [

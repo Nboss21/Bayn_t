@@ -6,7 +6,6 @@ import { teacherNavItems } from '../data/sidebarConfig';
 import WorkspaceTopbar from '../components/WorkspaceTopbar';
 import { getTeacherBreadcrumbs } from '../utils/breadcrumbs';
 import NotificationsDropdown from '../components/NotificationsDropdown';
-import { initialTeacherNotifications } from '../data/teacherNotificationsData';
 import { notificationService } from '../services/applicationService';
 import { useAuth } from '../context/AuthContext';
 
@@ -14,7 +13,7 @@ const TeacherLayout = () => {
   const { pathname } = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
   const [showNotifications, setShowNotifications] = useState(false);
-  const [notifications, setNotifications] = useState(initialTeacherNotifications);
+  const [notifications, setNotifications] = useState([]);
   const { user } = useAuth();
 
   useEffect(() => {
@@ -44,13 +43,14 @@ const TeacherLayout = () => {
   const teacherFooter = (collapsed) => (
     <>
       <button
+        onClick={() => setShowNotifications(true)}
         className={`flex items-center w-full ${
           collapsed ? 'justify-center px-1 py-2.5' : 'gap-3 px-4 py-2.5 text-left'
         } text-[#4b5563] hover:bg-[#e8ece0] rounded-lg text-sm font-medium transition-colors`}
       >
         <Bell className="w-[18px] h-[18px] shrink-0" />
         {!collapsed && <span className="flex-1">Notifications</span>}
-        {!collapsed && <span className="w-2 h-2 rounded-full bg-[#D4A373]" />}
+        {!collapsed && unreadCount > 0 && <span className="w-2 h-2 rounded-full bg-[#D4A373]" />}
       </button>
       <button
         className={`flex items-center w-full ${

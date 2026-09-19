@@ -17,6 +17,7 @@ class BulkAttendanceRequest extends FormRequest
             'records' => ['required', 'array', 'min:1'],
             'records.*.student_id' => ['required', 'integer', 'distinct', 'exists:students,id'],
             'records.*.status' => ['required', Rule::enum(AttendanceStatus::class)],
+            'records.*.note' => ['nullable', 'string', 'max:5000'],
         ];
     }
 }

@@ -1,13 +1,13 @@
 import { useEffect, useState } from 'react';
 import TeacherAttendanceModel from '../models/TeacherAttendanceModel';
 
-export default function useTeacherAttendance() {
+export default function useTeacherAttendance(classId, date) {
   const [attendanceModel, setAttendanceModel] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     let active = true;
-    TeacherAttendanceModel.fetch()
+    TeacherAttendanceModel.fetch(classId, date)
       .then((model) => {
         if (active) setAttendanceModel(model);
       })
@@ -17,7 +17,7 @@ export default function useTeacherAttendance() {
     return () => {
       active = false;
     };
-  }, []);
+  }, [classId, date]);
 
   return { attendanceModel, loading };
 }

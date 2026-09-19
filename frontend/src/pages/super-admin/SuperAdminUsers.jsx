@@ -6,6 +6,8 @@ import UsersFilterBar from '../../components/super-admin/users/UsersFilterBar';
 import UsersTable from '../../components/super-admin/users/UsersTable';
 import UsersPagination from '../../components/super-admin/users/UsersPagination';
 import useSuperAdminUsers from '../../hooks/useSuperAdminUsers';
+import { adminService } from '../../services/applicationService';
+import { useToast } from '../../context/ToastContext';
 
 function SkeletonTable() {
   return (
@@ -45,7 +47,8 @@ function SkeletonTable() {
 }
 
 export default function SuperAdminUsers() {
-  const { usersModel, loading } = useSuperAdminUsers();
+  const { usersModel, loading, reload } = useSuperAdminUsers();
+  const toast = useToast();
   const navigate = useNavigate();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState('All');
@@ -96,6 +99,17 @@ export default function SuperAdminUsers() {
 
   const handleView = (user) => navigate(`/super-admin/users/${encodeURIComponent(user.resourceId || user.id)}`);
 
+  const handleDelete = async (user) => {
+    if (!window.confirm(`Delete ${user.name}'s account? This cannot be undone.`)) return;
+    try {
+      await adminService.deleteUser(user.resourceId || user.id);
+      toast.success(`${user.name} was deleted.`);
+      reload();
+    } catch (error) {
+      toast.error(error?.message || 'Unable to delete this user.');
+    }
+  };
+
   return (
     <div className="w-full">
       <UsersPageHeader
@@ -135,6 +149,7 @@ export default function SuperAdminUsers() {
           rows={result.rows}
           onView={handleView}
           onReview={reviewPending}
+          onDelete={handleDelete}
         />
 
         <UsersPagination

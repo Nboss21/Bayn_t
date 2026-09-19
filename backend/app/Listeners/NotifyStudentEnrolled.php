@@ -14,7 +14,13 @@ class NotifyStudentEnrolled
     {
         $student = $event->student->loadMissing(['user', 'application', 'schoolClass.teacher']);
         $type = 'student_enrolled';
-        $message = "Student enrollment {$student->id} is now active.";
+        $class = $student->schoolClass;
+        $schedule = $class?->schedule ?? [];
+        $days = is_array($schedule['days'] ?? null) ? implode(', ', $schedule['days']) : ($schedule['days'] ?? '');
+        $time = $schedule['time'] ?? $schedule['time_range'] ?? '';
+        $scheduleText = collect([$days, $time])->filter()->implode(' · ');
+        $message = 'You have been assigned to '.($class?->name ?? 'your class').'.';
+        if ($scheduleText !== '') $message .= ' Schedule: '.$scheduleText.'.';
         $recipients = collect([$student->user, $student->schoolClass?->teacher]);
 
         if (! $student->user && $student->application?->applicant_email) {

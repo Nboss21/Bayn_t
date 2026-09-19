@@ -7,6 +7,7 @@ use App\Http\Requests\StoreClassRequest;
 use App\Http\Requests\UpdateClassRequest;
 use App\Http\Resources\ClassResource;
 use App\Models\SchoolClass;
+use App\Models\User;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -35,7 +36,9 @@ class ClassController extends Controller
     {
         Gate::authorize('create', SchoolClass::class);
 
-        $class = SchoolClass::create($request->validated())->load(['program', 'intake', 'teacher']);
+        $data = $request->validated();
+        $this->ensureTeacherCanTeachProgram($data['teacher_id'] ?? null, $data['program_id']);
+        $class = SchoolClass::create($data)->load(['program', 'intake', 'teacher']);
 
         return (new ClassResource($class))->response()->setStatusCode(201);
     }
@@ -51,7 +54,9 @@ class ClassController extends Controller
     {
         Gate::authorize('update', $class);
 
-        $class->update($request->validated());
+        $data = $request->validated();
+        $this->ensureTeacherCanTeachProgram($data['teacher_id'] ?? null, $data['program_id'] ?? $class->program_id);
+        $class->update($data);
 
         return new ClassResource($class->refresh()->load(['program', 'intake', 'teacher']));
     }
@@ -67,5 +72,16 @@ class ClassController extends Controller
         }
 
         return response()->json(null, 204);
+    }
+
+    private function ensureTeacherCanTeachProgram(?int $teacherId, int $programId): void
+    {
+        if ($teacherId === null) return;
+
+        abort_unless(
+            User::query()->whereKey($teacherId)->where('role', 'teacher')->whereHas('programs', fn ($query) => $query->whereKey($programId))->exists(),
+            422,
+            'The selected teacher is not assigned to this program.'
+        );
     }
 }

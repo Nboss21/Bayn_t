@@ -23,7 +23,7 @@ export default function NeedsAttentionSection({ items = [] }) {
         {items.map(item => (
           <AttentionItem
             key={item.id}
-            icon={iconMap[item.iconType]}
+            icon={iconMap[item.iconType] || FileText}
             title={item.title}
             description={item.description}
             badge={item.badge}

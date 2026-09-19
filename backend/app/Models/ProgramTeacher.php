@@ -15,5 +15,5 @@ class ProgramTeacher extends Pivot
 
     public $incrementing = false;
 
-    public $timestamps = false;
+    public $timestamps = true;
 }

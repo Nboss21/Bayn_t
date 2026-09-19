@@ -6,9 +6,15 @@ import TeachingContextCard from '../../components/teacher/curriculum/TeachingCon
 import ProgressCard from '../../components/teacher/curriculum/ProgressCard';
 import ModuleSequence from '../../components/teacher/curriculum/ModuleSequence';
 import useTeacherCurriculum from '../../hooks/useTeacherCurriculum';
+import TeacherClassSelector from '../../components/teacher/TeacherClassSelector';
 
 const TeacherCurriculum = () => {
-  const { curriculumModel, loading } = useTeacherCurriculum();
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const { curriculumModel, loading } = useTeacherCurriculum(selectedClassId);
+
+  React.useEffect(() => {
+    if (!selectedClassId && curriculumModel?.availableClasses?.[0]) setSelectedClassId(curriculumModel.availableClasses[0].id);
+  }, [curriculumModel, selectedClassId]);
 
   const [activeProgramId, setActiveProgramId] = useState(null);
   const [activeType, setActiveType] = useState('All');
@@ -67,6 +73,7 @@ const TeacherCurriculum = () => {
 
   return (
     <div className="w-full">
+      <TeacherClassSelector classes={curriculumModel.availableClasses} value={selectedClassId} onChange={setSelectedClassId} />
       <CurriculumHeader header={curriculumModel.header} />
 
       <CurriculumBanner banner={curriculumModel.banner} />

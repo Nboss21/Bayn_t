@@ -72,6 +72,7 @@ export default class SuperAdminProgramsModel {
       duration: program.duration_weeks ? `${program.duration_weeks} weeks` : '—',
       status: program.status ? `${program.status[0].toUpperCase()}${program.status.slice(1)}` : 'Draft',
       currentIntake: program.intakes?.data?.[0]?.name || program.intakes?.[0]?.name || '—',
+      intakeMonths: (program.intakes?.data || program.intakes || []).map((intake) => intake.start_date?.slice(0, 7)).filter(Boolean),
       lastUpdated: program.updated_at ? new Date(program.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
     }));
     const details = Object.fromEntries(rows.map((program) => [program.id, {
@@ -81,6 +82,7 @@ export default class SuperAdminProgramsModel {
       durationUnit: 'Weeks',
       status: program.status ? `${program.status[0].toUpperCase()}${program.status.slice(1)}` : 'Draft',
       currentIntake: program.intakes?.data?.[0]?.name || program.intakes?.[0]?.name || '—',
+      intakeMonths: (program.intakes?.data || program.intakes || []).map((intake) => intake.start_date?.slice(0, 7)).filter(Boolean),
       lastUpdated: program.updated_at ? new Date(program.updated_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }) : '—',
     }]));
     const levels = unique(programs, 'level');

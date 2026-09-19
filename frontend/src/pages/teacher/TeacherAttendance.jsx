@@ -7,9 +7,12 @@ import TeacherAttendanceTable from '../../components/teacher/TeacherAttendanceTa
 import TeacherAttendanceFooter from '../../components/teacher/TeacherAttendanceFooter';
 import useTeacherAttendance from '../../hooks/useTeacherAttendance';
 import { teacherService } from '../../services/applicationService';
+import TeacherClassSelector from '../../components/teacher/TeacherClassSelector';
 
-const getSelectedDate = () => {
-  return new Date().toLocaleDateString('en-US', {
+const getSelectedDate = (date) => {
+  if (!date) return '';
+  const [year, month, day] = date.split('-').map(Number);
+  return new Date(year, month - 1, day).toLocaleDateString('en-US', {
     weekday: 'long',
     year: 'numeric',
     month: 'long',
@@ -17,8 +20,19 @@ const getSelectedDate = () => {
   });
 };
 
+const getTodayIso = () => {
+  const today = new Date();
+  return [today.getFullYear(), String(today.getMonth() + 1).padStart(2, '0'), String(today.getDate()).padStart(2, '0')].join('-');
+};
+
 const TeacherAttendance = () => {
-  const { attendanceModel, loading } = useTeacherAttendance();
+  const [selectedClassId, setSelectedClassId] = useState(null);
+  const [selectedDate, setSelectedDate] = useState(getTodayIso);
+  const { attendanceModel, loading } = useTeacherAttendance(selectedClassId, selectedDate);
+
+  React.useEffect(() => {
+    if (!selectedClassId && attendanceModel?.availableClasses?.[0]) setSelectedClassId(attendanceModel.availableClasses[0].id);
+  }, [attendanceModel, selectedClassId]);
 
   const [students, setStudents] = useState([]);
   const [originalStudents, setOriginalStudents] = useState([]);
@@ -96,6 +110,11 @@ const TeacherAttendance = () => {
     setActiveFilter('All');
   }, [originalStudents]);
 
+  const handleDateChange = useCallback((date) => {
+    if (hasChanges && !window.confirm('You have unsaved attendance changes. Change date and discard them?')) return;
+    setSelectedDate(date);
+  }, [hasChanges]);
+
   const handleSave = useCallback(async () => {
     if (!attendanceModel?.header?.classId) return;
     await teacherService.bulkAttendance(attendanceModel.header.classId, {
@@ -103,6 +122,7 @@ const TeacherAttendance = () => {
       records: students.filter((student) => student.status !== 'Unmarked').map((student) => ({
         student_id: student.id,
         status: student.status.toLowerCase(),
+        note: student.note || null,
       })),
     });
     setOriginalStudents(JSON.parse(JSON.stringify(students)));
@@ -125,10 +145,12 @@ const TeacherAttendance = () => {
 
   return (
     <div className="relative min-h-screen pb-24">
+      <TeacherClassSelector classes={attendanceModel.availableClasses} value={selectedClassId} onChange={setSelectedClassId} />
       <TeacherAttendanceHeader
         header={attendanceModel.header}
-        selectedDate={getSelectedDate()}
+        selectedDate={getSelectedDate(attendanceModel.header.date)}
         hasChanges={hasChanges}
+        onDateChange={handleDateChange}
       />
 
       <TeacherAttendanceClassInfo

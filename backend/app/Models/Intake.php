@@ -38,4 +38,9 @@ class Intake extends Model
     {
         return $this->hasMany(SchoolClass::class);
     }
+
+    public function applications(): HasMany
+    {
+        return $this->hasMany(Application::class);
+    }
 }

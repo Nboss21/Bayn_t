@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import ApplicationStepper from '../components/application/ApplicationStepper';
 import { useApplication } from '../context/ApplicationContext';
-import { paymentService } from '../services/applicationService';
 
 const paymentMethods = [
   { id: 'primary', label: 'Telebirr' },
@@ -11,7 +10,7 @@ const paymentMethods = [
 
 const PaymentStep = () => {
   const navigate = useNavigate();
-  const { formData, updateField, getSelectedProgram, completeStep, saveStep, uploadDocuments, submitApplication } = useApplication();
+  const { formData, updateField, getSelectedProgram, completeStep, saveStep, submitApplication } = useApplication();
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState('');
   const program = getSelectedProgram();
@@ -25,10 +24,10 @@ const PaymentStep = () => {
         {/* Left: Payment form */}
         <div className="flex-1">
           <h2 className="text-[36px] md:text-[42px] font-serif leading-[1.1] text-[#111111] mb-3">
-            Complete your payment.
+            Choose a payment method.
           </h2>
           <p className="text-[13px] text-gray-500 mb-10 leading-relaxed">
-            Your application is ready. Review the payment details below and continue securely.
+            Choose your preferred payment method. Payment will be arranged after your application is reviewed.
           </p>
 
           <h3 className="text-[20px] font-serif text-[#111111] mb-5">
@@ -68,7 +67,7 @@ const PaymentStep = () => {
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
             </svg>
             <p className="text-[11px] text-gray-500">
-              Your payment will be securely processed through the academy's selected payment gateway.
+              Payment is not required at this stage. You can submit your application now.
             </p>
           </div>
 
@@ -81,12 +80,9 @@ const PaymentStep = () => {
                 setBusy(true); setError('');
                 try {
                   const draft = await saveStep('payment');
-                  await uploadDocuments();
-                  const submitted = await submitApplication();
-                  const payment = await paymentService.initiate({ application_id: submitted.id || draft.id });
+                  await submitApplication(draft);
                   completeStep('payment');
-                  if (payment?.checkout_url) window.location.assign(payment.checkout_url);
-                  else navigate('/application/confirmation');
+                  navigate('/application/confirmation');
                 } catch (err) { setError(err.message || 'Your application could not be submitted. Please try again.'); }
                 finally { setBusy(false); }
               }}

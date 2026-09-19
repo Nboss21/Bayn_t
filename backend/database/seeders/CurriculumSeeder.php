@@ -11,8 +11,8 @@ class CurriculumSeeder extends Seeder
 {
     public function run(): void
     {
-        $program = Program::where('slug', 'professional-makeup-artistry')->first();
-        if (! $program) return;
+        $programs = Program::where('status', 'open')->get();
+        if ($programs->isEmpty()) return;
 
         $modules = [
             ['Makeup Foundations', 'Build core knowledge of tools, products, hygiene, and professional setup.', ['Tools, Products & Hygiene', 'Workspace & Professional Setup', 'Sanitization & Safety Protocols', 'Color Theory Fundamentals', 'Makeup Application Prep']],
@@ -25,17 +25,19 @@ class CurriculumSeeder extends Seeder
             ['Professional Practice', 'Prepare for professional client work, portfolio development, and final practical assessment.', ['Client Consultation & Briefing', 'Portfolio Development', 'Mock Client Sessions', 'Final Practical Assessment Prep', 'Professional Standards & Etiquette', 'Graduation Showcase Preparation']],
         ];
 
-        foreach ($modules as $index => [$title, $description, $lessons]) {
-            $module = CurriculumModule::updateOrCreate(
-                ['program_id' => $program->id, 'number' => $index + 1],
-                ['type' => 'module', 'title' => $title, 'description' => $description, 'status' => 'upcoming', 'sort_order' => $index + 1],
-            );
-
-            foreach ($lessons as $lessonIndex => $lessonTitle) {
-                CurriculumLesson::updateOrCreate(
-                    ['curriculum_module_id' => $module->id, 'sort_order' => $lessonIndex + 1],
-                    ['title' => $lessonTitle],
+        foreach ($programs as $program) {
+            foreach ($modules as $index => [$title, $description, $lessons]) {
+                $module = CurriculumModule::updateOrCreate(
+                    ['program_id' => $program->id, 'number' => $index + 1],
+                    ['type' => 'module', 'title' => $title, 'description' => $description, 'status' => 'upcoming', 'sort_order' => $index + 1],
                 );
+
+                foreach ($lessons as $lessonIndex => $lessonTitle) {
+                    CurriculumLesson::updateOrCreate(
+                        ['curriculum_module_id' => $module->id, 'sort_order' => $lessonIndex + 1],
+                        ['title' => $lessonTitle],
+                    );
+                }
             }
         }
     }

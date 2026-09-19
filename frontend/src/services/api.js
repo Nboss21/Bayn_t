@@ -43,7 +43,15 @@ client.interceptors.response.use(
   (response) => response,
   async (error) => {
     const response = error.response;
-    if (!response) throw new ApiError('Unable to connect to the academy server. Please try again.', {});
+    if (!response) {
+      const timedOut = error.code === 'ECONNABORTED' || error.code === 'ETIMEDOUT';
+      throw new ApiError(
+        timedOut
+          ? 'The upload is taking longer than expected. Please check your connection and try again.'
+          : 'Unable to connect to the academy server. Please try again.',
+        { code: error.code }
+      );
+    }
 
     // Auto-refresh on 401 (token expired) — but not for auth endpoints themselves
     if (response.status === 401) {

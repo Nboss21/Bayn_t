@@ -20,6 +20,8 @@ services:
         value: https://bayn-t-web.onrender.com
       - key: DB_CONNECTION
         value: pgsql
+      - key: DB_EMULATE_PREPARES
+        value: "true"
       - key: DB_URL
         sync: false
       - key: SESSION_DRIVER

@@ -56,7 +56,7 @@ const Application = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M14 5l7 7m0 0l-7 7m7-7H3" />
               </svg>
             </button>
-            <button className="bg-transparent border border-[#d2bba0] hover:bg-gray-50 text-[#8a6543] text-[13px] font-medium py-[14px] px-6 transition flex items-center justify-center w-full max-w-[280px] rounded-full">
+            <button onClick={() => navigate('/application/program')} className="bg-transparent border border-[#d2bba0] hover:bg-gray-50 text-[#8a6543] text-[13px] font-medium py-[14px] px-6 transition flex items-center justify-center w-full max-w-[280px] rounded-full">
               Continue an existing application
             </button>
           </div>

@@ -27,6 +27,7 @@ import StudentsPage from './pages/StudentsPage';
 import StudentDetailPage from './pages/StudentDetailPage';
 import ClassesPage from './pages/ClassesPage';
 import EnrollmentHistoryPage from './pages/EnrollmentHistoryPage';
+import CompletionReviewsPage from './pages/CompletionReviewsPage';
 import ProfilePage from './pages/ProfilePage';
 
 import TeacherLayout from './layouts/TeacherLayout';
@@ -70,6 +71,9 @@ import SuperAdminSettings from './pages/super-admin/SuperAdminSettings';
 import SuperAdminNotifications from './pages/super-admin/SuperAdminNotifications';
 import SuperAdminGenerateReport from './pages/super-admin/SuperAdminGenerateReport';
 import { useAuth } from './context/AuthContext';
+import Dashboard from './pages/Dashboard';
+import StudentApplicationEntry from './components/StudentApplicationEntry';
+import { roleHome } from './utils/roleHome';
 function ProtectedRoute({ step, children }) {
   const { canAccess } = useApplication();
   const targetStep = canAccess(step);
@@ -91,13 +95,6 @@ function RequireAuth({ children }) {
   const { loading, isAuthenticated } = useAuth();
   if (loading) return <div className="min-h-screen flex items-center justify-center">Loading…</div>;
   return isAuthenticated ? children : <Navigate to="/login" replace state={{ from: window.location.pathname }} />;
-}
-
-function roleHome(role) {
-  if (role === 'registrar') return '/registrar/overview';
-  if (role === 'teacher') return '/teacher/overview';
-  if (role === 'super_admin') return '/super-admin/overview';
-  return '/dashboard';
 }
 
 function RequireRole({ roles, children }) {
@@ -129,11 +126,13 @@ function App() {
           <Route path="/contact" element={<Contact />} />
         </Route>
 
-        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
-          <Route index element={<Application />} />
+        <Route path="/application" element={<RequireAuth><RequireRole roles={['student']}><ApplicationLayout /></RequireRole></RequireAuth>}>
+          <Route index element={<StudentApplicationEntry />} />
         </Route>
 
-        <Route path="/application" element={<RequireAuth><ApplicationLayout /></RequireAuth>}>
+        <Route path="/dashboard" element={<RequireAuth><Dashboard /></RequireAuth>} />
+
+        <Route path="/application" element={<RequireAuth><RequireRole roles={['student']}><ApplicationLayout /></RequireRole></RequireAuth>}>
           <Route element={<ApplicationStepsLayout />}>
             <Route path="program" element={<ProgramSelection />} />
             <Route path="selected" element={<ProtectedRoute step="selected"><SelectedProgram /></ProtectedRoute>} />
@@ -155,6 +154,7 @@ function App() {
           <Route path="students/:studentId" element={<StudentDetailPage />} />
           <Route path="classes" element={<ClassesPage />} />
           <Route path="history" element={<EnrollmentHistoryPage />} />
+          <Route path="completion-reviews" element={<CompletionReviewsPage />} />
           <Route path="profile" element={<ProfilePage />} />
         </Route>
 

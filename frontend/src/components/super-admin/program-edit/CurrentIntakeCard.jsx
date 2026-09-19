@@ -1,8 +1,17 @@
 import React from 'react';
 import { Clock } from 'lucide-react';
 
+const futureMonths = (count = 36) => Array.from({ length: count }, (_, index) => {
+  const date = new Date();
+  date.setDate(1);
+  date.setMonth(date.getMonth() + index);
+  const month = String(date.getMonth() + 1).padStart(2, '0');
+  return { value: `${date.getFullYear()}-${month}`, label: date.toLocaleDateString('en-US', { month: 'long', year: 'numeric' }) };
+});
+
 export default function CurrentIntakeCard({ program = null, options = {}, value, onChange }) {
-  const intakes = options.intakes || ['September 2026', 'January 2027', 'May 2027'];
+  const months = futureMonths();
+  const selectedMonths = value || [];
 
   return (
     <div className="bg-white border border-[#e5e7eb] rounded-xl overflow-hidden shadow-[0_1px_2px_rgba(0,0,0,0.05)] p-6">
@@ -10,25 +19,24 @@ export default function CurrentIntakeCard({ program = null, options = {}, value,
 
       <div>
         <label className="block text-sm font-medium text-[#111827] mb-1.5">
-          Intake
+          Available intake months <span className="text-[#b91c1c]">*</span>
         </label>
-        <div className="relative mb-5">
-          <select
-            value={value}
-            onChange={(event) => onChange(event.target.value)}
-            className="w-full pl-4 pr-10 py-2.5 border border-[#d1d5db] rounded-lg text-[#111827] appearance-none focus:outline-none focus:ring-1 focus:ring-[#c1d0b5] focus:border-[#c1d0b5] sm:text-sm bg-white cursor-pointer"
-          >
-            {!program && <option value="" disabled>Select intake</option>}
-            {intakes.map((intake) => (
-              <option key={intake}>{intake}</option>
-            ))}
-          </select>
-          <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-3 text-[#6b7280]">
-            <svg className="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7" />
-            </svg>
-          </div>
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 max-h-72 overflow-y-auto border border-[#e5e7eb] rounded-lg p-3 mb-5">
+          {months.map((month) => (
+            <label key={month.value} className="flex items-center gap-2 rounded-md px-2 py-2 text-sm text-[#374151] hover:bg-[#f9fafb] cursor-pointer">
+              <input
+                type="checkbox"
+                checked={selectedMonths.includes(month.value)}
+                onChange={() => onChange(selectedMonths.includes(month.value)
+                  ? selectedMonths.filter((selected) => selected !== month.value)
+                  : [...selectedMonths, month.value])}
+                className="h-4 w-4 accent-[#657b63]"
+              />
+              {month.label}
+            </label>
+          ))}
         </div>
+        {!selectedMonths.length && <p className="text-xs text-[#b91c1c] mb-4">Select at least one intake month.</p>}
 
         <div className="flex items-start gap-2.5 text-[#6b7280] text-[13px] mt-1">
           <Clock className="w-4 h-4 shrink-0 mt-0.5" />

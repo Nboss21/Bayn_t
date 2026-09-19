@@ -18,6 +18,11 @@ class StoreApplicationRequest extends FormRequest
             'intake_id' => ['nullable', 'integer', 'exists:intakes,id'],
             'applicant_name' => ['nullable', 'string', 'max:255'],
             'applicant_phone' => ['nullable', 'string', 'max:50'],
+            'city' => ['nullable', 'string', 'max:255'],
+            'area' => ['nullable', 'string', 'max:255'],
+            'landmark' => ['nullable', 'string', 'max:255'],
+            'education' => ['nullable', 'string', 'max:255'],
+            'experience' => ['nullable', 'string', 'max:255'],
         ];
     }
 

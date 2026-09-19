@@ -12,6 +12,6 @@ class UpdateAttendanceRequest extends FormRequest
 
     public function rules(): array
     {
-        return ['status' => ['required', Rule::enum(AttendanceStatus::class)]];
+        return ['status' => ['required', Rule::enum(AttendanceStatus::class)], 'note' => ['nullable', 'string', 'max:5000']];
     }
 }

@@ -9,6 +9,7 @@ import EnrollmentPanel from '../components/students/EnrollmentPanel';
 import ClassPanel from '../components/students/ClassPanel';
 import ApplicationPanel from '../components/students/ApplicationPanel';
 import RecentActivityPanel from '../components/students/RecentActivityPanel';
+import { scheduleLabel } from '../utils/schedule';
 
 export default function StudentDetailPage() {
   const { studentId } = useParams();
@@ -34,7 +35,7 @@ export default function StudentDetailPage() {
         education: { educationalBackground: '—', makeupExperience: '—', previousTraining: '—', relevantExperience: '—' },
         documents: (record.documents || []).map((document) => ({ name: document.type || 'Document', status: 'Uploaded' })),
         enrollment: { studentId: `STU-${record.id}`, program: application.program?.name || 'Unassigned', intake: application.intake?.name || '—', class: classRecord.name || 'Unassigned', enrollmentDate: record.enrolled_at ? new Date(record.enrolled_at).toLocaleDateString() : '—', status: record.status || 'Unknown' },
-        classInfo: { name: classRecord.name || 'Unassigned', instructor: classRecord.teacher?.name || '—', schedule: classRecord.schedule?.label || '—' },
+        classInfo: { name: classRecord.name || 'Unassigned', instructor: classRecord.teacher?.name || '—', schedule: scheduleLabel(classRecord.schedule) || '—' },
         application: { id: application.reference_number || `APP-${application.id || '—'}`, submitted: application.submitted_at ? new Date(application.submitted_at).toLocaleDateString() : '—', approval: application.status || '—', payment: record.payments?.[0]?.status || '—' },
         recentActivity: [],
       });

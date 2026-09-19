@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import TeacherRosterModel from '../models/TeacherRosterModel';
 
-const useTeacherRoster = (active = true) => {
+const useTeacherRoster = (active = true, classId = null) => {
   const [rosterModel, setRosterModel] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -10,7 +10,7 @@ const useTeacherRoster = (active = true) => {
     let cancelled = false;
     setLoading(true);
 
-    TeacherRosterModel.fetch().then((data) => {
+    TeacherRosterModel.fetch(classId).then((data) => {
       if (!cancelled) {
         setRosterModel(data);
         setLoading(false);
@@ -18,7 +18,7 @@ const useTeacherRoster = (active = true) => {
     });
 
     return () => { cancelled = true; };
-  }, [active]);
+  }, [active, classId]);
 
   return { rosterModel, loading };
 };

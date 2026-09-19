@@ -6,11 +6,14 @@ import { useApplication } from '../context/ApplicationContext';
 const ProgramSelection = () => {
   const { formData, programs, loading, errors, updateField, validateStep, completeStep, ensureDraft } = useApplication();
   const navigate = useNavigate();
+  const [busy, setBusy] = React.useState(false);
+  const [apiError, setApiError] = React.useState('');
   const handleContinue = async () => {
     if (validateStep('program')) {
-      await ensureDraft();
-      completeStep('program');
-      navigate('/application/selected');
+      setBusy(true); setApiError('');
+      try { await ensureDraft(); completeStep('program'); navigate('/application/selected'); }
+      catch (error) { setApiError(error.message || 'Your application could not be started. Please try again.'); }
+      finally { setBusy(false); }
     }
   };
 
@@ -64,13 +67,15 @@ const ProgramSelection = () => {
           )}
           <button 
             onClick={handleContinue}
+            disabled={busy}
             className="bg-[#dfbc55] hover:bg-[#d4b14d] text-[#111111] text-[12px] font-medium uppercase tracking-wider py-3 px-6 sm:px-8 rounded-full transition flex items-center justify-center shadow-sm w-full sm:w-auto"
           >
-            Continue
+            {busy ? 'Saving…' : 'Continue'}
             <svg className="w-3.5 h-3.5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M14 5l7 7m0 0l-7 7m7-7H3" />
             </svg>
           </button>
+          {apiError && <p role="alert" className="text-[12px] text-red-500">{apiError}</p>}
         </div>
       </div>
     </div>

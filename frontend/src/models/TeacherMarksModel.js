@@ -15,16 +15,25 @@ export default class TeacherMarksModel {
   }
 
   assessmentById(id) {
-    return this.assessments.find((a) => a.id === id) || this.assessments[0];
+    return this.assessments.find((a) => a.id === id) || this.assessments[0] || { id: 'all', name: 'Assessment' };
   }
 
-  static async fetch() {
-    const classesResponse = await teacherService.classes({ per_page: 1 });
-    const classItem = (classesResponse?.data || classesResponse || [])[0];
+  static async fetch(classId = null) {
+    const classesResponse = await teacherService.classes({ per_page: 100 });
+    const classRows = classesResponse?.data || classesResponse || [];
+    const classItem = classRows.find((item) => String(item.id) === String(classId)) || classRows[0];
     if (!classItem) return new TeacherMarksModel({ header: { title: 'Marks', subtitle: 'No assigned class.', assessments: [] }, classInfo: {}, gradingWeight: { categories: [] }, students: [] });
-    const response = await teacherService.classAssessments(classItem.id, { per_page: 100 });
+    const [response, gradingResponse] = await Promise.all([
+      teacherService.classAssessments(classItem.id, { per_page: 100 }),
+      teacherService.grading({ class_id: classItem.id }),
+    ]);
     const rows = response?.data || response || [];
-    const categories = ['practical', 'theory', 'professional'].map((id) => ({ id, label: id.charAt(0).toUpperCase() + id.slice(1), percent: 0, points: 0 }));
+    const grading = gradingResponse?.data || gradingResponse || [];
+    const existingCategories = [...new Set(rows.flatMap((row) => (row.assessments || []).map((assessment) => assessment.category)))];
+    const categories = (grading.length ? grading : existingCategories.map((category) => ({ category, weight_percentage: 0 }))).map((config) => {
+      const id = config.category;
+      return { id, label: id.charAt(0).toUpperCase() + id.slice(1), percent: Number(config.weight_percentage || 0), points: 100 };
+    });
     const students = rows.map((row) => ({
       id: row.student?.id,
       name: row.student?.name || 'Unnamed student',
@@ -35,13 +44,21 @@ export default class TeacherMarksModel {
       theory_id: row.assessments?.find((assessment) => assessment.category === 'theory')?.id,
       professional: row.categories?.professional ?? null,
       professional_id: row.assessments?.find((assessment) => assessment.category === 'professional')?.id,
-      participation: null,
-    }));
-    return new TeacherMarksModel({
+    })).map((student) => {
+      const values = { ...student };
+      categories.forEach((category) => {
+        values[category.id] ??= null;
+        values[`${category.id}_id`] ??= undefined;
+      });
+      return values;
+    });
+    const model = new TeacherMarksModel({
       header: { title: 'Marks', subtitle: `Record marks for ${classItem.name}.`, classId: classItem.id, assessments: [{ id: 'all', name: 'Assessment' }] },
       classInfo: { name: classItem.name, program: classItem.program?.name || 'Program', cohort: classItem.intake?.name || 'Current intake', schedule: scheduleLabel(classItem.schedule) },
       gradingWeight: { categories },
       students,
     });
+    model.availableClasses = classRows.map((item) => ({ id: item.id, name: item.name, program: item.program?.name || 'Program' }));
+    return model;
   }
 }

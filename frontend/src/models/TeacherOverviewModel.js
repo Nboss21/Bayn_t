@@ -1,4 +1,3 @@
-import { teacherOverview } from '../data/teacherOverviewData';
 import { teacherService } from '../services/applicationService';
 
 export default class TeacherOverviewModel {
@@ -72,7 +71,7 @@ export default class TeacherOverviewModel {
     // Filter out days with no data (null) → only show days with records
     const validChartData = chartData.filter((d) => d.value !== null);
     const primaryClass = classes[0];
-    const attendanceChartData = validChartData.length > 0 ? validChartData : teacherOverview.attendanceChart.data;
+    const attendanceChartData = validChartData;
 
     // ── Assessment Progress ───────────────────────────────────────────────────
     // Get unique student IDs across all classes
@@ -108,24 +107,19 @@ export default class TeacherOverviewModel {
         path: '/teacher/marks',
       });
     }
-    // Fall back to static items if API gave no useful data
-    const finalAttentionItems = attentionItems.length > 0 ? attentionItems : teacherOverview.attentionItems;
-
     // ── Stats ─────────────────────────────────────────────────────────────────
-    const staticData = teacherOverview;
-    const stats = staticData.stats.map((stat) => ({ ...stat }));
-    stats.find((s) => s.id === 'classes').value = String(dashboard.classes_count ?? classRows.length);
-    stats.find((s) => s.id === 'students').value = String(dashboard.student_count ?? totalStudentSlots);
-    const marksStat = stats.find((s) => s.id === 'marks');
-    if (marksStat) marksStat.value = String(pendingAssessments);
-    const attendanceStat = stats.find((s) => s.id === 'attendance');
-    if (attendanceStat) attendanceStat.value = String(todayAttendance.length === 0 && classes.length > 0 ? classes.length : 0);
+    const stats = [
+      { id: 'classes', title: 'My classes', value: String(dashboard.classes_count ?? classRows.length), subtitle: 'Assigned classes', iconType: 'folder' },
+      { id: 'students', title: 'My students', value: String(dashboard.student_count ?? totalStudentSlots), subtitle: 'Enrolled learners', iconType: 'user' },
+      { id: 'attendance', title: 'Attendance due', value: String(todayAttendance.length === 0 && classes.length > 0 ? classes.length : 0), subtitle: 'Classes needing attendance', iconType: 'clock' },
+      { id: 'marks', title: 'Pending marks', value: String(pendingAssessments), subtitle: 'Scores still to enter', iconType: 'checkSquare' },
+    ];
 
     return new TeacherOverviewModel({
-      user: { name: dashboard.user?.name || staticData.user.name, role: 'Teacher' },
+      user: { name: dashboard.user?.name || 'Teacher', role: 'Teacher' },
       stats,
       classes: classRows,
-      attentionItems: finalAttentionItems,
+      attentionItems,
       attendanceChart: {
         title: 'Attendance this week',
         className: primaryClass?.name || 'My Class',

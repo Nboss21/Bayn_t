@@ -39,7 +39,7 @@ class DocumentController extends Controller
     public function storeForApplication(StoreApplicationDocumentRequest $request, Application $application): JsonResponse
     {
         Gate::authorize('uploadDocument', $application);
-        abort_if($application->status?->value !== 'draft', 409, 'Documents can only be uploaded to draft applications.');
+        abort_unless(in_array($application->status?->value, ['draft', 'rejected'], true), 409, 'Documents can only be uploaded to draft or rejected applications.');
 
         $file = $request->file('file');
         $filePath = $file->storeAs(
@@ -110,10 +110,14 @@ class DocumentController extends Controller
 
         abort_unless(is_file($path), 404);
 
-        return Storage::disk('private_documents')->download(
-            $document->file_path,
-            basename($document->file_path)
-        );
+        if (str_ends_with(strtolower($document->file_path), '.pdf')) {
+            return response()->file($path, [
+                'Content-Type' => 'application/pdf',
+                'Content-Disposition' => 'inline; filename="'.basename($document->file_path).'"',
+            ]);
+        }
+
+        return Storage::disk('private_documents')->download($document->file_path, basename($document->file_path));
     }
 
     private function authorizeDocumentAccess(Document $document, string $ability): void

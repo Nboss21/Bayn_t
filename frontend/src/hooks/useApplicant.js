@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import ApplicationModel from '../models/ApplicationModel';
+import { registrarService } from '../services/applicationService';
 
 export default function useApplicant(id) {
   const [applicant, setApplicant] = useState(null);
@@ -19,8 +20,14 @@ export default function useApplicant(id) {
     };
   }, [id]);
 
-  const transition = (options) => {
-    setApplicant((current) => (current ? current.transition(options.status, options) : null));
+  const transition = async (options) => {
+    const updated = await registrarService.review(id, {
+      status: options.backendStatus,
+      rejection_reason: options.reason,
+    });
+    const refreshed = await ApplicationModel.fetch(updated.id || id);
+    setApplicant(refreshed);
+    return refreshed;
   };
 
   return { applicant, loading, transition };

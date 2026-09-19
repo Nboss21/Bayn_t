@@ -49,8 +49,13 @@ export default class TeacherCurriculumModel {
     return result;
   }
 
-  static async fetch() {
-    const data = await teacherService.curriculum();
-    return new TeacherCurriculumModel(data);
+  static async fetch(classId = null) {
+    const classesResponse = await teacherService.classes({ per_page: 100 });
+    const classRows = classesResponse?.data || classesResponse || [];
+    const selected = classRows.find((item) => String(item.id) === String(classId)) || classRows[0];
+    const data = await teacherService.curriculum(selected ? { class_id: selected.id } : {});
+    const model = new TeacherCurriculumModel(data);
+    model.availableClasses = classRows.map((item) => ({ id: item.id, name: item.name, program: item.program?.name || 'Program' }));
+    return model;
   }
 }

@@ -4,10 +4,12 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\ClassResource;
+use App\Http\Resources\GradingConfigResource;
 use App\Http\Resources\TeacherStudentResource;
 use App\Models\AssessmentScore;
 use App\Models\AttendanceRecord;
 use App\Models\CurriculumModule;
+use App\Models\GradingConfig;
 use App\Services\TeacherScopeService;
 use Illuminate\Http\Request;
 
@@ -21,6 +23,7 @@ class TeacherController extends Controller
         $classes = $this->scope->classes($user);
         $classIds = (clone $classes)->pluck('id');
         return response()->json(['data' => [
+            'user' => ['name' => $user->name],
             'classes_count' => $classIds->count(),
             'student_count' => $this->scope->students($user)->distinct('students.id')->count('students.id'),
             'recent_attendance' => $this->scope->attendance($user)->with(['student.user', 'schoolClass'])->latest()->limit(5)->get()->map(fn ($record) => [
@@ -68,8 +71,8 @@ class TeacherController extends Controller
         $nextLesson = $active ? $active['lessons']->get($active['completedLessonsCount']) : null;
 
         return response()->json(['data' => [
-            'header' => ['title' => 'Curriculum', 'subtitle' => 'View the modules and lessons for '.$class->program->name.'.', 'termBadge' => 'Academic Year '.now()->year.' / Term I'],
-            'banner' => ['className' => $class->name, 'program' => $class->program->name, 'startDate' => $class->intake?->start_date?->format('F Y'), 'schedule' => is_array($class->schedule) ? implode(' · ', array_filter($class->schedule)) : $class->schedule, 'studentsCount' => $class->students()->count()],
+            'header' => ['title' => 'Curriculum', 'subtitle' => 'View the modules and lessons for '.$class->program->name.'.', 'termBadge' => $class->intake?->name ?? 'Current intake'],
+            'banner' => ['className' => $class->name, 'program' => $class->program->name, 'startDate' => $class->intake?->start_date?->format('F Y'), 'schedule' => $this->scheduleLabel($class->schedule), 'studentsCount' => $class->students()->count()],
             'programs' => [['id' => (string) $class->program_id, 'label' => $class->program->name]],
             'activeProgramId' => (string) $class->program_id,
             'filterTabs' => [['id' => 'All', 'label' => 'All'], ['id' => 'module', 'label' => 'Curriculum Modules'], ['id' => 'brief', 'label' => 'Teaching Briefs']],
@@ -77,5 +80,32 @@ class TeacherController extends Controller
             'progress' => ['completedModules' => $completedModules, 'totalModules' => $moduleRows->count(), 'completedCount' => $completedModules, 'currentCount' => $moduleRows->where('status', 'in_progress')->count(), 'remainingCount' => $moduleRows->whereIn('status', ['upcoming', 'in_progress'])->count(), 'activeModuleNumber' => $active['number'] ?? null, 'termWeek' => null, 'termWeeks' => null],
             'modules' => $moduleRows->values(),
         ]]);
+    }
+
+    public function grading(Request $request)
+    {
+        $class = $this->scope->classes($request->user())
+            ->when($request->integer('class_id'), fn ($query, $id) => $query->whereKey($id))
+            ->first();
+        abort_unless($class, 404, 'No assigned class exists for this teacher.');
+
+        $configs = GradingConfig::query()
+            ->where(fn ($query) => $query->where('program_id', $class->program_id)->orWhereNull('program_id'))
+            ->orderByRaw('CASE WHEN program_id IS NULL THEN 1 ELSE 0 END')
+            ->orderBy('category')
+            ->get()
+            ->unique('category')
+            ->values();
+
+        return GradingConfigResource::collection($configs);
+    }
+
+    private function scheduleLabel($schedule): string
+    {
+        if (is_string($schedule)) return $schedule;
+        if (! is_array($schedule)) return 'Schedule not set';
+
+        $days = is_array($schedule['days'] ?? null) ? implode(' · ', $schedule['days']) : ($schedule['days'] ?? '');
+        return implode(' · ', array_filter([$days, $schedule['label'] ?? null, $schedule['time'] ?? null])) ?: 'Schedule not set';
     }
 }

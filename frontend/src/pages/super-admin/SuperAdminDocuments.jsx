@@ -54,12 +54,9 @@ export default function SuperAdminDocuments() {
   const handleGenerate = async (student) => {
     setGenerating((prev) => ({ ...prev, [student.id]: true }));
     try {
-      await studentService.certificate
-        ? await fetch(`/students/${student.id}/certificate`, { method: 'POST' })
-        : null;
-      // Use the studentService certificate view to get the URL
+      await studentService.generateCertificate(student.id);
       const result = await studentService.certificate(student.id);
-      setCertUrls((prev) => ({ ...prev, [student.id]: result?.url || result }));
+      setCertUrls((prev) => ({ ...prev, [student.id]: result?.temporary_url }));
       showToast(`Certificate generated for ${student.user?.name || 'student'}`);
     } catch (err) {
       showToast(toUserMessage(err), 'error');
@@ -75,7 +72,8 @@ export default function SuperAdminDocuments() {
     }
     try {
       const result = await studentService.certificate(student.id);
-      const url = result?.url || result;
+      const url = result?.temporary_url;
+      if (!url) throw new Error('Certificate URL was not returned.');
       setCertUrls((prev) => ({ ...prev, [student.id]: url }));
       window.open(url, '_blank');
     } catch {
