@@ -36,6 +36,25 @@ class DocumentController extends Controller
         $expiresAt = now()->addMinutes(15);
         return response()->json(['data' => new DocumentResource($document), 'temporary_url' => Storage::disk('private_documents')->temporaryUrl($document->file_path, $expiresAt), 'expires_at' => $expiresAt->toIso8601String()]);
     }
+
+    /** Serve the generated certificate as an authenticated PDF response. */
+    public function certificateDownload(Request $request, Student $student): Response
+    {
+        Gate::authorize('view', $student);
+        $document = $student->documents()
+            ->where('type', DocumentType::Certificate->value)
+            ->latest()
+            ->firstOrFail();
+
+        $disk = Storage::disk('private_documents');
+        abort_unless($disk->exists($document->file_path), 404, 'Certificate file not found.');
+
+        return response($disk->get($document->file_path), 200, [
+            'Content-Type' => 'application/pdf',
+            'Content-Disposition' => 'inline; filename="'.basename($document->file_path).'"',
+            'Cache-Control' => 'private, max-age=0, no-store',
+        ]);
+    }
     public function storeForApplication(StoreApplicationDocumentRequest $request, Application $application): JsonResponse
     {
         Gate::authorize('uploadDocument', $application);

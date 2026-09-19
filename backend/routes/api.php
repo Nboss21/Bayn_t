@@ -193,6 +193,7 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->group(functio
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar', 'throttle:expensive-admin'])->post('/students/{student}/certificate', [DocumentController::class, 'certificate']);
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->get('/students/{student}/certificate', [DocumentController::class, 'certificateView']);
+Route::middleware(['auth:sanctum', 'role:super_admin,registrar'])->get('/students/{student}/certificate/download', [DocumentController::class, 'certificateDownload']);
 
 // --------------------------------------------------------------------------
 // Role-Gated Routes

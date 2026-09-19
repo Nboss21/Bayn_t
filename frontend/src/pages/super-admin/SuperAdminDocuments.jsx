@@ -66,18 +66,16 @@ export default function SuperAdminDocuments() {
   };
 
   const handleView = async (student) => {
-    if (certUrls[student.id]) {
-      window.open(certUrls[student.id], '_blank');
-      return;
-    }
+    const viewer = window.open('', '_blank');
     try {
-      const result = await studentService.certificate(student.id);
-      const url = result?.temporary_url;
-      if (!url) throw new Error('Certificate URL was not returned.');
-      setCertUrls((prev) => ({ ...prev, [student.id]: url }));
-      window.open(url, '_blank');
-    } catch {
-      showToast('No certificate found. Generate one first.', 'error');
+      const pdf = await studentService.certificateFile(student.id);
+      const url = URL.createObjectURL(new Blob([pdf], { type: 'application/pdf' }));
+      if (viewer) viewer.location.href = url;
+      else window.open(url, '_blank');
+      setTimeout(() => URL.revokeObjectURL(url), 120000);
+    } catch (err) {
+      viewer?.close();
+      showToast(toUserMessage(err, 'The certificate could not be opened.'), 'error');
     }
   };
 

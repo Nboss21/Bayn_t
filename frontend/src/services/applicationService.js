@@ -59,6 +59,7 @@ export const studentService = {
   attendanceSummary: async (id, params) => resource(await api.get(`/students/${id}/attendance/summary`, params)),
   assessments: async (id, params) => resource(await api.get(`/students/${id}/assessments`, params)),
   certificate: async (id) => (await api.get(`/students/${id}/certificate`)).data,
+  certificateFile: async (id) => (await api.get(`/students/${id}/certificate/download`, undefined, { responseType: 'blob', timeout: 120000 })).data,
   generateCertificate: async (id) => resource(await api.post(`/students/${id}/certificate`)),
   completionReview: async () => resource(await api.get('/student/completion-review')),
 };
