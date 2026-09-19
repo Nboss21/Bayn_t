@@ -45,6 +45,17 @@ body {
   color: #1d1610;
 }
 
+/* Make every enabled action feel interactive across all workspaces. */
+button:not(:disabled),
+[role='button']:not([aria-disabled='true']) {
+  cursor: pointer;
+}
+
+button:disabled,
+[aria-disabled='true'] {
+  cursor: not-allowed;
+}
+
 /* Soft film grain overlay — position absolute inset-0, pointer-events none */
 .grain-overlay {
   position: absolute;
