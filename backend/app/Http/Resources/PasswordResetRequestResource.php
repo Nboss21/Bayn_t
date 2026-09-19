@@ -5,23 +5,23 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class PasswordResetRequestResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
         return [
             'id' => $this->id,
+            'user_id' => $this->user_id,
             'name' => $this->name,
             'email' => $this->email,
-            'role' => $this->role?->value,
-            'role_label' => $this->role?->label(),
             'phone' => $this->phone,
-            'is_active' => $this->is_active,
-            'must_change_password' => $this->must_change_password,
-            'email_verified_at' => $this->email_verified_at,
+            'role' => $this->role,
+            'status' => $this->status,
+            'admin_comment' => $this->admin_comment,
+            'reviewed_by' => $this->reviewed_by,
+            'reviewed_at' => $this->reviewed_at,
             'created_at' => $this->created_at,
             'updated_at' => $this->updated_at,
-            'programs' => ProgramResource::collection($this->whenLoaded('programs')),
         ];
     }
 }

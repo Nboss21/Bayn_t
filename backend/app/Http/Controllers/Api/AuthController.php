@@ -4,8 +4,11 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\ForgotPasswordRequest;
+use App\Http\Requests\ChangePasswordRequest;
 use App\Http\Requests\ResetPasswordRequest;
+use App\Models\PasswordResetRequest as PasswordResetRequestModel;
 use App\Models\User;
+use App\Services\NotificationService;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
@@ -63,6 +66,7 @@ class AuthController extends Controller
                 'role_label' => $user->role->label(),
                 'phone' => $user->phone,
                 'is_active' => $user->is_active,
+                'must_change_password' => $user->must_change_password,
                 'created_at' => $user->created_at,
             ],
         ]);
@@ -104,6 +108,7 @@ class AuthController extends Controller
                 'role_label' => $user->role->label(),
                 'phone' => $user->phone,
                 'is_active' => $user->is_active,
+                'must_change_password' => $user->must_change_password,
                 'staff_profile' => $user->staffProfile,
                 'created_at' => $user->created_at,
             ],
@@ -138,18 +143,75 @@ class AuthController extends Controller
      *
      * POST /api/auth/forgot-password
      */
-    public function forgotPassword(ForgotPasswordRequest $request): JsonResponse
+    public function forgotPassword(ForgotPasswordRequest $request, NotificationService $notifications): JsonResponse
     {
-        $status = Password::sendResetLink($request->only('email'));
+        $user = User::query()->where('email', $request->validated('email'))->first();
 
-        if ($status !== Password::RESET_LINK_SENT) {
-            return response()->json([
-                'message' => 'If an account matches that email, a password reset link will be sent.',
+        if ($user && ! PasswordResetRequestModel::query()
+            ->where('user_id', $user->id)
+            ->where('status', 'pending')
+            ->exists()) {
+            $resetRequest = PasswordResetRequestModel::create([
+                'user_id' => $user->id,
+                'email' => $user->email,
+                'name' => $user->name,
+                'phone' => $user->phone,
+                'role' => $user->role?->value,
             ]);
+
+            User::query()->where('role', 'super_admin')->where('is_active', true)->get()->each(
+                fn (User $admin) => $notifications->create(
+                    $admin,
+                    'password_reset_requested',
+                    "Password reset request #{$resetRequest->id} from {$user->name} ({$user->email}).",
+                )
+            );
         }
 
         return response()->json([
-            'message' => __($status),
+            'message' => 'If an account matches that email, a password reset request has been sent to an administrator.',
+        ]);
+    }
+
+    /** Change a temporary or current password and issue a fresh token. */
+    public function changePassword(ChangePasswordRequest $request): JsonResponse
+    {
+        $user = $request->user();
+        $data = $request->validated();
+
+        if (! Hash::check($data['current_password'], $user->password)) {
+            throw ValidationException::withMessages(['current_password' => ['The current password is incorrect.']]);
+        }
+
+        if (Hash::check($data['password'], $user->password)) {
+            throw ValidationException::withMessages(['password' => ['Your new password must be different from the current password.']]);
+        }
+
+        $user->forceFill([
+            'password' => $data['password'],
+            'must_change_password' => false,
+            'remember_token' => Str::random(60),
+        ])->save();
+
+        PasswordResetRequestModel::query()
+            ->where('user_id', $user->id)
+            ->where('status', 'approved')
+            ->latest('reviewed_at')
+            ->first()?->update(['status' => 'completed']);
+
+        $user->tokens()->delete();
+        $token = $user->createToken('password_changed', [$user->role->value])->plainTextToken;
+
+        return response()->json([
+            'message' => 'Password changed successfully.',
+            'access_token' => $token,
+            'token_type' => 'Bearer',
+            'user' => [
+                'id' => $user->id, 'name' => $user->name, 'email' => $user->email,
+                'role' => $user->role->value, 'role_label' => $user->role->label(),
+                'phone' => $user->phone, 'is_active' => $user->is_active,
+                'must_change_password' => false, 'created_at' => $user->created_at,
+            ],
         ]);
     }
 
@@ -166,6 +228,7 @@ class AuthController extends Controller
         $status = Password::reset($validated, function (User $user, string $password) use (&$resetUser): void {
             $user->forceFill([
                 'password' => $password,
+                'must_change_password' => false,
                 'remember_token' => Str::random(60),
             ])->save();
 
@@ -269,6 +332,7 @@ class AuthController extends Controller
                 'role_label' => $user->role->label(),
                 'phone' => $user->phone,
                 'is_active' => $user->is_active,
+                'must_change_password' => $user->must_change_password,
                 'created_at' => $user->created_at,
             ],
         ]);

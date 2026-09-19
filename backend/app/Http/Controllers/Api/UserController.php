@@ -41,6 +41,7 @@ class UserController extends Controller
         $programIds = $data['program_ids'] ?? [];
         unset($data['program_ids']);
         $data['password'] = Hash::make($data['password']);
+        $data['must_change_password'] = true;
         $data['is_active'] ??= true;
 
         $user = DB::transaction(function () use ($data, $programIds): User {
@@ -71,6 +72,7 @@ class UserController extends Controller
 
         if (array_key_exists('password', $data) && $data['password'] !== null) {
             $data['password'] = Hash::make($data['password']);
+            $data['must_change_password'] = true;
         } else {
             unset($data['password']);
         }

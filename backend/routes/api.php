@@ -16,6 +16,7 @@ use App\Http\Controllers\Api\IntakeController;
 use App\Http\Controllers\Api\NotificationController;
 use App\Http\Controllers\Api\PaymentController;
 use App\Http\Controllers\Api\ProgramController;
+use App\Http\Controllers\Api\PasswordResetRequestController;
 use App\Http\Controllers\Api\RegistrarController;
 use App\Http\Controllers\Api\ReportController;
 use App\Http\Controllers\Api\StudentController;
@@ -48,6 +49,7 @@ Route::prefix('auth')->group(function () {
 // Protected Auth Endpoints (Requires Sanctum Bearer Token)
 Route::middleware('auth:sanctum')->prefix('auth')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
+    Route::post('/change-password', [AuthController::class, 'changePassword']);
     Route::get('/me', [AuthController::class, 'me'])->middleware('role');
     Route::post('/refresh', [AuthController::class, 'refresh'])->middleware('role');
 });
@@ -113,6 +115,14 @@ Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student']
 
 Route::middleware(['auth:sanctum', 'role:super_admin'])
     ->apiResource('users', UserController::class);
+
+Route::middleware(['auth:sanctum', 'role:super_admin'])
+    ->prefix('password-reset-requests')->group(function () {
+        Route::get('/', [PasswordResetRequestController::class, 'index']);
+        Route::get('/{passwordResetRequest}', [PasswordResetRequestController::class, 'show']);
+        Route::post('/{passwordResetRequest}/approve', [PasswordResetRequestController::class, 'approve']);
+        Route::post('/{passwordResetRequest}/reject', [PasswordResetRequestController::class, 'reject']);
+    });
 
 Route::middleware(['auth:sanctum', 'role:super_admin,registrar,teacher,student'])
     ->prefix('documents')

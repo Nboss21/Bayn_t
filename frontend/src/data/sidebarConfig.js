@@ -16,6 +16,7 @@ import {
   Shield,
   Bell,
   Settings,
+  KeyRound,
 } from 'lucide-react';
 
 export const teacherNavItems = [
@@ -50,5 +51,6 @@ export const superadminNavItems = [
   { name: 'Roles & Permissions', path: '/super-admin/roles', icon: Shield },
   { name: 'Audit Log', path: '/super-admin/audit', icon: History },
   { name: 'Notifications', path: '/super-admin/notifications', icon: Bell },
+  { name: 'Password Resets', path: '/super-admin/password-resets', icon: KeyRound },
   { name: 'Profile & Settings', path: '/super-admin/settings', icon: Settings },
 ];

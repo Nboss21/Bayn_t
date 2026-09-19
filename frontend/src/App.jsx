@@ -69,11 +69,13 @@ import SuperAdminRoles from './pages/super-admin/SuperAdminRoles';
 import SuperAdminAuditLog from './pages/super-admin/SuperAdminAuditLog';
 import SuperAdminSettings from './pages/super-admin/SuperAdminSettings';
 import SuperAdminNotifications from './pages/super-admin/SuperAdminNotifications';
+import SuperAdminPasswordResetRequests from './pages/super-admin/SuperAdminPasswordResetRequests';
 import SuperAdminGenerateReport from './pages/super-admin/SuperAdminGenerateReport';
 import { useAuth } from './context/AuthContext';
 import Dashboard from './pages/Dashboard';
 import StudentApplicationEntry from './components/StudentApplicationEntry';
 import { roleHome } from './utils/roleHome';
+import ForcedPasswordChangeModal from './components/ForcedPasswordChangeModal';
 function ProtectedRoute({ step, children }) {
   const { canAccess } = useApplication();
   const targetStep = canAccess(step);
@@ -193,10 +195,12 @@ function App() {
           <Route path="roles" element={<SuperAdminRoles />} />
           <Route path="audit" element={<SuperAdminAuditLog />} />
           <Route path="notifications" element={<SuperAdminNotifications />} />
+          <Route path="password-resets" element={<SuperAdminPasswordResetRequests />} />
           <Route path="settings" element={<SuperAdminSettings />} />
           <Route index element={<Navigate to="/super-admin/overview" replace />} />
         </Route>
       </Routes>
+      <ForcedPasswordChangeModal />
     </BrowserRouter>
   );
 }

@@ -31,6 +31,7 @@ class User extends Authenticatable
         'role',
         'phone',
         'is_active',
+        'must_change_password',
         'email_verified_at',
     ];
 
@@ -44,6 +45,7 @@ class User extends Authenticatable
         return [
             'role' => UserRole::class,
             'is_active' => 'boolean',
+            'must_change_password' => 'boolean',
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];

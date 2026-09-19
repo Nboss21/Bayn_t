@@ -14,6 +14,7 @@ import {
   History,
   Bell,
   Settings,
+  KeyRound,
   ChevronDown
 } from 'lucide-react';
 
@@ -33,6 +34,7 @@ const bottomNavItems = [
   { name: 'Roles & Permissions', path: '/super-admin/roles', icon: Shield },
   { name: 'Audit Log', path: '/super-admin/audit', icon: History },
   { name: 'Notifications', path: '/super-admin/notifications', icon: Bell, badge: '3' },
+  { name: 'Password Resets', path: '/super-admin/password-resets', icon: KeyRound },
   { name: 'Profile & Settings', path: '/super-admin/settings', icon: Settings },
 ];
 

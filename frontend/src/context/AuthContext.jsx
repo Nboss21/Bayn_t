@@ -15,8 +15,13 @@ export function AuthProvider({ children }) {
   useEffect(() => { const clear = () => setUser(null); window.addEventListener('bayn:unauthorized', clear); return () => window.removeEventListener('bayn:unauthorized', clear); }, []);
 
   const login = useCallback(async (credentials) => { const next = await authService.login(credentials); setUser(next); return next; }, []);
+  const changePassword = useCallback(async (payload) => {
+    const next = await authService.changePassword(payload);
+    setUser(next.user || next);
+    return next;
+  }, []);
   const logout = useCallback(async () => { await authService.logout(); setUser(null); }, []);
-  const value = { user, loading, isAuthenticated: Boolean(user), role: user?.role, login, logout };
+  const value = { user, loading, isAuthenticated: Boolean(user), role: user?.role, login, logout, changePassword };
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
